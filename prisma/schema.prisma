@@ -126,7 +126,7 @@ model TwoFactorAuthToken {
   email   String
   token   String   @unique
   expires DateTime
-
+  
   @@unique([email, token])
 }
 

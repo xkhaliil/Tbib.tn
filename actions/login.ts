@@ -43,7 +43,7 @@ export const login = async (
   }
 
   if (existingUser?.role === Role.PATIENT) {
-    defaultRedirectUrl = "/dashboard";
+    defaultRedirectUrl = "/patient/dashboard";
   }
 
   if (!existingUser || !existingUser.email || !existingUser.password) {

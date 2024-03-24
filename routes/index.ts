@@ -50,8 +50,8 @@ export const apiAuthPrefix: string = "/api/auth";
 export const defaultRedirectUrl: string = "/dashboard";
 
 /**
- * An array of routes that are used by the healthcare provider
- * These routes are only accessible by the healthcare provider and are protected by the Middleware
+ * An array of routes that are used by the patient
+ * These routes are only accessible by the patient and are protected by the Middleware
  * @type {string[]}
  */
 export const healthcareProviderRoutes: string[] = [
@@ -66,3 +66,10 @@ export const healthcareProviderRoutes: string[] = [
   "/hp/dashboard/settings/notifications",
   "/hp/dashboard/settings/team",
 ];
+
+/**
+ * An array of routes that are used by the patient
+ * These routes are only accessible by the patient and are protected by the Middleware
+ * @type {string[]}
+ */
+export const patientRoutes: string[] = ["/patient/dashboard"];
