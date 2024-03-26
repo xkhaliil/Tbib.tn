@@ -1,0 +1,342 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PATIENT
+  HEALTHCARE_PROVIDER
+  HEALTHCARE_CENTER
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  UPCOMING
+  CANCELLED
+  EXPIRED
+  COMPLETED
+}
+
+enum NotificationType {
+  APPOINTMENT
+  MESSAGE
+  REVIEW
+  DOCUMENT
+  ABSENCE
+}
+
+enum PrescriptionType {
+  MEDICATION
+  BIOLOGY_TEST
+  RADIOLOGY_TEST
+  PROCEDURE
+  PARAMEDICAL_ACT
+}
+
+enum BloodType {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String    @unique
+  gender        String?
+  dateOfBirth   DateTime?
+  phone         String?
+  city          String?
+  state         String?
+  postalCode    String?
+  bio           String?
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role
+
+  accounts              Account[]
+  isTwoFactorEnabled    Boolean                    @default(false)
+  twoFactorConfirmation TwoFactorAuthConfirmation?
+
+  patient            Patient?
+  healthCareProvider HealthCareProvider?
+  healthCareCenter   HealthCareCenter?
+
+  seenMessagesIds String[]  @db.ObjectId
+  seenMessages    Message[] @relation("SeenMessages", fields: [seenMessagesIds], references: [id])
+
+  messages      Message[]
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @unique @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorAuthToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+  
+  @@unique([email, token])
+}
+
+model TwoFactorAuthConfirmation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model Patient {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  allergies       String[]
+  chronicDiseases String[]
+  vaccinations    String[]
+  surgeries       String[]
+  familyHistory   String?
+  bloodType       BloodType?
+  weight          Float?
+  height          Float?
+  bmi             Float?
+  occupation      String?
+
+  appointments  Appointment[]
+  consultations Consultation[]
+  documents     Document[]
+  prescriptions Prescription[]
+  reviews       Review[]
+  conversations Conversation[]
+
+  userId String @unique @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model HealthCareProvider {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @unique @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  speciality      String?
+  licenseNumber   String?
+  officeLocation  String?
+  spokenLanguages String[]
+  services        String[]
+  paymentMethods  String[]
+  accountVerified Boolean  @default(false)
+
+  appointments  Appointment[]
+  consultations Consultation[]
+  prescriptions Prescription[]
+  openingHours  OpeningHours[]
+  absences      Absence[]
+  reviews       Review[]
+  conversations Conversation[]
+
+  healthCareCenterId String?           @db.ObjectId
+  healthCareCenter   HealthCareCenter? @relation(fields: [healthCareCenterId], references: [id], onDelete: SetNull)
+}
+
+model OpeningHours {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  dayOfWeek Int
+  startTime DateTime
+  endTime   DateTime
+  isClosed  Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  healthCareProviderId String             @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+}
+
+model HealthCareCenter {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String  @unique @db.ObjectId
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  website     String?
+  description String?
+
+  healthCareProviders HealthCareProvider[]
+}
+
+model Document {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  url         String
+  patientId   String  @db.ObjectId
+  patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  date         DateTime
+  startTime    DateTime
+  endTime      DateTime
+  status       AppointmentStatus @default(PENDING)
+  consultation Consultation?
+
+  patientId String  @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  healthCareProviderId String             @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+}
+
+model Consultation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  appointmentId String      @unique @db.ObjectId
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  patientId String  @unique @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+
+  prescriptions Prescription[]
+  diagnosis     String?
+  followUp      String?
+  notes         String?
+
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  rating  Int
+  comment String?
+  date    DateTime
+
+  patientId String  @unique @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+}
+
+model Absence {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  date DateTime @unique
+
+  healthCareProviderId String             @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+
+  patientId String  @unique @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  file      String?
+  createdAt DateTime @default(now())
+
+  conversationId String       @unique @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId String @unique @db.ObjectId
+  sender   User   @relation(fields: [senderId], references: [id])
+
+  seenIds String[] @db.ObjectId
+  seenBy  User[]   @relation("SeenMessages", fields: [seenIds], references: [id])
+}
+
+model Notification {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  type        NotificationType
+  date        DateTime         @default(now())
+
+  userId String @unique @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Prescription {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  date        DateTime         @default(now())
+  type        PrescriptionType
+  medications String
+  dosage      String
+  duration    String
+  notes       String?
+
+  consultationId String       @unique @db.ObjectId
+  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  patientId String  @unique @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+}
