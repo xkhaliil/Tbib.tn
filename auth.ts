@@ -66,22 +66,22 @@ export const {
       }
 
       if (token.speciality && session.user) {
-        session.user.speciality = token.speciality;
-        session.user.accountVerified = token.accountVerified;
-        session.user.spokenLanguages = token.spokenLanguages;
+        session.user.speciality = token.speciality as string;
+        session.user.accountVerified = token.accountVerified as boolean;
+        session.user.spokenLanguages = token.spokenLanguages as string[];
       }
 
       if (session.user) {
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
-        session.user.bio = token.bio;
-        session.user.image = token.image;
-        session.user.isOAuth = token.isOAuth;
-        session.user.gender = token.gender;
-        session.user.dateOfBirth = token.dateOfBirth;
-        session.user.phone = token.phone;
-        session.user.city = token.city;
-        session.user.state = token.state;
-        session.user.postalCode = token.postalCode;
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+        session.user.bio = token.bio as string;
+        session.user.image = token.image as string;
+        session.user.isOAuth = token.isOAuth as boolean;
+        session.user.gender = token.gender as string;
+        session.user.dateOfBirth = token.dateOfBirth as string;
+        session.user.phone = token.phone as string;
+        session.user.city = token.city as string;
+        session.user.state = token.state as string;
+        session.user.postalCode = token.postalCode as string;
       }
 
       return session;
