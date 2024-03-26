@@ -19,9 +19,6 @@ export default middleware((req) => {
     return Response.redirect(new URL("/patient/dashboard", nextUrl));
   }
 
-  console.log("isLoggedIn", isLoggedIn);
-  console.log("user", req.auth?.user);
-
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL("/auth/sign-in", nextUrl));
   }
