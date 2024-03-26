@@ -175,7 +175,7 @@ model HealthCareProvider {
   services        String[]
   paymentMethods  String[]
   accountVerified Boolean  @default(false)
-
+  
   appointments  Appointment[]
   consultations Consultation[]
   prescriptions Prescription[]
