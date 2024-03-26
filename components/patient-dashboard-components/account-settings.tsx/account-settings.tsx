@@ -18,7 +18,7 @@ export function PatientAccountSettings() {
       <div className="pl-1 text-lg font-bold">Identity</div>
       <Separator className="w-3/4" />
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <div className="mt-2 flex h-16 w-screen items-center justify-between space-x-4  pl-4 hover:bg-gray-200">
             <div className="flex items-center space-x-4">
               <CircleUser className="h-7 w-7" />
