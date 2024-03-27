@@ -1,38 +1,46 @@
-"use client";
-
 import React from "react";
 
 import { getAllDoctors } from "@/actions/doctors";
+import { UsersIcon } from "lucide-react";
+import { BsHospitalFill } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
-import { AdminSideBar } from "@/components/base/admin-dashboard/admin-sidebar";
+import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
 import AdminDoctorChartDashboard from "@/components/base/admin-dashboard/charts/doctors-chart";
-import { DoctorDashboardtable } from "@/components/base/admin-dashboard/data-tables/doctor-dashboard-table";
+import { TotalUsersChart } from "@/components/base/admin-dashboard/charts/total-users-chart";
+import { AdminDoctorTable } from "@/components/base/admin-dashboard/data-table/admin-doctors-table/admin-doctor-table";
 
 export default function AdminDoctorsDashboard() {
   return (
-    <div className="grid h-screen grid-cols-[70px_1fr] grid-rows-[64px_1fr]">
-      <AdminNavbar />
-      <AdminSideBar />
-      <main className="p-8">
-        <div className="mt-8 grid w-full grid-cols-1  space-x-10 lg:grid-cols-6 xl:grid-cols-6">
-          <div className="col-span-4 rounded-xl border bg-white p-6 shadow-sm">
-            <AdminDoctorChartDashboard />
-          </div>{" "}
-          <div className="col-span-2 flex flex-col items-center justify-center space-y-4 rounded-xl border bg-white p-6">
-            <div className="flex h-36 w-36 items-center justify-center rounded-xl bg-blue-400/40">
-              <FaUserDoctor className="h-20 w-20" />
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <AdminSidebar />
+      <div className="flex flex-col">
+        <AdminNavbar />
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="col-span-2 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-1">
+              <AdminDoctorChartDashboard />
             </div>
-            <h1 className="text-xl font-semibold tracking-tight text-muted-foreground">
-              Total doctors
-            </h1>
-            <p className="text-2xl font-bold tracking-tight">30</p>
+            <div className="col-span-2 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-1">
+              {" "}
+              <AdminStatsCard
+                title="healthcare centers"
+                value="78"
+                icon={BsHospitalFill}
+                className="xl:pl-6"
+              />
+            </div>
           </div>
-        </div>
-        <DoctorDashboardtable />
-      </main>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-1">
+            <div className="col-span-1 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-5">
+              table
+              <AdminDoctorTable />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
