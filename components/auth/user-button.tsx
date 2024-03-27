@@ -16,7 +16,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function UserButton() {
+interface UserButtonProps {
+  side?: "bottom" | "top" | "left" | "right";
+  align?: "start" | "center" | "end";
+}
+
+export function UserButton({
+  side = "right",
+  align = "start",
+}: UserButtonProps) {
   const user = useCurrentUser();
   const manageAccountDialog = useManageAccountDialog();
   return (
@@ -40,8 +48,8 @@ export function UserButton() {
       </PopoverTrigger>
       <PopoverContent
         className="mb-4 w-[350px] rounded-xl shadow-xl"
-        align="start"
-        side="right"
+        align={align}
+        side={side}
       >
         <div className="flex items-center">
           <Avatar>
