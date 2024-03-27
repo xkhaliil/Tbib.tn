@@ -1,4 +1,6 @@
-import React, { PureComponent } from "react";
+"use client";
+
+import React from "react";
 
 import {
   CartesianGrid,
@@ -55,6 +57,7 @@ const data = [
     amt: 2100,
   },
 ];
+
 export default function AdminDoctorChartDashboard() {
   return (
     <ResponsiveContainer width="100%" height={300}>
