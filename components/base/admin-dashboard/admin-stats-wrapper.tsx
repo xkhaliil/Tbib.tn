@@ -1,7 +1,6 @@
 import React from "react";
 
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { FileSpreadsheetIcon, HeartPulseIcon, UsersIcon } from "lucide-react";
+import { UsersIcon } from "lucide-react";
 import { BsHospitalFill } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { PureComponent } from "react";
+import React from "react";
 
 import {
   Bar,
@@ -58,6 +58,7 @@ const data = [
     amt: 2100,
   },
 ];
+
 export function TotalUsersChart() {
   return (
     <ResponsiveContainer width="100%" height={700}>
