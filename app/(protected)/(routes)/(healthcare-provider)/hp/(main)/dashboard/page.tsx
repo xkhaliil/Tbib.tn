@@ -1,10 +1,9 @@
 import { getAllAppointments } from "@/actions/appointment";
+import { getCurrentSession } from "@/actions/auth";
 import { getPatientsWithAtLeastOneAppointment } from "@/actions/patient";
 import { AppointmentStatus } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, startOfToday } from "date-fns";
-
-import { currentUser } from "@/lib/auth";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -27,7 +26,7 @@ const piedata = [
 const COLORS = ["#24a581", "#f991dc", "#fea25f", "#93e7fe"];
 
 export default async function DashboardPage() {
-  const user = await currentUser();
+  const user = await getCurrentSession();
   const patients = await getPatientsWithAtLeastOneAppointment();
   const appointments = await getAllAppointments();
 

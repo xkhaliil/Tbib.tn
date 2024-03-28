@@ -9,8 +9,9 @@ import {
 } from "@/schemas";
 import { AppointmentStatus } from "@prisma/client";
 
-import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+
+import { getCurrentSession } from "./auth";
 
 export async function getAllAppointments() {
   try {
@@ -56,7 +57,7 @@ export async function getAppointmentById(id: string | undefined) {
 
 export async function createAppointment(values: CreateAppointmentSchemaType) {
   try {
-    const user = await currentUser();
+    const user = await getCurrentSession();
 
     const healthCareProvider = await db.healthCareProvider.findFirst({
       where: {

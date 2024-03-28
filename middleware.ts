@@ -1,31 +1,24 @@
-import authConfig from "@/auth.config";
-import { apiAuthPrefix, patientRoutes, publicRoutes } from "@/routes";
-import { Role } from "@prisma/client";
-import NextAuth from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
 
-const { auth: middleware } = NextAuth(authConfig);
+export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
 
-export default middleware((req) => {
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
+  /**
+   * Clone the request headers and add the pathname to them. This way we can access
+   * the pathname in server actions with `headers().get("x-request-pathname")`
+   * This is useful for server actions that need to know the current pathname
+   */
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-request-pathname", pathname);
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  const isPatientRoute = patientRoutes.includes(nextUrl.pathname);
-
-  if (isApiAuthRoute || isPublicRoute) return undefined;
-
-  if (isLoggedIn && req.auth?.user.role === Role.PATIENT && !isPatientRoute) {
-    return Response.redirect(new URL("/patient/dashboard", nextUrl));
-  }
-
-  if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/auth/sign-in", nextUrl));
-  }
-
-  return undefined;
-});
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+}
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher:
+    "/((?!api|_next/static|site.webmanifest|images|image|videos|fonts|site.webmanifest|favicon.ico|opengraph-image.png).*)",
 };

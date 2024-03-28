@@ -93,81 +93,77 @@ export function ManageSecurityForm() {
           className="space-y-4"
           id="manage-security-form"
         >
-          {!user?.isOAuth && (
-            <>
-              <FormField
-                control={manageSecurityForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="•••••••••"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={manageSecurityForm.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="•••••••••"
+                    {...field}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-              <FormField
-                control={manageSecurityForm.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>New Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="•••••••••"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={manageSecurityForm.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="•••••••••"
+                    {...field}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-              <FormField
-                control={manageSecurityForm.control}
-                name="isTwoFactorEnabled"
-                render={({ field }) => (
-                  <div className="space-y-2">
-                    <FormLabel aria-disabled={isLoading || user?.isOAuth}>
-                      Two Factor Authentication
-                    </FormLabel>
-                    <FormItem
-                      className={cn(
-                        "flex flex-row items-center justify-between rounded-lg border p-3",
-                        isLoading || user?.isOAuth
-                          ? "cursor-not-allowed opacity-50"
-                          : "bg-background",
-                      )}
-                    >
-                      <div className="space-y-1">
-                        <FormLabel>Two Factor Authentication</FormLabel>
-                        <FormDescription>
-                          Enable two factor authentication for added security.
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          disabled={isLoading || user?.isOAuth}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
+          <FormField
+            control={manageSecurityForm.control}
+            name="isTwoFactorEnabled"
+            render={({ field }) => (
+              <div className="space-y-2">
+                <FormLabel aria-disabled={isLoading}>
+                  Two Factor Authentication
+                </FormLabel>
+                <FormItem
+                  className={cn(
+                    "flex flex-row items-center justify-between rounded-lg border p-3",
+                    isLoading
+                      ? "cursor-not-allowed opacity-50"
+                      : "bg-background",
+                  )}
+                >
+                  <div className="space-y-1">
+                    <FormLabel>Two Factor Authentication</FormLabel>
+                    <FormDescription>
+                      Enable two factor authentication for added security.
+                    </FormDescription>
                   </div>
-                )}
-              />
-            </>
-          )}
+                  <FormControl>
+                    <Switch
+                      disabled={isLoading}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              </div>
+            )}
+          />
 
           <div className="space-y-2">
             <Label htmlFor="delete-account">Delete Account</Label>

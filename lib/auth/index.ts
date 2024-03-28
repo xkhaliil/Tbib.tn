@@ -1,15 +1,15 @@
-import { getTwoFactorAuthConfirmationTokenByUserId } from "@/actions/two-factor-auth-confirmation-token";
-import authConfig from "@/auth.config";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Role } from "@prisma/client";
-import NextAuth from "next-auth";
-
 import {
   getHealthcareProviderById,
   getUserAccountById,
   getUserByEmail,
   getUserById,
-} from "@/lib/auth";
+} from "@/actions/auth";
+import { getTwoFactorAuthConfirmationTokenByUserId } from "@/actions/two-factor-auth-confirmation-token";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Role } from "@prisma/client";
+import NextAuth from "next-auth";
+
+import config from "@/lib/auth/config";
 import { db } from "@/lib/db";
 
 export const {
@@ -19,17 +19,10 @@ export const {
   signOut,
   unstable_update,
 } = NextAuth({
-  events: {
-    linkAccount: async ({ user }) => {
-      await db.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          emailVerified: new Date(),
-        },
-      });
-    },
+  adapter: PrismaAdapter(db),
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
     signIn: async ({ user, account }) => {
@@ -45,7 +38,6 @@ export const {
 
         if (!twoFactorAuthConfirmationToken) return false;
 
-        // * Delete the two factor auth confirmation token
         await db.twoFactorAuthConfirmation.delete({
           where: {
             id: twoFactorAuthConfirmationToken.id,
@@ -55,7 +47,6 @@ export const {
 
       return true;
     },
-    // @ts-ignore
     session: async ({ session, token }) => {
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -75,7 +66,6 @@ export const {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
         session.user.bio = token.bio as string;
         session.user.image = token.image as string;
-        session.user.isOAuth = token.isOAuth as boolean;
         session.user.gender = token.gender as string;
         session.user.dateOfBirth = token.dateOfBirth as string;
         session.user.phone = token.phone as string;
@@ -90,8 +80,6 @@ export const {
       if (!token.sub) return token;
 
       const existingUser = await getUserById(token.sub);
-
-      const existingAccount = await getUserAccountById(token.sub);
 
       const existingHealthcareProvider = await getHealthcareProviderById(
         token.sub,
@@ -117,7 +105,6 @@ export const {
       token.image = existingUser.image;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      token.isOAuth = !!existingAccount;
 
       if (trigger === "update") {
         return { ...token, ...session.user };
@@ -126,14 +113,10 @@ export const {
       return token;
     },
   },
-  adapter: PrismaAdapter(db),
-  session: {
-    strategy: "jwt",
-  },
   pages: {
     signIn: "/auth/sign-in",
     signOut: "/auth/sign-out",
     error: "/auth/error",
   },
-  ...authConfig,
+  ...config,
 });
