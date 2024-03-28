@@ -6,8 +6,9 @@ import {
   ManageOpeningHoursSchemaType,
 } from "@/schemas";
 
-import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+
+import { getCurrentSession } from "./auth";
 
 export async function getOpeningHoursByProviderId(providerId: string) {
   try {
@@ -25,7 +26,7 @@ export async function getOpeningHoursByProviderId(providerId: string) {
 
 export async function createOpeningHours(values: ManageOpeningHoursSchemaType) {
   try {
-    const user = await currentUser();
+    const user = await getCurrentSession();
 
     const healthCareProvider = await db.healthCareProvider.findFirst({
       where: {
@@ -64,7 +65,7 @@ export async function createOpeningHours(values: ManageOpeningHoursSchemaType) {
 
 export async function updateOpeningHours(values: ManageOpeningHoursSchemaType) {
   try {
-    const user = await currentUser();
+    const user = await getCurrentSession();
 
     const healthCareProvider = await db.healthCareProvider.findFirst({
       where: {

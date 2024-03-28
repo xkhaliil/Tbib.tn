@@ -6,11 +6,11 @@ import {
   getTwoFactorAuthTokenByEmail,
 } from "@/actions/two-factor-auth-token";
 import { generateVerificationToken } from "@/actions/verification-token";
-import { signIn } from "@/auth";
 import { SignInSchema, SignInSchemaType } from "@/schemas";
 import { Role } from "@prisma/client";
 import { AuthError } from "next-auth";
 
+import { signIn } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { sendTwoFactorAuthEmail, sendVerificationEmail } from "@/lib/mail";
 

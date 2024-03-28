@@ -4,10 +4,10 @@ import { revalidatePath } from "next/cache";
 import { CreateAbsenceSchema, CreateAbsenceSchemaType } from "@/schemas";
 import { AppointmentStatus } from "@prisma/client";
 
-import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 import { getAllAppointmentsByDate } from "./appointment";
+import { getCurrentSession } from "./auth";
 
 export async function getAllAbsences() {
   try {
@@ -21,7 +21,7 @@ export async function getAllAbsences() {
 
 export async function createAbsence(values: CreateAbsenceSchemaType) {
   try {
-    const user = await currentUser();
+    const user = await getCurrentSession();
 
     const healthCareProvider = await db.healthCareProvider.findFirst({
       where: {

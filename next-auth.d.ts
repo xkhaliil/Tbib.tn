@@ -11,7 +11,6 @@ export type ExtendedUser = DefaultSession["user"] & {
   bio: string;
   role: Role;
   isTwoFactorEnabled: boolean;
-  isOAuth: boolean;
   speciality?: string;
   spokenLanguages?: string[];
   accountVerified?: boolean;

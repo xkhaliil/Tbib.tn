@@ -1,11 +1,11 @@
 import { SignInSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
-import type { NextAuthConfig } from "next-auth";
+import { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { db } from "@/lib/db";
 
-export default {
+const config: NextAuthConfig = {
   providers: [
     Credentials({
       authorize: async (credentials) => {
@@ -31,4 +31,6 @@ export default {
       },
     }),
   ],
-} satisfies NextAuthConfig;
+};
+
+export default config;

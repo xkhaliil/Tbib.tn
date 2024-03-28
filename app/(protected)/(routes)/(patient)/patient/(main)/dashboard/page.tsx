@@ -1,9 +1,16 @@
 import React from "react";
 
+import { requireAuth } from "@/actions/auth";
+import { Role } from "@prisma/client";
+
+import { Unauthorized } from "@/components/auth/unauthorized";
 import { Navbar } from "@/components/base/patient-dashboard/navbar";
 import { Container } from "@/components/container";
 
-export default function PatientDashboardPage() {
+export default async function PatientDashboardPage() {
+  const { authorized } = await requireAuth(Role.PATIENT);
+
+  if (!authorized) return <Unauthorized />;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Navbar />

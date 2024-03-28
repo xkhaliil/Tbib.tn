@@ -1,16 +1,17 @@
 "use server";
 
-import { unstable_update } from "@/auth";
 import { ManageHealthcareProviderProfileSchemaType } from "@/schemas";
 import bcrypt from "bcryptjs";
 
-import { currentUser } from "@/lib/auth";
+import { unstable_update } from "@/lib/auth";
 import { db } from "@/lib/db";
+
+import { getCurrentSession } from "./auth";
 
 export const settings = async (
   values: ManageHealthcareProviderProfileSchemaType,
 ) => {
-  const user = await currentUser();
+  const user = await getCurrentSession();
 
   if (!user) {
     return { error: "Unauthorized" };

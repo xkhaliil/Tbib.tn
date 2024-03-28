@@ -22,13 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { FormError } from "@/components/form-error";
@@ -143,43 +136,19 @@ export function ManageAccountForm() {
             )}
           />
 
-          {user?.isOAuth && (
-            <FormItem>
-              <FormLabel>Connected Accounts</FormLabel>
-              <Select disabled={isLoading}>
-                <SelectTrigger>
-                  <SelectValue placeholder={user.email} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={user?.email as string} disabled>
-                    {user?.email}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-
-          {!user?.isOAuth && (
-            <>
-              <FormField
-                control={manageAccountForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="name@example.com"
-                        {...field}
-                        disabled
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </>
-          )}
+          <FormField
+            control={manageAccountForm.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="name@example.com" {...field} disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={manageAccountForm.control}
