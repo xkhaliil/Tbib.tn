@@ -42,8 +42,8 @@ export function AdminSidebar() {
             <AdminSidebarButton
               label="Healthcare Providers"
               icon={FaUserDoctor}
-              href="/admin/healthcare-providers"
-              isActive={pathname === "/admin/healthcare-providers"}
+              href="/admin/doctors"
+              isActive={pathname === "/admin/doctors"}
             />
             <AdminSidebarButton
               label="Healthcare Centers"

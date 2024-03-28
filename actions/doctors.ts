@@ -15,3 +15,19 @@ export async function getAllDoctors() {
     console.error(error);
   }
 }
+export async function getDoctorById(doctorId: string) {
+  try {
+    const doctor = await db.healthCareProvider.findUnique({
+      where: {
+        id: doctorId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return doctor;
+  } catch (error) {
+    console.error(error);
+  }
+}
