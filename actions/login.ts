@@ -46,6 +46,10 @@ export const login = async (
     defaultRedirectUrl = "/patient/dashboard";
   }
 
+  if (existingUser?.role === Role.ADMIN) {
+    defaultRedirectUrl = "/admin/dashboard";
+  }
+
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "Invalid credentials!" };
   }
