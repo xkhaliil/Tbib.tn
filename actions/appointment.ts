@@ -201,3 +201,32 @@ export async function cancelAllAppointments(ids: (string | undefined)[]) {
     console.error(error);
   }
 }
+
+export async function fetchTodayAppointments() {
+  try {
+    const appointments = await db.appointment.findMany({
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      // ! TODO: Do not forget to get the appointments for the current date
+      // where: {
+      //   status: {
+      //     notIn: [AppointmentStatus.EXPIRED],
+      //   },
+      // },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
