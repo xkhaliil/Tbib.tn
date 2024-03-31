@@ -1,8 +1,7 @@
 import React from "react";
 
 import Link from "next/link";
-
-import { currentUser } from "@/lib/auth";
+import { getCurrentSession } from "@/actions/auth";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +10,7 @@ import { Container } from "@/components/container";
 import { Logo } from "@/components/marketing/logo";
 
 export async function BookApppointmentNavbar() {
-  const authenticatedUser = await currentUser();
+  const authenticatedUser = await getCurrentSession();
   return (
     <header className="z-10 w-full bg-background">
       <div className="border-b py-5">
