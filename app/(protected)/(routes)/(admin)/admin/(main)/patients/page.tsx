@@ -36,7 +36,6 @@ export default function PatientsAdminDashboard() {
           </div>
         </main>
       </div>
-      ;
     </div>
   );
 }
