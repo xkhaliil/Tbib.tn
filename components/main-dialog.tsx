@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface MainDialogProps {
   open: boolean;

@@ -96,7 +96,6 @@ export function ManageAccountDialog() {
                 "bg-accent font-semibold text-foreground",
             )}
             onClick={() => setTab(TABS.SECURITY)}
-            disabled={user?.isOAuth}
           >
             <KeyRoundIcon className="h-5 w-5" />
             <span>Security</span>
