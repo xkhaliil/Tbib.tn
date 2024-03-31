@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllDoctors, getDoctorById } from "@/actions/doctors";
+import { getAllPatients } from "@/actions/patient";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
@@ -15,47 +16,39 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Doctor = Awaited<ReturnType<typeof getAllDoctors>>;
-const columnHelper = createColumnHelper<Doctor>();
+export type Patient = Awaited<ReturnType<typeof getAllPatients>>;
+const columnHelper = createColumnHelper<Patient>();
 export const columns = [
   columnHelper.accessor("user.name", {
     header: "Name",
     id: "name",
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   }),
-  columnHelper.accessor("speciality", {
-    id: "speciality",
+  columnHelper.accessor("user.email", {
+    id: "email",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Speciality
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   }),
-  columnHelper.accessor("accountVerified", {
+  columnHelper.accessor("user.gender", {
+    id: "gender",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Status
+          Gender
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <Badge
-          variant={row.getValue("accountVerified") ? "success" : "destructive"}
-        >
-          {row.getValue("accountVerified") ? "Verified" : "Not Verified"}
-        </Badge>
       );
     },
   }),

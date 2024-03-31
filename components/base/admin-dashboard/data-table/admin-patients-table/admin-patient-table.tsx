@@ -1,22 +1,22 @@
 import React from "react";
 
-import { getAllDoctors } from "@/actions/doctors";
+import { getAllPatients } from "@/actions/patient";
 
-import { columns, Doctor } from "./columns";
+import { columns, Patient } from "./columns";
 import { DataTable } from "./data-table";
 
-async function getData(): Promise<Doctor[]> {
+async function getData(): Promise<Patient[]> {
   try {
-    const doctors = await getAllDoctors();
+    const patients = await getAllPatients();
     // @ts-ignore
-    return doctors;
+    return patients;
   } catch (error) {
     console.error(error);
   }
   return [];
 }
 
-export async function AdminDoctorTable() {
+export async function AdminPatientTable() {
   const data = await getData();
   return (
     <div className="mx-aut container">

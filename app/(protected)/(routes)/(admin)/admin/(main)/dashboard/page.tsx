@@ -15,33 +15,40 @@ export default function AdminDashboard() {
       <AdminSidebar />
       <div className="flex flex-col">
         <AdminNavbar />
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
+        <main className=" flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="col-span-2 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-1">
-              <AdminStatsCard title="Patients" value="146" icon={UsersIcon} />
+            <div className="col-span-2 rounded-lg p-4 lg:col-span-1 ">
+              <AdminStatsCard
+                title="Patients"
+                value="146"
+                icon={UsersIcon}
+                className="bg-muted/40 shadow-sm"
+              />
             </div>
-            <div className="col-span-2 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-1">
+            <div className="col-span-2 rounded-lg p-4 lg:col-span-1">
               <AdminStatsCard
                 title="Doctors"
                 value="56"
                 icon={FaUserDoctor}
-                className="xl:pl-6"
+                className="bg-muted/40 shadow-sm xl:pl-6"
               />
             </div>
-            <div className="col-span-2 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-1">
+            <div className="col-span-2 rounded-lg p-4 lg:col-span-1">
               <AdminStatsCard
                 title="healthcare centers"
                 value="78"
                 icon={BsHospitalFill}
-                className="xl:pl-6"
+                className="bg-muted/40 shadow-sm xl:pl-6"
               />
             </div>
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-            <div className="col-span-1 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-3">
+            <div className="col-span-1 rounded-lg  bg-muted/40 p-4 shadow-sm lg:col-span-3">
               <TotalUsersChart />
             </div>
-            <div className="col-span-1 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-2"></div>
+            <div className="col-span-1 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-2">
+              Empty :(
+            </div>
           </div>
         </main>
       </div>
