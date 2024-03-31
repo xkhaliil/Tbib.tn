@@ -61,7 +61,7 @@ const data = [
 
 export function TotalUsersChart() {
   return (
-    <ResponsiveContainer width="100%" height={700}>
+    <ResponsiveContainer width="100%" height={600}>
       <BarChart
         width={500}
         height={300}
