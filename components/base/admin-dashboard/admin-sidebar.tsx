@@ -60,8 +60,8 @@ export function AdminSidebar() {
             <AdminSidebarButton
               label="Settings"
               icon={SettingsIcon}
-              href="/admin/settings"
-              isActive={pathname === "/admin/settings"}
+              href="/admin/settings/general"
+              isActive={pathname === "/admin/settings/general"}
             />
           </nav>
         </div>
