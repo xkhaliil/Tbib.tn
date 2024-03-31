@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
 import { SearchButton } from "@/components/base/healthcare-center/dashboard/search-button";
 import {
@@ -37,6 +38,7 @@ export default function HealthcareCenterOpeningHoursPage() {
           </BreadcrumbList>
         </Breadcrumb>
         <SearchButton />
+        <HealthcareCenterButton />
       </Header>
     </div>
   );

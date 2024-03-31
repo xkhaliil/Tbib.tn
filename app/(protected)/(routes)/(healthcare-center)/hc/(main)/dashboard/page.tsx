@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
 import { NotificationsCard } from "@/components/base/healthcare-center/dashboard/cards/notifications-card";
 import { OpeningHoursCard } from "@/components/base/healthcare-center/dashboard/cards/opening-hours-card";
 import { TeamCard } from "@/components/base/healthcare-center/dashboard/cards/team-card";
@@ -46,6 +47,7 @@ export default async function HealthcareCenterDashboardPage() {
           </BreadcrumbList>
         </Breadcrumb>
         <SearchButton />
+        <HealthcareCenterButton />
       </Header>
       <main className="grid flex-1 items-start gap-4 p-4 sm:ml-14 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
