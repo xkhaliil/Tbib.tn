@@ -38,13 +38,26 @@ export function HealthcareCenterButton() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[250px]">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-[300px]">
+        <div className="flex items-center gap-2.5 p-2.5">
+          <Avatar className="h-8 w-8">
+            {user?.image ? (
+              <AvatarImage src={user.image} />
+            ) : (
+              <AvatarFallback>
+                {user?.name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <div className="flex flex-col">
+            <h1 className="text-sm font-semibold">{user?.name}</h1>
+            <p className="text-xs text-muted-foreground">{user?.email}</p>
+          </div>
+        </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem>Account Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => logout()}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

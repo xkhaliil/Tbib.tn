@@ -4,6 +4,7 @@ import Image from "next/image";
 import { specialties } from "@/constants";
 import { faker } from "@faker-js/faker";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -37,17 +38,19 @@ const teamMembers = Array.from({ length: 7 }, () => ({
   speciality: faker.helpers.arrayElement(
     specialties.flatMap((s) => s.specialties),
   ),
-  totalConsultations: faker.number.int({ min: 0, max: 100 }),
-  joinedAt: faker.date.recent(),
+  requestSentAt: faker.date.recent(),
 }));
 
-export function TeamMembersTable() {
+export function RequestedTeamMembersTable() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Team Members</CardTitle>
+        <CardTitle>
+          Requests <span className="text-primary">({teamMembers.length})</span>
+        </CardTitle>
         <CardDescription>
-          Invite, manage, and remove team members.
+          See all the team members who have requested to join your team, or the
+          ones you have invited.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -60,10 +63,9 @@ export function TeamMembersTable() {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Speciality</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Total Consultations
+              <TableHead className="hidden sm:table-cell">
+                Request Sent At
               </TableHead>
-              <TableHead className="hidden md:table-cell">Joined At</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
@@ -84,11 +86,8 @@ export function TeamMembersTable() {
                 <TableCell>{member.name}</TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>{member.speciality}</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {member.totalConsultations}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {new Date(member.joinedAt).toLocaleDateString()}
+                <TableCell className="hidden sm:table-cell">
+                  {format(member.requestSentAt, "MM/dd/yyyy")}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -102,7 +101,7 @@ export function TeamMembersTable() {
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent>
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem>Edit</DropdownMenuItem>
                       <DropdownMenuItem>Delete</DropdownMenuItem>

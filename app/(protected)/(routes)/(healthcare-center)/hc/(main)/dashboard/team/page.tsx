@@ -15,12 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
+import { RequestedTeamMembersTable } from "@/components/base/healthcare-center/dashboard/requested-team-members-table";
 import { SearchButton } from "@/components/base/healthcare-center/dashboard/search-button";
 import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
 import { TeamMembersTable } from "@/components/base/healthcare-center/dashboard/team-members-table";
+import { InviteHealthcareProviderButton } from "@/components/base/healthcare-center/invite-healthcare-provider-button";
 
 export default function HealthcareCenterTeamPage() {
   return (
@@ -58,14 +60,14 @@ export default function HealthcareCenterTeamPage() {
                 <FileIcon className="h-3.5 w-3.5" />
                 <span className="sm:whitespace-nowrap">Export</span>
               </Button>
-              <Button variant="blue" size="sm" className="h-7 gap-1">
-                <PlusCircledIcon className="h-3.5 w-3.5" />
-                <span className="sm:whitespace-nowrap">Invite Team Member</span>
-              </Button>
+              <InviteHealthcareProviderButton />
             </div>
           </div>
           <TabsContent value="members">
             <TeamMembersTable />
+          </TabsContent>
+          <TabsContent value="requested">
+            <RequestedTeamMembersTable />
           </TabsContent>
         </Tabs>
       </main>
