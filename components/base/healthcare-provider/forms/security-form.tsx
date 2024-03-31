@@ -140,87 +140,85 @@ export function SecurityForm() {
             <FormSuccess message={success} />
             <FormError message={error} />
           </div>
-          {!user?.isOAuth && (
-            <>
-              <div className="sm:col-span-3">
-                <FormField
-                  control={manageSecurityForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
+          <div>
+            <div className="sm:col-span-3">
+              <FormField
+                control={manageSecurityForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="•••••••••"
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="sm:col-span-3">
+              <FormField
+                control={manageSecurityForm.control}
+                name="newPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="•••••••••"
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="sm:col-span-6">
+              <FormField
+                control={manageSecurityForm.control}
+                name="isTwoFactorEnabled"
+                render={({ field }) => (
+                  <div className="space-y-2">
+                    <FormLabel aria-disabled={isPending}>
+                      Two Factor Authentication
+                    </FormLabel>
+                    <FormItem
+                      className={cn(
+                        "flex flex-row items-center justify-between rounded-lg border p-3",
+                        isPending
+                          ? "cursor-not-allowed opacity-50"
+                          : "bg-background",
+                      )}
+                    >
+                      <div className="space-y-1">
+                        <FormLabel>Two Factor Authentication</FormLabel>
+                        <FormDescription>
+                          Enable two factor authentication for added security.
+                        </FormDescription>
+                      </div>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="•••••••••"
-                          {...field}
+                        <Switch
                           disabled={isPending}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="sm:col-span-3">
-                <FormField
-                  control={manageSecurityForm.control}
-                  name="newPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="•••••••••"
-                          {...field}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="sm:col-span-6">
-                <FormField
-                  control={manageSecurityForm.control}
-                  name="isTwoFactorEnabled"
-                  render={({ field }) => (
-                    <div className="space-y-2">
-                      <FormLabel aria-disabled={isPending || user?.isOAuth}>
-                        Two Factor Authentication
-                      </FormLabel>
-                      <FormItem
-                        className={cn(
-                          "flex flex-row items-center justify-between rounded-lg border p-3",
-                          isPending || user?.isOAuth
-                            ? "cursor-not-allowed opacity-50"
-                            : "bg-background",
-                        )}
-                      >
-                        <div className="space-y-1">
-                          <FormLabel>Two Factor Authentication</FormLabel>
-                          <FormDescription>
-                            Enable two factor authentication for added security.
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            disabled={isPending || user?.isOAuth}
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    </div>
-                  )}
-                />
-              </div>
-            </>
-          )}
+                  </div>
+                )}
+              />
+            </div>
+          </div>
 
           <div className="sm:col-span-6">
             <div className="space-y-2">
