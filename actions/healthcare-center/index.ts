@@ -19,3 +19,16 @@ export async function getHealthcareCenterById(id: string) {
     console.error("[500] getHealthcareCenterById", error);
   }
 }
+export async function getAllHealthcareCenters() {
+  try {
+    const healthcareCenters = await db.healthCareCenter.findMany({
+      include: {
+        user: true,
+      },
+    });
+
+    return healthcareCenters;
+  } catch (error) {
+    console.error("[500] getAllHealthcareCenters", error);
+  }
+}
