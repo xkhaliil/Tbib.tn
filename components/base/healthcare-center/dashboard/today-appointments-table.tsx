@@ -61,7 +61,7 @@ export function TodayAppointmentsTable({
             )}
 
             {appointments?.map((appointment) => (
-              <TableRow>
+              <TableRow key={appointment.id}>
                 <TableCell>
                   <div className="font-medium">
                     {appointment.patient.user.name}
