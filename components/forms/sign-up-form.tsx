@@ -48,6 +48,8 @@ import {
 import { Logo } from "@/components/marketing/logo";
 import { RoleCard } from "@/components/role-card";
 
+import { DocumentsUploadDropzone } from "../documents-upload-dropzone";
+
 type FieldName = keyof SignUpSchemaType;
 
 interface StepsType {
@@ -64,7 +66,7 @@ const steps: StepsType[] = [
   },
   {
     id: "personal",
-    name: "Funamental Information",
+    name: "Fundamental Information",
     fields: [
       "name",
       "email",
@@ -73,6 +75,7 @@ const steps: StepsType[] = [
       "state",
       "city",
       "postalCode",
+      "verificationDocuments",
     ],
   },
   {
@@ -109,6 +112,7 @@ export function SignUpForm() {
       state: "",
       city: "",
       postalCode: "",
+      verificationDocuments: [],
     },
   });
 
@@ -161,7 +165,7 @@ export function SignUpForm() {
   const selectedRole = signUpForm.watch("role");
 
   return (
-    <div className="w-full max-w-md p-6 xl:max-w-[550px]">
+    <div className="w-full max-w-md p-6 xl:max-w-[600px]">
       <div className="flex flex-col items-center space-y-3">
         <Logo />
         <h1 className="text-3xl font-bold">Sign Up to Oladoc</h1>
@@ -256,99 +260,124 @@ export function SignUpForm() {
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="space-y-4"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             >
-              <FormField
-                control={signUpForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your Name"
-                        {...field}
-                        disabled={isPending}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={signUpForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="name@example.com"
-                        {...field}
-                        disabled={isPending}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={signUpForm.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="Phone Number"
-                        {...field}
-                        disabled={isPending}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={signUpForm.control}
-                name="speciality"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Speciality</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+              <>
+                <FormField
+                  control={signUpForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a speciality" />
-                        </SelectTrigger>
+                        <Input
+                          placeholder="Your Name"
+                          {...field}
+                          disabled={isPending}
+                          className="w-full"
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {specialties.map((specialty) => (
-                          <SelectGroup key={specialty.category}>
-                            <SelectLabel>{specialty.category}</SelectLabel>
-                            {specialty.specialties.map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={signUpForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="name@example.com"
+                          {...field}
+                          disabled={isPending}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={signUpForm.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="Phone Number"
+                          {...field}
+                          disabled={isPending}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={signUpForm.control}
+                  name="speciality"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Speciality</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a speciality" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {specialties.map((specialty) => (
+                            <SelectGroup key={specialty.category}>
+                              <SelectLabel>{specialty.category}</SelectLabel>
+                              {specialty.specialties.map((item) => (
+                                <SelectItem key={item} value={item}>
+                                  {item}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+
+              <div className="col-span-2">
+                <FormField
+                  control={signUpForm.control}
+                  name="verificationDocuments"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel>Verification Documents</FormLabel>
+                      <FormDescription className="pb-2">
+                        Upload your verification documents, such as your medical
+                        license and ID card.
+                      </FormDescription>
+                      <FormControl>
+                        <DocumentsUploadDropzone
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </motion.div>
           )}
 
@@ -425,68 +454,72 @@ export function SignUpForm() {
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="space-y-4"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-3"
             >
-              <FormField
-                control={signUpForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your Name"
-                        {...field}
-                        disabled={isPending}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="col-span-3">
+                <FormField
+                  control={signUpForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your Name"
+                          {...field}
+                          disabled={isPending}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-              <FormField
-                control={signUpForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="name@example.com"
-                        disabled={isPending}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField
+                  control={signUpForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="name@example.com"
+                          disabled={isPending}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={signUpForm.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="Phone Number"
-                        {...field}
-                        disabled={isPending}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={signUpForm.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="Phone Number"
+                          {...field}
+                          disabled={isPending}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <FormField
                   control={signUpForm.control}
                   name="state"
@@ -546,6 +579,29 @@ export function SignUpForm() {
                           {...field}
                           disabled={isPending}
                           className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-3">
+                <FormField
+                  control={signUpForm.control}
+                  name="verificationDocuments"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel>Verification Documents</FormLabel>
+                      <FormDescription className="pb-2">
+                        Upload your verification documents, such as your medical
+                        license and ID card.
+                      </FormDescription>
+                      <FormControl>
+                        <DocumentsUploadDropzone
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -693,7 +749,7 @@ export function SignUpForm() {
         </div>
       )}
 
-      <div className="flex flex-col items-center space-y-4 pt-4">
+      <div className="flex flex-col items-center space-y-4">
         <div className="mt-4 flex justify-center gap-x-1 text-sm text-muted-foreground">
           <p>{"Already have an account?"}</p>
           <Link
@@ -704,12 +760,12 @@ export function SignUpForm() {
           </Link>
         </div>
 
-        <div className="flex items-center space-x-4 pt-4">
+        <div className="flex items-center space-x-4 pt-2">
           {steps.map((step, index) => (
             <div
               key={step.id}
               className={cn(
-                "flex h-6 w-6 items-center justify-center rounded-full text-white",
+                "flex h-5 w-5 items-center justify-center rounded-full text-white",
                 index === currentStep ? "bg-blue-600" : "border bg-muted",
                 error && index === currentStep && "bg-destructive",
                 success && index === currentStep && "bg-green-600",

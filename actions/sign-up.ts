@@ -25,6 +25,7 @@ export async function signUp(values: SignUpSchemaType) {
     state,
     city,
     postalCode,
+    verificationDocuments,
   } = validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 12);
@@ -76,6 +77,7 @@ export async function signUp(values: SignUpSchemaType) {
     await db.healthCareProvider.create({
       data: {
         speciality,
+        verificationDocuments,
         user: {
           connect: {
             id: user.id,
@@ -92,6 +94,7 @@ export async function signUp(values: SignUpSchemaType) {
   if (user.role === Role.HEALTHCARE_CENTER) {
     await db.healthCareCenter.create({
       data: {
+        verificationDocuments,
         user: {
           connect: {
             id: user.id,
