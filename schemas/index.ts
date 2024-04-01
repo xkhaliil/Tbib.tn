@@ -63,6 +63,7 @@ export const SignUpSchema = z
     state: z.optional(z.string()),
     city: z.optional(z.string()),
     postalCode: z.optional(z.string()),
+    verificationDocuments: z.optional(z.array(z.string())),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -123,6 +124,24 @@ export const SignUpSchema = z
     {
       message: "Postal code is required",
       path: ["postalCode"],
+    },
+  )
+  // * If the user is a healthcare provider or healthcare center, the verification documents are required.
+  .refine(
+    (data) => {
+      if (
+        (data.role === Role.HEALTHCARE_PROVIDER ||
+          data.role === Role.HEALTHCARE_CENTER) &&
+        data.verificationDocuments?.length === 0
+      ) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "Verification documents are required",
+      path: ["verificationDocuments"],
     },
   );
 
