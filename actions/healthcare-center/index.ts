@@ -32,3 +32,12 @@ export async function getAllHealthcareCenters() {
     console.error("[500] getAllHealthcareCenters", error);
   }
 }
+export async function getHealthcareCentersCount() {
+  try {
+    const count = await db.healthCareCenter.count();
+
+    return count;
+  } catch (error) {
+    console.error("[500] getHealthcareCentersCount", error);
+  }
+}

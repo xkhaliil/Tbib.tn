@@ -77,3 +77,13 @@ export async function getPatientsWithAtLeastOneAppointment() {
     console.error(error);
   }
 }
+
+export async function getPatientsCount() {
+  try {
+    const patientsCount = await db.patient.count();
+
+    return patientsCount;
+  } catch (error) {
+    console.error(error);
+  }
+}

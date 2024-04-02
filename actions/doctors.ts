@@ -31,3 +31,13 @@ export async function getDoctorById(doctorId: string) {
     console.error(error);
   }
 }
+
+export async function getDoctorsCount() {
+  try {
+    const count = await db.healthCareProvider.count();
+
+    return count;
+  } catch (error) {
+    console.error(error);
+  }
+}
