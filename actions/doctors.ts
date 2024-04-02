@@ -41,3 +41,4 @@ export async function getDoctorsCount() {
     console.error(error);
   }
 }
+

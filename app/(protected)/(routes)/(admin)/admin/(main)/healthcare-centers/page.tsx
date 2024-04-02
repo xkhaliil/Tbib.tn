@@ -1,14 +1,22 @@
 import React from "react";
 
+import {
+  getHealthCareCentersByMonth,
+  getHealthcareCentersCount,
+} from "@/actions/healthcare-center";
 import { BsHospitalFill } from "react-icons/bs";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
 import AdminHealthcareCenterChartDashboard from "@/components/base/admin-dashboard/charts/healthcare-center-chart";
+import { TotalUsersChart } from "@/components/base/admin-dashboard/charts/total-users-chart";
 import { AdminHealthcareCenterTable } from "@/components/base/admin-dashboard/data-table/admin-healthcare-center-table/admin-healthcare-center-table";
 
-export default function HealthcareCenterAdminDashboard() {
+export default async function HealthcareCenterAdminDashboard() {
+  const healthcareCentersCount = await getHealthcareCentersCount();
+  const healthCareCentersUsers = await getHealthCareCentersByMonth();
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <AdminSidebar />
@@ -16,14 +24,21 @@ export default function HealthcareCenterAdminDashboard() {
         <AdminNavbar />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
-            <div className="col-span-2 rounded-lg  bg-muted/40 p-4 shadow-sm lg:col-span-3">
-              <AdminHealthcareCenterChartDashboard />
-            </div>
-            <div className="rounded-lgp-4 col-span-2 flex items-center justify-center lg:col-span-1 ">
+            <Card className="col-span-3 bg-muted/40">
+              <CardHeader>
+                <CardTitle>Total users per month</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <AdminHealthcareCenterChartDashboard
+                  users={healthCareCentersUsers}
+                />
+              </CardContent>
+            </Card>
+            <div className="col-span-2 flex items-center justify-center rounded-lg p-4 lg:col-span-1 ">
               {" "}
               <AdminStatsCard
                 title="healthcare centers"
-                value="78"
+                value={healthcareCentersCount}
                 icon={BsHospitalFill}
                 className="bg-muted/40 shadow-sm xl:pl-6 "
               />
