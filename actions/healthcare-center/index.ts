@@ -41,3 +41,39 @@ export async function getHealthcareCentersCount() {
     console.error("[500] getHealthcareCentersCount", error);
   }
 }
+export async function getHealthCareCentersByMonth() {
+  const users = await db.user.findMany({
+    select: {
+      createdAt: true,
+    },
+    where: {
+      role: "HEALTHCARE_CENTER",
+    },
+  });
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const HealthCareCentersPerMonth = Array(12)
+    .fill(0)
+    .map((_, index) => ({
+      month: monthNames[index],
+      totalUsers: users.filter((user) => {
+        const date = new Date(user.createdAt);
+        return date.getMonth() === index && date.getFullYear() === 2024;
+      }).length,
+    }));
+
+  return HealthCareCentersPerMonth;
+}

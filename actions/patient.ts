@@ -87,3 +87,40 @@ export async function getPatientsCount() {
     console.error(error);
   }
 }
+export async function getPatientsByMonth() {
+  const users = await db.user.findMany({
+    select: {
+      createdAt: true,
+    },
+    where: {
+      role: "PATIENT",
+    },
+  });
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const PatientsPerMonth = Array(12)
+    .fill(0)
+    .map((_, index) => ({
+      month: monthNames[index],
+      totalUsers: users.filter((user) => {
+        const date = new Date(user.createdAt);
+        return date.getMonth() === index && date.getFullYear() === 2024;
+      }).length,
+    }));
+
+  return PatientsPerMonth;
+}

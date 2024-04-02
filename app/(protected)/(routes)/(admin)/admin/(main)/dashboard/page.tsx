@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { getDoctorsCount } from "@/actions/doctors";
 import { getHealthcareCentersCount } from "@/actions/healthcare-center";

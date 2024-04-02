@@ -95,3 +95,48 @@ export const settings = async (
 
   return { success: "Account updated!" };
 };
+export async function getHealthcareProviderByMonth() {
+  const users = await db.user.findMany({
+    select: {
+      createdAt: true,
+    },
+    where: {
+      role: "HEALTHCARE_PROVIDER",
+    },
+  });
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const HealthCareProviderPerMonth = Array(12)
+    .fill(0)
+    .map((_, index) => ({
+      month: monthNames[index],
+      totalUsers: users.filter((user) => {
+        const date = new Date(user.createdAt);
+        return date.getMonth() === index && date.getFullYear() === 2024;
+      }).length,
+    }));
+
+  return HealthCareProviderPerMonth;
+}
+export async function getHealthcareProvidersCount() {
+  try {
+    const count = await db.healthCareProvider.count();
+
+    return count;
+  } catch (error) {
+    console.error(error);
+  }
+}
