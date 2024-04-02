@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import { getDoctorsCount } from "@/actions/doctors";
+import { getHealthcareCentersCount } from "@/actions/healthcare-center";
+import { getPatientsCount } from "@/actions/patient";
+import { countUsersByMonth } from "@/actions/users";
 import { UsersIcon } from "lucide-react";
 import { BsHospitalFill } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
 import { TotalUsersChart } from "@/components/base/admin-dashboard/charts/total-users-chart";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const patientsCount = await getPatientsCount();
+  const doctorCount = await getDoctorsCount();
+  const healthcareCenterCount = await getHealthcareCentersCount();
+  const totalUsersPerMonth = await countUsersByMonth();
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <AdminSidebar />
@@ -20,7 +30,7 @@ export default function AdminDashboard() {
             <div className="col-span-2 rounded-lg p-4 lg:col-span-1 ">
               <AdminStatsCard
                 title="Patients"
-                value="146"
+                value={patientsCount}
                 icon={UsersIcon}
                 className="bg-muted/40 shadow-sm"
               />
@@ -28,7 +38,7 @@ export default function AdminDashboard() {
             <div className="col-span-2 rounded-lg p-4 lg:col-span-1">
               <AdminStatsCard
                 title="Doctors"
-                value="56"
+                value={doctorCount}
                 icon={FaUserDoctor}
                 className="bg-muted/40 shadow-sm xl:pl-6"
               />
@@ -36,19 +46,29 @@ export default function AdminDashboard() {
             <div className="col-span-2 rounded-lg p-4 lg:col-span-1">
               <AdminStatsCard
                 title="healthcare centers"
-                value="78"
+                value={healthcareCenterCount}
                 icon={BsHospitalFill}
                 className="bg-muted/40 shadow-sm xl:pl-6"
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-            <div className="col-span-1 rounded-lg  bg-muted/40 p-4 shadow-sm lg:col-span-3">
-              <TotalUsersChart />
-            </div>
-            <div className="col-span-1 rounded-lg border border-dashed border-black bg-background p-4 lg:col-span-2">
-              Empty :(
-            </div>
+          <div className=" grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-5 ">
+            <Card className="col-span-3 bg-muted/40">
+              <CardHeader>
+                <CardTitle>Total users per month</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <TotalUsersChart users={totalUsersPerMonth} />
+              </CardContent>
+            </Card>
+            <Card className="col-span-2 bg-muted/40">
+              <CardHeader>
+                <CardTitle>Recent activities</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <p>Recent activities will be shown here</p>
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>
