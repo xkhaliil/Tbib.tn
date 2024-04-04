@@ -1,9 +1,8 @@
 import React from "react";
 
 import Link from "next/link";
+import { getCurrentSession, getHealthcareProviderById } from "@/actions/auth";
 import { getOpeningHoursByProviderId } from "@/actions/opening-hours";
-
-import { currentUser, getHealthcareProviderById } from "@/lib/auth";
 
 import {
   Breadcrumb,
@@ -16,7 +15,7 @@ import {
 import { ManageOpeningHoursForm } from "@/components/base/healthcare-provider/forms/manage-opening-hours-form";
 
 export default async function OpeningHoursSettingsPage() {
-  const authenticatedUser = await currentUser();
+  const authenticatedUser = await getCurrentSession();
   const healthCareProvider = await getHealthcareProviderById(
     authenticatedUser?.id as string,
   );

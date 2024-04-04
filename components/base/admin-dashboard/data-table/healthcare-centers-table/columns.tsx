@@ -1,8 +1,7 @@
 "use client";
 
 import { getAllHealthcareCenters } from "@/actions/healthcare-center";
-import { getAllPatients } from "@/actions/patient";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";

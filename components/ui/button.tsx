@@ -23,6 +23,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         white: "bg-white border text-foreground shadow-sm hover:bg-white/90",
         blue: "bg-blue-600 text-white shadow-sm hover:bg-blue-600/90",
+        green: "bg-green-600 text-white shadow-sm hover:bg-green-600/90",
       },
       size: {
         default: "h-9 px-4 py-2",

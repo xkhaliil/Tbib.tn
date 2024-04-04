@@ -10,9 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
-import AdminHealthcareCenterChartDashboard from "@/components/base/admin-dashboard/charts/healthcare-center-chart";
-import { TotalUsersChart } from "@/components/base/admin-dashboard/charts/total-users-chart";
-import { AdminHealthcareCenterTable } from "@/components/base/admin-dashboard/data-table/admin-healthcare-center-table/admin-healthcare-center-table";
+import { AdminHealthcareCenterChartDashboard } from "@/components/base/admin-dashboard/charts/healthcare-center-chart";
+import { HealthcareCentersTable } from "@/components/base/admin-dashboard/data-table/healthcare-centers-table";
 
 export default async function HealthcareCenterAdminDashboard() {
   const healthcareCentersCount = await getHealthcareCentersCount();
@@ -46,7 +45,7 @@ export default async function HealthcareCenterAdminDashboard() {
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-1">
             <div className="col-span-1 rounded-lg bg-muted/40 p-4 shadow-sm lg:col-span-5">
-              <AdminHealthcareCenterTable />
+              <HealthcareCentersTable />
             </div>
           </div>
         </main>

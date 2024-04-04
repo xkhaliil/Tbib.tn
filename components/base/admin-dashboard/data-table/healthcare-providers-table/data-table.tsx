@@ -14,14 +14,17 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
+import { FileIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -31,6 +34,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,6 +51,11 @@ export function DataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -54,19 +64,25 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
+      pagination,
     },
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
   });
 
   return (
-    <div>
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center py-4">
+    <Card>
+      <CardHeader className="px-7">
+        <CardTitle>Healthcare Providers</CardTitle>
+        <CardDescription>
+          List of all healthcare providers in the system.
+        </CardDescription>
+        <div className="flex items-center justify-between pt-4">
           <Input
             placeholder="Filter by name..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -75,37 +91,25 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-sm bg-white"
           />
-        </div>
-        <div className="bg-white">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns
+          <div className="flex items-center">
+            <div className="ml-auto flex items-center gap-2">
+              <DataTableFacetedFilter
+                column={table.getColumn("accountVerified")}
+                title="Filter by status"
+                options={[
+                  { label: "Verified", value: true },
+                  { label: "Not Verified", value: false },
+                ]}
+              />
+              <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
+                <FileIcon className="h-3.5 w-3.5" />
+                <span>Export</span>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="rounded-md border bg-white">
+      </CardHeader>
+      <CardContent>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -154,25 +158,32 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 bg-white py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="flex items-center justify-between px-7">
+        <div className="text-xs text-muted-foreground">
+          Showing <strong>1-{data.length}</strong> of{" "}
+          <strong>{data.length}</strong> healthcare providers
+        </div>
+
+        <div className="flex items-center justify-end space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }

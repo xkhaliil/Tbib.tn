@@ -5,7 +5,6 @@ import React from "react";
 import { getPatientsByMonth } from "@/actions/patient";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { FileIcon } from "lucide-react";
 
 import {
@@ -15,13 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
-import { RequestedTeamMembersTable } from "@/components/base/healthcare-center/dashboard/requested-team-members-table";
 import { SearchButton } from "@/components/base/healthcare-center/dashboard/search-button";
 import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
-import { TeamMembersTable } from "@/components/base/healthcare-center/dashboard/team-members-table";
+import { RequestedTeamMembersDataTable } from "@/components/base/healthcare-center/data-tables/requested-team-members";
+import { TeamMembersDataTable } from "@/components/base/healthcare-center/data-tables/team-members";
 import { InviteHealthcareProviderButton } from "@/components/base/healthcare-center/invite-healthcare-provider-button";
 
 export default function HealthcareCenterTeamPage() {
@@ -64,10 +63,10 @@ export default function HealthcareCenterTeamPage() {
             </div>
           </div>
           <TabsContent value="members">
-            <TeamMembersTable />
+            <TeamMembersDataTable />
           </TabsContent>
           <TabsContent value="requested">
-            <RequestedTeamMembersTable />
+            <RequestedTeamMembersDataTable />
           </TabsContent>
         </Tabs>
       </main>
