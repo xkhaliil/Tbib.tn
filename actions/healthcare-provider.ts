@@ -1,5 +1,6 @@
 "use server";
 
+import { months } from "@/constants";
 import { ManageHealthcareProviderProfileSchemaType } from "@/schemas";
 import bcrypt from "bcryptjs";
 
@@ -95,7 +96,7 @@ export const settings = async (
 
   return { success: "Account updated!" };
 };
-export async function getHealthcareProviderByMonth() {
+export async function getHealthcareProvidersByMonth() {
   const users = await db.user.findMany({
     select: {
       createdAt: true,
@@ -105,24 +106,10 @@ export async function getHealthcareProviderByMonth() {
     },
   });
 
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
   const HealthCareProviderPerMonth = Array(12)
     .fill(0)
     .map((_, index) => ({
-      month: monthNames[index],
+      month: months[index],
       totalUsers: users.filter((user) => {
         const date = new Date(user.createdAt);
         return date.getMonth() === index && date.getFullYear() === 2024;
@@ -131,6 +118,7 @@ export async function getHealthcareProviderByMonth() {
 
   return HealthCareProviderPerMonth;
 }
+
 export async function getHealthcareProvidersCount() {
   try {
     const count = await db.healthCareProvider.count();
@@ -139,4 +127,95 @@ export async function getHealthcareProvidersCount() {
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function totalHealthcareProvidersWeeklyWithIncrease() {
+  const totalHealthcareProvidersInThisWeek = await db.healthCareProvider.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      },
+    },
+  });
+
+  const totalHealthcareProvidersInLastWeek = await db.healthCareProvider.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 14)),
+          lt: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalHealthcareProvidersInThisWeek,
+    increase:
+      totalHealthcareProvidersInThisWeek - totalHealthcareProvidersInLastWeek,
+  };
+}
+
+export async function totalHealthcareProvidersMonthlyWithIncrease() {
+  const totalHealthcareProvidersInThisMonth = await db.healthCareProvider.count(
+    {
+      where: {
+        user: {
+          createdAt: {
+            gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+          },
+        },
+      },
+    },
+  );
+
+  const totalHealthcareProvidersInLastMonth = await db.healthCareProvider.count(
+    {
+      where: {
+        user: {
+          createdAt: {
+            gte: new Date(new Date().setMonth(new Date().getMonth() - 2)),
+            lt: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+          },
+        },
+      },
+    },
+  );
+
+  return {
+    total: totalHealthcareProvidersInThisMonth,
+    increase:
+      totalHealthcareProvidersInThisMonth - totalHealthcareProvidersInLastMonth,
+  };
+}
+
+export async function totalHealthcareProvidersYearlyWithIncrease() {
+  const totalHealthcareProvidersInThisYear = await db.healthCareProvider.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      },
+    },
+  });
+
+  const totalHealthcareProvidersInLastYear = await db.healthCareProvider.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setFullYear(new Date().getFullYear() - 2)),
+          lt: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalHealthcareProvidersInThisYear,
+    increase:
+      totalHealthcareProvidersInThisYear - totalHealthcareProvidersInLastYear,
+  };
 }

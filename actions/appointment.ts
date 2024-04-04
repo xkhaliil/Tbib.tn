@@ -223,6 +223,69 @@ export async function fetchTodayAppointments() {
       //     notIn: [AppointmentStatus.EXPIRED],
       //   },
       // },
+      where: {
+        date: new Date(),
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function fetchWeeklyAppointments() {
+  try {
+    const appointments = await db.appointment.findMany({
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+      },
+
+      where: {
+        date: {
+          gte: new Date(),
+          lte: new Date(new Date().setDate(new Date().getDate() + 7)),
+        },
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function fetchMonthlyAppointments() {
+  try {
+    const appointments = await db.appointment.findMany({
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+      },
+
+      where: {
+        date: {
+          gte: new Date(),
+          lte: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+        },
+      },
     });
 
     return appointments;

@@ -1,7 +1,6 @@
 import React from "react";
 
 import Link from "next/link";
-import { fetchTodayAppointments } from "@/actions/appointment";
 import { FileIcon } from "lucide-react";
 
 import {
@@ -26,10 +25,11 @@ import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
-import { TodayAppointmentsTable } from "@/components/base/healthcare-center/dashboard/today-appointments-table";
+import { MonthlyAppointmentsDataTable } from "@/components/base/healthcare-center/data-tables/monthly-appointments";
+import { TodayAppointmentsDataTable } from "@/components/base/healthcare-center/data-tables/today-appointments";
+import { WeeklyAppointmentsDataTable } from "@/components/base/healthcare-center/data-tables/weekly-appointments";
 
-export default async function HealthcareCenterDashboardPage() {
-  const todayAppointments = await fetchTodayAppointments();
+export default function HealthcareCenterDashboardPage() {
   return (
     <div>
       <Sidebar />
@@ -80,7 +80,13 @@ export default async function HealthcareCenterDashboardPage() {
               </div>
             </div>
             <TabsContent value="today">
-              <TodayAppointmentsTable appointments={todayAppointments} />
+              <TodayAppointmentsDataTable />
+            </TabsContent>
+            <TabsContent value="week">
+              <WeeklyAppointmentsDataTable />
+            </TabsContent>
+            <TabsContent value="month">
+              <MonthlyAppointmentsDataTable />
             </TabsContent>
           </Tabs>
         </div>

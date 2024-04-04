@@ -1,9 +1,20 @@
-import React from "react";
+"use client";
+
+import * as React from "react";
 
 import Image from "next/image";
-import { specialties } from "@/constants";
-import { faker } from "@faker-js/faker";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,22 +41,55 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const teamMembers = Array.from({ length: 7 }, () => ({
-  id: faker.string.uuid(),
-  name: faker.person.fullName(),
-  email: faker.internet.email(),
-  speciality: faker.helpers.arrayElement(
-    specialties.flatMap((s) => s.specialties),
-  ),
-  totalConsultations: faker.number.int({ min: 0, max: 100 }),
-  joinedAt: faker.date.recent(),
-}));
+type HealthcareProvider = {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  speciality: string;
+  totalConsultations: number;
+  joinedAt: Date;
+};
 
-export function TeamMembersTable() {
+interface DataTableProps {
+  columns: ColumnDef<HealthcareProvider, any>[];
+  data: HealthcareProvider[];
+}
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 7,
+  });
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      pagination,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Team Members</CardTitle>
+        <CardTitle>Team Members ({data.length})</CardTitle>
         <CardDescription>
           Invite, manage, and remove team members.
         </CardDescription>
@@ -58,7 +102,7 @@ export function TeamMembersTable() {
                 <span className="sr-only">Image</span>
               </TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead>Speciality</TableHead>
               <TableHead className="hidden md:table-cell">
                 Total Consultations
@@ -70,8 +114,8 @@ export function TeamMembersTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {teamMembers.map((member) => (
-              <TableRow key={member.id}>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.original.id}>
                 <TableCell className="hidden sm:table-cell">
                   <Image
                     alt="Profile Image"
@@ -81,14 +125,16 @@ export function TeamMembersTable() {
                     width="64"
                   />
                 </TableCell>
-                <TableCell>{member.name}</TableCell>
-                <TableCell>{member.email}</TableCell>
-                <TableCell>{member.speciality}</TableCell>
+                <TableCell>{row.original.name}</TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {member.totalConsultations}
+                  {row.original.email}
+                </TableCell>
+                <TableCell>{row.original.speciality}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {row.original.totalConsultations}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {new Date(member.joinedAt).toLocaleDateString()}
+                  {new Date(row.original.joinedAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -114,9 +160,35 @@ export function TeamMembersTable() {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex items-center justify-between px-7">
         <div className="text-xs text-muted-foreground">
-          Showing <strong>1-7</strong> of <strong>32</strong> team members
+          Showing{" "}
+          <strong>
+            {table.getRowModel().rows.length > 0}
+            {table.getRowModel().rows.length > 0 ? "1-" : ""}
+            {table.getRowModel().rows.length}{" "}
+            <span className="font-normal">of</span>{" "}
+          </strong>
+          <strong>{data.length}</strong> team members
+        </div>
+
+        <div className="flex items-center justify-end space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
         </div>
       </CardFooter>
     </Card>

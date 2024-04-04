@@ -5,13 +5,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HomeIcon } from "@radix-ui/react-icons";
-import { Bell, Menu, SettingsIcon, UsersIcon } from "lucide-react";
+import { Bell, SettingsIcon, UsersIcon } from "lucide-react";
 import { BsHospital } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { UserButton } from "@/components/auth/user-button";
 import { Logo } from "@/components/marketing/logo";
 
 import { AdminSidebarButton } from "./admin-sidebar-button";
@@ -42,8 +40,8 @@ export function AdminSidebar() {
             <AdminSidebarButton
               label="Healthcare Providers"
               icon={FaUserDoctor}
-              href="/admin/doctors"
-              isActive={pathname === "/admin/doctors"}
+              href="/admin/healthcare-providers"
+              isActive={pathname === "/admin/healthcare-providers"}
             />
             <AdminSidebarButton
               label="Healthcare Centers"

@@ -2,14 +2,13 @@ import React from "react";
 
 import { getPatientsByMonth, getPatientsCount } from "@/actions/patient";
 import { UsersIcon } from "lucide-react";
-import { BsHospitalFill } from "react-icons/bs";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
 import AdminPatientChartDashboard from "@/components/base/admin-dashboard/charts/patients-chart";
-import { AdminPatientTable } from "@/components/base/admin-dashboard/data-table/admin-patients-table/admin-patient-table";
+import { AdminPatientTable } from "@/components/base/admin-dashboard/data-table/patients-table/admin-patient-table";
 
 export default async function PatientsAdminDashboard() {
   const totallPatients = await getPatientsCount();

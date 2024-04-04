@@ -19,7 +19,7 @@ export function NotificationsCard() {
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="p-[26px]">
+      <CardContent className="p-[54px]">
         <h1 className="text-center text-sm font-medium">
           No notifications found.
         </h1>

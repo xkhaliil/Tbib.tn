@@ -11,6 +11,7 @@ export default async function PatientDashboardPage() {
   const { authorized } = await requireAuth(Role.PATIENT);
 
   if (!authorized) return <Unauthorized />;
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Navbar />

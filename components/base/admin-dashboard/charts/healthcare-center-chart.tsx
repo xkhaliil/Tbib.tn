@@ -17,7 +17,7 @@ import {
 interface AdminHealthcareCenterChartDashboardProps {
   users: Awaited<ReturnType<typeof getHealthCareCentersByMonth>>;
 }
-export default function AdminHealthcareCenterChartDashboard({
+export function AdminHealthcareCenterChartDashboard({
   users,
 }: AdminHealthcareCenterChartDashboardProps) {
   return (
