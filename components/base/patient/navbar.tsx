@@ -16,7 +16,7 @@ import { Logo } from "@/components/marketing/logo";
 export function Navbar() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background">
       <div className="mx-auto flex w-full max-w-[1800px] items-center px-4 md:px-6">
         <nav className="hidden gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <NavbarLink
@@ -52,7 +52,7 @@ export function Navbar() {
           </NavbarLink>
           <NavbarLink
             href="/patient/dashboard/settings"
-            isActive={pathname === "/patient/dashboard/settings"}
+            isActive={pathname.startsWith("/patient/dashboard/settings")}
           >
             Settings
           </NavbarLink>
