@@ -185,8 +185,18 @@ export const ManageAccountSchema = z
   .object({
     name: z.optional(z.string()),
     email: z.optional(z.string().email()),
+    dateOfBirth: z.optional(z.date()),
+    phone: z.optional(
+      z.string().refine((phone) => phoneRegex.test(phone), {
+        message: "Phone must be a valid phone number",
+      }),
+    ),
+    gender: z.optional(z.enum(["MALE", "FEMALE"])),
     image: z.optional(z.string()),
     bio: z.optional(z.string()),
+    state: z.optional(z.string()),
+    city: z.optional(z.string()),
+    postalCode: z.optional(z.string()),
     password: z.optional(
       z
         .string()
@@ -237,6 +247,36 @@ export const ManageAccountSchema = z
       return true;
     },
     { message: "Name is required!", path: ["name"] },
+  )
+  .refine(
+    (data) => {
+      if (data.state === "") {
+        return false;
+      }
+
+      return true;
+    },
+    { message: "State is required!", path: ["state"] },
+  )
+  .refine(
+    (data) => {
+      if (data.city === "") {
+        return false;
+      }
+
+      return true;
+    },
+    { message: "City is required!", path: ["city"] },
+  )
+  .refine(
+    (data) => {
+      if (data.postalCode === "") {
+        return false;
+      }
+
+      return true;
+    },
+    { message: "Postal code is required!", path: ["postalCode"] },
   );
 
 export const CreateAppointmentSchema = z

@@ -4,7 +4,7 @@ import { requireAuth } from "@/actions/auth";
 import { Role } from "@prisma/client";
 
 import { Unauthorized } from "@/components/auth/unauthorized";
-import { Navbar } from "@/components/base/patient-dashboard/navbar";
+import { Navbar } from "@/components/base/patient/navbar";
 import { Container } from "@/components/container";
 
 interface PatientDashboardLayoutProps {

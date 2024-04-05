@@ -1,5 +1,7 @@
 import React from "react";
 
+import { ProfileAndAccountForm } from "@/components/base/patient/settings/forms/profile-and-account-form";
+
 export default function PatientSettingsPage() {
-  return <h1 className="text-3xl font-semibold">Settings</h1>;
+  return <ProfileAndAccountForm />;
 }
