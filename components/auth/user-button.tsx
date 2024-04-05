@@ -31,7 +31,7 @@ export function UserButton({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          className="h-10 w-10 overflow-hidden rounded-full"
+          className="h-9 w-9 overflow-hidden rounded-full"
           variant="ghost"
         >
           <Avatar>
@@ -52,7 +52,7 @@ export function UserButton({
         side={side}
       >
         <div className="flex items-center">
-          <Avatar>
+          <Avatar className="h-9 w-9">
             {user?.image ? (
               <AvatarImage src={user.image} alt={user.name as string} />
             ) : (
