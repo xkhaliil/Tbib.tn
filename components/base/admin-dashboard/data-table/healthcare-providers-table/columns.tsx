@@ -72,10 +72,10 @@ export const columns = [
     id: "verificationDocuments",
     header: "Verification Documents",
     cell: ({ row }) => {
-      if (row.original.verificationDocuments.length > 0) {
-        return (
-          <div>
-            {row.original.verificationDocuments.map((doc, index) => (
+      return (
+        <div>
+          {row.original.verificationDocuments &&
+            row.original.verificationDocuments.map((doc, index) => (
               <div
                 key={index}
                 className={cn(
@@ -136,10 +136,11 @@ export const columns = [
                 </a>
               </div>
             ))}
-            {row.original.verificationDocuments.length === 0 && "No documents"}
-          </div>
-        );
-      }
+          {row.original.verificationDocuments &&
+            row.original.verificationDocuments.length === 0 &&
+            "No documents"}
+        </div>
+      );
     },
   }),
   columnHelper.display({
