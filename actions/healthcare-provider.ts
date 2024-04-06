@@ -219,3 +219,40 @@ export async function totalHealthcareProvidersYearlyWithIncrease() {
       totalHealthcareProvidersInThisYear - totalHealthcareProvidersInLastYear,
   };
 }
+
+export async function getHealthCareProvidersByMonth() {
+  const users = await db.user.findMany({
+    select: {
+      createdAt: true,
+    },
+    where: {
+      role: "HEALTHCARE_PROVIDER",
+    },
+  });
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const HealthCareProvidersPerMonth = Array(12)
+    .fill(0)
+    .map((_, index) => ({
+      month: monthNames[index],
+      totalUsers: users.filter((user) => {
+        const date = new Date(user.createdAt);
+        return date.getMonth() === index && date.getFullYear() === 2024;
+      }).length,
+    }));
+
+  return HealthCareProvidersPerMonth;
+}
