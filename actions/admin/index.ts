@@ -58,3 +58,57 @@ export async function deleteHealthcareProvider(id: string | undefined) {
     console.error(error);
   }
 }
+
+export async function verifyHealthcareCenter(id: string | undefined) {
+  try {
+    const healthCareCenter = await db.healthCareCenter.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!healthCareCenter) {
+      return { error: "Healthcare center not found" };
+    }
+
+    await db.healthCareCenter.update({
+      where: {
+        id: id,
+      },
+      data: {
+        accountVerified: true,
+      },
+    });
+
+    revalidatePath("/admin/healthcare-centers");
+
+    return { success: "Healthcare center verified successfully" };
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function deleteHealthcareCenter(id: string | undefined) {
+  try {
+    const healthCareCenter = await db.healthCareCenter.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!healthCareCenter) {
+      return { error: "Healthcare center not found" };
+    }
+
+    await db.healthCareCenter.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    revalidatePath("/admin/healthcare-centers");
+
+    return { success: "Healthcare center deleted successfully" };
+  } catch (error) {
+    console.error(error);
+  }
+}

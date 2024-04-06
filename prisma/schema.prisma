@@ -211,7 +211,6 @@ model HealthCareCenter {
   description           String?
   accountVerified       Boolean  @default(false)
   verificationDocuments String[]
-
   healthCareProviders HealthCareProvider[]
 }
 

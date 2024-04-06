@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { TunisianStatesComboBox } from "@/components/base/admin-dashboard/components/tunisian-states-combo-box";
+import { ProfileAndAccountFormAdmin } from "@/components/base/admin-dashboard/settings/profile-and-account-form";
 
 export default function Dashboard() {
   return (
@@ -45,61 +46,7 @@ export default function Dashboard() {
               <Link href="/admin/settings/notifications">Notifications</Link>
             </nav>
             <div className="grid gap-6">
-              <Card>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardHeader>
-                      <CardTitle>Security prefrences </CardTitle>
-                      <CardDescription>
-                        Your account details are used to identify you and your
-                        team in the system.
-                      </CardDescription>
-                    </CardHeader>
-                  </div>
-                  <div className="pr-7">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Avatar>
-                          <AvatarImage
-                            src="https://github.com/shadcn.png"
-                            alt="@shadcn"
-                          />
-                          <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuLabel>Profile picture</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                          <FaFileUpload />
-                          Choose from files
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <MdDelete className="" /> Delete picture
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
-                <CardContent>
-                  <form className="flex flex-col gap-4">
-                    Name:
-                    <Input placeholder="Name" />
-                    Email:
-                    <Input placeholder="Email" disabled />
-                    Phone:
-                    <Input placeholder="phone" />
-                    State:
-                    <TunisianStatesComboBox />
-                    City:
-                    <Input placeholder="City" />
-                    Postal code:
-                    <Input placeholder="Postal code" />
-                  </form>
-                </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                  <Button>Save</Button>
-                </CardFooter>
-              </Card>
+              <ProfileAndAccountFormAdmin />
             </div>
           </div>
         </main>

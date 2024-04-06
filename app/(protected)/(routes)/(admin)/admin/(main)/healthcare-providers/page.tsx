@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  getHealthCareProvidersByMonth,
   totalHealthcareProvidersMonthlyWithIncrease,
   totalHealthcareProvidersWeeklyWithIncrease,
   totalHealthcareProvidersYearlyWithIncrease,
@@ -10,10 +11,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { TotalHealthcareProvidersCard } from "@/components/base/admin-dashboard/cards/total-hp-card";
+import { TotalHealthCareProvidersUsersCard } from "@/components/base/admin-dashboard/cards/total-hp-users-card";
 import { HealthcareProvidersChart } from "@/components/base/admin-dashboard/charts/doctors-chart";
 import { HealthcareProvidersTable } from "@/components/base/admin-dashboard/data-table/healthcare-providers-table";
 
 export default async function AdminDoctorsDashboard() {
+  const healthcareProvidersPerMonth = await getHealthCareProvidersByMonth();
   const healthcareProvidersWeeklyStats =
     await totalHealthcareProvidersWeeklyWithIncrease();
   const healthcareProvidersMonthlyStats =
@@ -48,6 +51,16 @@ export default async function AdminDoctorsDashboard() {
               <HealthcareProvidersTable />
             </div>
           </main>
+          <div className="grid flex-1 grid-cols-7 items-start gap-4 p-4">
+            <div className="col-span-5">
+              <HealthcareProvidersChart users={healthcareProvidersPerMonth} />
+            </div>
+            <div className="col-span-2">
+              <div className="flex flex-col">
+                <TotalHealthCareProvidersUsersCard />
+              </div>
+            </div>
+          </div>
         </ScrollArea>
       </div>
     </div>

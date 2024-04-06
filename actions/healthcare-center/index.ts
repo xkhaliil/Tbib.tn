@@ -77,3 +77,87 @@ export async function getHealthCareCentersByMonth() {
 
   return HealthCareCentersPerMonth;
 }
+export async function totalHealthcareCentersWeeklyWithIncrease() {
+  const totalHealthcareCentersInThisWeek = await db.healthCareCenter.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      },
+    },
+  });
+
+  const totalHealthcareCentersInLastWeek = await db.healthCareCenter.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 14)),
+          lt: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalHealthcareCentersInThisWeek,
+    increase:
+      totalHealthcareCentersInThisWeek - totalHealthcareCentersInLastWeek,
+  };
+}
+export async function totalHealthcareCentersMonthlyWithIncrease() {
+  const totalHealthcareCentersInThisMonth = await db.healthCareCenter.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+        },
+      },
+    },
+  });
+
+  const totalHealthcareCentersInLastMonth = await db.healthCareCenter.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setMonth(new Date().getMonth() - 2)),
+          lt: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalHealthcareCentersInThisMonth,
+    increase:
+      totalHealthcareCentersInThisMonth - totalHealthcareCentersInLastMonth,
+  };
+}
+export async function totalHealthcareCentersYearlyWithIncrease() {
+  const totalHealthcareCentersInThisYear = await db.healthCareCenter.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      },
+    },
+  });
+
+  const totalHealthcareCentersInLastYear = await db.healthCareCenter.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setFullYear(new Date().getFullYear() - 2)),
+          lt: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalHealthcareCentersInThisYear,
+    increase:
+      totalHealthcareCentersInThisYear - totalHealthcareCentersInLastYear,
+  };
+}
