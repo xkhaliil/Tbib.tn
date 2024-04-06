@@ -3,7 +3,7 @@
 import React from "react";
 
 import { AppointmentWithPatient } from "@/types";
-import { Absence } from "@prisma/client";
+import { Absence, OpeningHours } from "@prisma/client";
 import {
   add,
   eachDayOfInterval,
@@ -23,9 +23,14 @@ import { Sidebar } from "@/components/base/navigation/sidebar";
 interface CalendarProps {
   appointments: AppointmentWithPatient[];
   absences?: Absence[];
+  openingHours?: OpeningHours[];
 }
 
-export function Calendar({ appointments, absences }: CalendarProps) {
+export function Calendar({
+  appointments,
+  absences,
+  openingHours,
+}: CalendarProps) {
   let today = startOfToday();
   let [selectedDay, setSelectedDay] = React.useState(today);
   let [currentMonth, setCurrentMonth] = React.useState(
@@ -75,6 +80,7 @@ export function Calendar({ appointments, absences }: CalendarProps) {
                   dayIndex={dayIdx}
                   appointments={appointments}
                   absences={absences}
+                  openingHours={openingHours}
                 />
               ))}
             </div>
