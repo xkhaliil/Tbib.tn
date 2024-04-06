@@ -67,7 +67,7 @@ export async function getUserAccountById(userId: string) {
   }
 }
 
-export async function getHealthcareProviderById(userId: string) {
+export async function getHealthcareProviderById(userId: string | undefined) {
   try {
     const healthcareProvider = await db.healthCareProvider.findFirst({
       where: {

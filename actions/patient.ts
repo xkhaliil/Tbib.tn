@@ -1,5 +1,7 @@
 "use server";
 
+import { startOfToday } from "date-fns";
+
 import { db } from "@/lib/db";
 
 export async function getAllPatients() {
@@ -17,7 +19,7 @@ export async function getAllPatients() {
   }
 }
 
-export async function getPatientById(id: string) {
+export async function getPatientById(id: string | undefined) {
   try {
     const patient = await db.patient.findUnique({
       where: {
@@ -123,4 +125,76 @@ export async function getPatientsByMonth() {
     }));
 
   return PatientsPerMonth;
+}
+
+export async function getPatientPastAppointments(id: string | undefined) {
+  try {
+    const currentUser = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    const currentPatient = await db.patient.findUnique({
+      where: {
+        userId: currentUser?.id,
+      },
+    });
+
+    const pastAppointments = await db.appointment.findMany({
+      where: {
+        patientId: currentPatient?.id,
+        date: {
+          lt: startOfToday(),
+        },
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return pastAppointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientUpcomingAppointments(id: string | undefined) {
+  try {
+    const currentUser = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    const currentPatient = await db.patient.findUnique({
+      where: {
+        userId: currentUser?.id,
+      },
+    });
+
+    const upcomingAppointments = await db.appointment.findMany({
+      where: {
+        patientId: currentPatient?.id,
+        date: {
+          gte: startOfToday(),
+        },
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return upcomingAppointments;
+  } catch (error) {
+    console.error(error);
+  }
 }
