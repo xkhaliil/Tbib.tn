@@ -7,9 +7,11 @@ import { ManageAccountSchema, ManageAccountSchemaType } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, parseISO, startOfToday } from "date-fns";
+import { AlertTriangleIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
+import { userHasCompletedProfile } from "@/lib/auth/helpers";
 import { cn } from "@/lib/utils";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -43,6 +45,12 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { GenderCard } from "@/components/base/patient/settings/gender-card";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
@@ -112,11 +120,39 @@ export function ProfileAndAccountForm() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Profile & Account</CardTitle>
-        <CardDescription>
-          Manage your profile and account settings.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Profile & Account</CardTitle>
+          <CardDescription>
+            Manage your profile and account settings.
+          </CardDescription>
+        </div>
+
+        {!userHasCompletedProfile(user) && (
+          <TooltipProvider>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="warning"
+                  size="icon"
+                  className="rounded-full"
+                  aria-label="Help"
+                >
+                  <AlertTriangleIcon className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent
+                sideOffset={2}
+                align="end"
+                side="bottom"
+                className="w-64 border border-yellow-500 bg-yellow-50 text-yellow-500"
+              >
+                You haven't completed your profile yet. Please complete your
+                profile in order to book an appointment.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </CardHeader>
       <CardContent>
         <Form {...manageAccountAndProfileForm}>

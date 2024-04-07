@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { UploadDocumentSchemaType } from "@/schemas";
 import { startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
@@ -194,6 +196,65 @@ export async function getPatientUpcomingAppointments(id: string | undefined) {
     });
 
     return upcomingAppointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientDocuments(patientId: string | undefined) {
+  try {
+    const patientDocuments = await db.document.findMany({
+      where: {
+        patientId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return patientDocuments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function uploadDocument(
+  values: UploadDocumentSchemaType,
+  patientId: string,
+) {
+  try {
+    const { title: name, description, file: url } = values;
+
+    const document = await db.document.create({
+      data: {
+        name,
+        description,
+        url,
+        patientId,
+      },
+    });
+
+    if (document) {
+      revalidatePath("/patient/dashboard/medical-documents");
+      return { success: "Document uploaded successfully" };
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteDocument(id: string) {
+  try {
+    const document = await db.document.delete({
+      where: {
+        id,
+      },
+    });
+
+    if (document) {
+      revalidatePath("/patient/dashboard/medical-documents");
+      return { success: "Document deleted successfully" };
+    }
   } catch (error) {
     console.error(error);
   }

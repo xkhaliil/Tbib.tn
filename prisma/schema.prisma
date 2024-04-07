@@ -221,6 +221,10 @@ model Document {
   url         String
   patientId   String  @db.ObjectId
   patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
 }
 
 model Appointment {

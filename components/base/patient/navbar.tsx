@@ -39,6 +39,12 @@ export function Navbar() {
             My Appointments
           </NavbarLink>
           <NavbarLink
+            href="/patient/dashboard/messages"
+            isActive={pathname === "/patient/dashboard/messages"}
+          >
+            My Messages
+          </NavbarLink>
+          <NavbarLink
             href="/patient/dashboard/consultations"
             isActive={pathname === "/patient/dashboard/consultations"}
           >
@@ -113,26 +119,32 @@ export function MobileMenu() {
             Dashboard
           </NavbarLink>
           <NavbarLink
-            href="/patient/appointments"
-            isActive={pathname === "/patient/appointments"}
+            href="/patient/dashboard/appointments"
+            isActive={pathname === "/patient/dashboard/appointments"}
           >
             My Appointments
           </NavbarLink>
           <NavbarLink
-            href="/patient/consultations"
-            isActive={pathname === "/patient/consultations"}
+            href="/patient/dashboard/messages"
+            isActive={pathname === "/patient/dashboard/messages"}
+          >
+            My Messages
+          </NavbarLink>
+          <NavbarLink
+            href="/patient/dashboard/consultations"
+            isActive={pathname === "/patient/dashboard/consultations"}
           >
             My Consultations
           </NavbarLink>
           <NavbarLink
-            href="/patient/medical-records"
-            isActive={pathname === "/patient/medical-records"}
+            href="/patient/dashboard/medical-documents"
+            isActive={pathname === "/patient/dashboard/medical-documents"}
           >
-            Medical Records
+            Medical Documents
           </NavbarLink>
           <NavbarLink
-            href="/patient/settings"
-            isActive={pathname === "/patient/settings"}
+            href="/patient/dashboard/settings"
+            isActive={pathname === "/patient/dashboard/settings"}
           >
             Settings
           </NavbarLink>

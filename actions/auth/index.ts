@@ -67,6 +67,11 @@ export async function getUserAccountById(userId: string) {
   }
 }
 
+/**
+ * This function is used to get the healthcare provider by the user id.
+ * @param userId
+ * @returns
+ */
 export async function getHealthcareProviderById(userId: string | undefined) {
   try {
     const healthcareProvider = await db.healthCareProvider.findFirst({
@@ -76,6 +81,26 @@ export async function getHealthcareProviderById(userId: string | undefined) {
     });
 
     return healthcareProvider;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
+ * This function is used to get the patient by the user id.
+ * @param userId
+ * @returns
+ */
+export async function getPatientById(userId: string | undefined) {
+  try {
+    const patient = await db.patient.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    return patient;
   } catch (error) {
     console.error(error);
     return null;
