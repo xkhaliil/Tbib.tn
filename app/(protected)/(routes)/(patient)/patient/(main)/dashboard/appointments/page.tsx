@@ -6,6 +6,7 @@ import {
   getPatientUpcomingAppointments,
 } from "@/actions/patient";
 
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PastAppointmentCard } from "@/components/base/patient/appointments/past-appointment-card";
 import { UpcomingAppointmentCard } from "@/components/base/patient/appointments/upcoming-appointment-card";
@@ -28,9 +29,19 @@ export default async function PatientAppointmentsPage() {
         </div>
         <TabsContent value="past">
           {pastAppointments?.length === 0 && (
-            <p className="text-center text-muted-foreground">
-              No past appointments
-            </p>
+            <div className="flex h-[650px] flex-1 items-center justify-center rounded-lg border border-dashed">
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">
+                  You have no past appointments
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Book an appointment with a doctor to get started
+                </p>
+                <Button variant="blue" className="mt-4">
+                  Book an appointment
+                </Button>
+              </div>
+            </div>
           )}
           {pastAppointments?.map((appointment) => (
             <div className="mb-4" key={appointment.id}>
@@ -40,9 +51,19 @@ export default async function PatientAppointmentsPage() {
         </TabsContent>
         <TabsContent value="upcoming">
           {upcomingAppointments?.length === 0 && (
-            <p className="text-center text-muted-foreground">
-              No upcoming appointments
-            </p>
+            <div className="flex h-[650px] flex-1 items-center justify-center rounded-lg border border-dashed">
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">
+                  You have no upcoming appointments
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Book an appointment with a doctor to get started
+                </p>
+                <Button variant="blue" className="mt-4">
+                  Book an appointment
+                </Button>
+              </div>
+            </div>
           )}
           {upcomingAppointments?.map((appointment) => (
             <div className="mb-4" key={appointment.id}>

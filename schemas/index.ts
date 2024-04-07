@@ -509,6 +509,32 @@ export const ManageOpeningHoursSchema = z.object({
   ),
 });
 
+export const UploadDocumentSchema = z
+  .object({
+    title: z.string({ required_error: "Title is required" }).min(3, {
+      message: "Title must be at least 3 characters long.",
+    }),
+    description: z.optional(
+      z.string().max(250, {
+        message: "Description must be at most 100 characters long.",
+      }),
+    ),
+    file: z.string(),
+  })
+  .refine(
+    (data) => {
+      if (!data.file) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "Document is required",
+      path: ["file"],
+    },
+  );
+
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 export type ForgotPasswordSchemaType = z.infer<typeof ForgotPasswordSchema>;
@@ -526,3 +552,4 @@ export type BookAppointmentSchemaType = z.infer<typeof BookAppointmentSchema>;
 export type ManageOpeningHoursSchemaType = z.infer<
   typeof ManageOpeningHoursSchema
 >;
+export type UploadDocumentSchemaType = z.infer<typeof UploadDocumentSchema>;
