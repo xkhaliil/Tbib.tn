@@ -14,7 +14,7 @@ export default async function PatientMedicalDocumentsPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Medical Documents</h1>
+        <h1 className="text-3xl font-semibold">Medical Documents</h1>
         {medicalDocuments && medicalDocuments.length > 0 && (
           <UploadMedicalDocumentButton />
         )}
