@@ -201,6 +201,40 @@ export async function getPatientUpcomingAppointments(id: string | undefined) {
   }
 }
 
+export async function getPatientAppointments(id: string | undefined) {
+  try {
+    const currentUser = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    const currentPatient = await db.patient.findUnique({
+      where: {
+        userId: currentUser?.id,
+      },
+    });
+
+    const appointments = await db.appointment.findMany({
+      where: {
+        patientId: currentPatient?.id,
+        status: "COMPLETED",
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getPatientDocuments(patientId: string | undefined) {
   try {
     const patientDocuments = await db.document.findMany({
