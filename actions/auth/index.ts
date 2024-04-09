@@ -116,6 +116,29 @@ export async function getHealthcareProviderById(id: string | undefined) {
 }
 
 /**
+ * This function is used to get the healthcare center by the user id.
+ * @param userId
+ * @returns
+ */
+export async function getHealthcareCenterByUserId(userId: string | undefined) {
+  try {
+    const healthcareCenter = await db.healthCareCenter.findFirst({
+      where: {
+        userId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return healthcareCenter;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
  * This function is used to get the healthcare center by the id.
  * @param id
  * @returns

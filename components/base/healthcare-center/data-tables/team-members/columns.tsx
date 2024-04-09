@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { getHealthcareProviderByHealthcareCenterId } from "@/actions/healthcare-center";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -14,20 +15,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type HealthcareProvider = {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  speciality: string;
-  totalConsultations: number;
-  joinedAt: Date;
-};
+type HealthcareProvider = Awaited<
+  ReturnType<typeof getHealthcareProviderByHealthcareCenterId>
+>;
 
 const columnHelper = createColumnHelper<HealthcareProvider>();
 
 export const columns = [
-  columnHelper.accessor("image", {
+  columnHelper.accessor("user.image", {
     id: "image",
     header: "",
     cell: ({ row }) => {
@@ -42,11 +37,11 @@ export const columns = [
       );
     },
   }),
-  columnHelper.accessor("name", {
+  columnHelper.accessor("user.name", {
     id: "name",
     header: "Name",
   }),
-  columnHelper.accessor("email", {
+  columnHelper.accessor("user.email", {
     id: "email",
     header: "Email",
   }),
@@ -54,15 +49,14 @@ export const columns = [
     id: "speciality",
     header: "Speciality",
   }),
-  columnHelper.accessor("totalConsultations", {
-    id: "totalConsultations",
-    header: "Total Consultations",
-  }),
-  columnHelper.accessor("joinedAt", {
+  columnHelper.accessor("user.createdAt", {
     id: "joinedAt",
     header: "Joined At",
     cell: ({ row }) => {
-      return format(row.original.joinedAt, "dd/MM/yyyy");
+      {
+        row.original?.user.createdAt &&
+          format(new Date(row.original.user.createdAt), "dd/MM/yyyy");
+      }
     },
   }),
   {
