@@ -9,9 +9,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Label } from "@/components/ui/label";
 
-export default function PdfViewer() {
+export function PdfViewer() {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">

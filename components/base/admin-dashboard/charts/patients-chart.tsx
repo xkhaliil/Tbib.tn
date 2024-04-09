@@ -17,7 +17,7 @@ interface AdminDoctorChartDashboardProps {
   users: Awaited<ReturnType<typeof getPatientsByMonth>>;
 }
 
-export default function AdminPatientChartDashboard({
+export function AdminPatientChartDashboard({
   users,
 }: AdminDoctorChartDashboardProps) {
   return (
