@@ -108,7 +108,9 @@ export function Calendar({
                   !isSameMonth(day, firstDayCurrentMonth) &&
                   "text-muted-foreground",
                 isSameDay(day, selectedDay) && "bg-primary text-white",
-                isEqual(day, selectedDay) && !isToday(day) && "bg-foreground",
+                isEqual(day, selectedDay) &&
+                  !isToday(day) &&
+                  "bg-foreground hover:bg-foreground",
                 !isEqual(day, selectedDay) && "hover:bg-accent",
                 (isEqual(day, selectedDay) || isToday(day)) && "font-medium",
                 absences?.some((absence) => isSameDay(absence.date, day)) &&
