@@ -43,7 +43,7 @@ export function TotalUsersChart({ users }: TotalUsersChartProps) {
                   <div className="grid grid-cols-1 gap-2">
                     <div className="flex flex-col">
                       <span className="text-[0.70rem] uppercase text-muted-foreground">
-                        User
+                        Users
                       </span>
                       <span className="font-semibold">{payload[0].value}</span>
                     </div>

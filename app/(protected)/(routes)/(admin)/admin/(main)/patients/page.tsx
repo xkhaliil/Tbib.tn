@@ -4,20 +4,21 @@ import { getPatientsByMonth, getPatientsCount } from "@/actions/patient";
 import { UsersIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
-import AdminPatientChartDashboard from "@/components/base/admin-dashboard/charts/patients-chart";
+import { AdminPatientChartDashboard } from "@/components/base/admin-dashboard/charts/patients-chart";
 import { AdminPatientTable } from "@/components/base/admin-dashboard/data-table/admin-patients-table/admin-patient-table";
 
 export default async function PatientsAdminDashboard() {
   const totallPatients = await getPatientsCount();
   const PatientsByMonth = await getPatientsByMonth();
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="grid h-screen md:grid-cols-[220px_1fr] md:grid-rows-[56px_1fr] lg:grid-cols-[280px_1fr]">
+      <AdminNavbar />
       <AdminSidebar />
-      <div className="flex flex-col">
-        <AdminNavbar />
+      <ScrollArea className="col-start-1 col-end-3 flex-1 md:col-start-2">
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <Card className="col-span-3 bg-muted/40">
@@ -45,7 +46,7 @@ export default async function PatientsAdminDashboard() {
             </div>
           </div>
         </main>
-      </div>
+      </ScrollArea>
     </div>
   );
 }

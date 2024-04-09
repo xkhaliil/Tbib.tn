@@ -52,7 +52,7 @@ export default async function DashboardPage() {
     (appointment) => appointment.status === AppointmentStatus.EXPIRED,
   );
   return (
-    <div className="grid h-screen grid-cols-[70px_352px_1fr] grid-rows-[64px_1fr]">
+    <div className="grid h-screen grid-cols-[70px_352px_1fr] grid-rows-[3.5rem_1fr]">
       <Navbar />
       <Sidebar />
       <AppointmentsSidebar
