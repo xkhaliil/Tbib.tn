@@ -1,6 +1,6 @@
 import React from "react";
 
-import { getCurrentSession, getPatientById } from "@/actions/auth";
+import { getCurrentSession, getPatientByUserId } from "@/actions/auth";
 import { getPatientDocuments } from "@/actions/patient";
 
 import { EmptyState } from "@/components/base/patient/medical-documents/empty-state";
@@ -9,7 +9,7 @@ import { UploadMedicalDocumentButton } from "@/components/base/patient/medical-d
 
 export default async function PatientMedicalDocumentsPage() {
   const currentUser = await getCurrentSession();
-  const currentPatient = await getPatientById(currentUser?.id);
+  const currentPatient = await getPatientByUserId(currentUser?.id);
   const medicalDocuments = await getPatientDocuments(currentPatient?.id);
   return (
     <div>

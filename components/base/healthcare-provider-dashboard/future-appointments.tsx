@@ -41,7 +41,7 @@ export function FutureAppointments({ appointments }: FutureAppointmentsProps) {
             <p className="text-sm font-medium text-foreground">
               {appointment.title}
             </p>
-            <p className="truncate text-xs font-normal text-muted-foreground">
+            <p className="max-w-[14rem] truncate text-xs font-normal text-muted-foreground">
               {appointment.description}
             </p>
             <p className="text-xs text-muted-foreground">

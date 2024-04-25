@@ -62,7 +62,7 @@ export function Calendar() {
           <SmallCalendar selectedDay={selectedDay} setSelectedDay={() => {}} />
           <Separator />
           <div className="px-4">
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible defaultValue="item-1">
               <AccordionItem value="item-1">
                 <AccordionTrigger className="text-xs font-normal text-muted-foreground">
                   Status

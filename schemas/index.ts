@@ -401,6 +401,10 @@ export const ManageHealthcareProviderProfileSchema = z
     isTwoFactorEnabled: z.optional(z.boolean()),
     speciality: z.optional(z.string()),
     spokenLanguages: z.optional(z.array(z.string())),
+    officeState: z.optional(z.string()),
+    officeAddress: z.optional(z.string()),
+    officeLatitude: z.optional(z.number()),
+    officeLongitude: z.optional(z.number()),
     state: z.optional(z.string()),
     city: z.optional(z.string()),
     postalCode: z.optional(z.string()),
@@ -486,11 +490,13 @@ export const ManageHealthcareProviderProfileSchema = z
   );
 
 export const BookAppointmentSchema = z.object({
+  date: z.date(),
+  time: z.string({ required_error: "Please select a time" }),
   symptomsType: z.nativeEnum(SymptomType),
   symptoms: z.optional(z.string()),
   symptomsDuration: z
-    .optional(z.number())
-    .refine((duration) => duration !== undefined && duration > 0, {
+    .optional(z.string())
+    .refine((duration) => duration !== undefined && parseInt(duration) > 0, {
       message: "Duration must be greater than 0",
     }),
   symptomsSeverity: z.optional(z.enum(["LOW", "MEDIUM", "HIGH"])),

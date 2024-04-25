@@ -1,10 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { UploadDocumentSchemaType } from "@/schemas";
-import { startOfToday } from "date-fns";
+import {
+  BookAppointmentSchema,
+  BookAppointmentSchemaType,
+  UploadDocumentSchemaType,
+} from "@/schemas";
+import { add, format, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
+
+import { getCurrentSession, getPatientByUserId } from "./auth";
 
 export async function getAllPatients() {
   try {
@@ -289,6 +295,67 @@ export async function deleteDocument(id: string) {
       revalidatePath("/patient/dashboard/medical-documents");
       return { success: "Document deleted successfully" };
     }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function bookAppointment(
+  values: BookAppointmentSchemaType,
+  healthCareProviderId: string | undefined,
+) {
+  try {
+    const user = await getCurrentSession();
+
+    const patient = await getPatientByUserId(user?.id);
+
+    const validatedFields = BookAppointmentSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" };
+    }
+
+    const {
+      date,
+      time,
+      symptomsType,
+      symptoms,
+      symptomsDuration,
+      symptomsLength,
+      symptomsSeverity,
+      additionalImages,
+    } = validatedFields.data;
+
+    await db.appointment.create({
+      data: {
+        title: `Appointment with ${patient?.user.name}`,
+        description: `Appointment with ${patient?.user.name} on ${format(
+          new Date(date),
+          "EEEE, MMMM d yyyy",
+        )} at ${format(new Date(time), "HH:mm")}`,
+        date,
+        startTime: new Date(time),
+        endTime: add(new Date(time), { minutes: 30 }),
+        symptomsType,
+        symptoms,
+        symptomsDuration,
+        symptomsLength,
+        symptomsSeverity,
+        additionalImages,
+        patient: {
+          connect: {
+            id: patient?.id,
+          },
+        },
+        healthCareProvider: {
+          connect: {
+            id: healthCareProviderId,
+          },
+        },
+      },
+    });
+
+    return { success: "Appointment booked successfully." };
   } catch (error) {
     console.error(error);
   }
