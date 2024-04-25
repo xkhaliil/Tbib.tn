@@ -14,6 +14,10 @@ export type ExtendedUser = DefaultSession["user"] & {
   speciality?: string;
   spokenLanguages?: string[];
   accountVerified?: boolean;
+  officeState?: string;
+  officeAddress?: string;
+  officeLatitude?: number;
+  officeLongitude?: number;
 };
 
 declare module "next-auth" {

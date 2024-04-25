@@ -72,6 +72,10 @@ export const settings = async (
       },
       speciality: values.speciality,
       spokenLanguages: values.spokenLanguages,
+      officeState: values.officeState,
+      officeAddress: values.officeAddress,
+      officeLatitude: values.officeLatitude,
+      officeLongitude: values.officeLongitude,
     },
     include: {
       user: true,
@@ -91,6 +95,10 @@ export const settings = async (
       city: updatedHealthCareProvider.user.city || "",
       postalCode: updatedHealthCareProvider.user.postalCode || "",
       isTwoFactorEnabled: updatedHealthCareProvider.user.isTwoFactorEnabled,
+      officeState: updatedHealthCareProvider.officeState || "",
+      officeAddress: updatedHealthCareProvider.officeAddress || "",
+      officeLatitude: updatedHealthCareProvider.officeLatitude || 0,
+      officeLongitude: updatedHealthCareProvider.officeLongitude || 0,
     },
   });
 
@@ -255,4 +263,70 @@ export async function getHealthCareProvidersByMonth() {
     }));
 
   return HealthCareProvidersPerMonth;
+}
+
+export async function getHealthCareProviderById(id: string) {
+  const healthCareProvider = await db.healthCareProvider.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+      openingHours: true,
+      absences: true,
+      appointments: true,
+    },
+  });
+
+  return healthCareProvider;
+}
+
+export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
+  const INTERVAL = 30;
+
+  const healthCareProvider = await db.healthCareProvider.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      openingHours: true,
+      appointments: {
+        where: {
+          date: {
+            equals: date,
+          },
+        },
+      },
+    },
+  });
+
+  const openingHours = healthCareProvider?.openingHours;
+
+  const appointments = healthCareProvider?.appointments;
+
+  const day = date.getDay();
+
+  const openingHour = openingHours?.find((hour) => hour.dayOfWeek === day);
+
+  if (!openingHour) {
+    return [];
+  }
+
+  const slots = [];
+
+  const start = new Date(date);
+  start.setHours(openingHour.startTime.getHours() - 1);
+  start.setMinutes(openingHour.startTime.getMinutes());
+
+  const end = new Date(date);
+  end.setHours(openingHour.endTime.getHours() - 1);
+  end.setMinutes(openingHour.endTime.getMinutes());
+
+  while (start < end) {
+    const slot = new Date(start);
+    slots.push(slot);
+    start.setMinutes(start.getMinutes() + INTERVAL);
+  }
+
+  return slots;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 
 import Link from "next/link";
+import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import { SlashIcon } from "@radix-ui/react-icons";
 
 import {
@@ -13,9 +14,19 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 
-import { BookAppointmentForm } from "./forms/book-appointment-form";
+import { BookAppointmentForm } from "../forms/book-appointment-form";
 
-export function BookAppointmentHeader() {
+interface BookAppointmentHeaderProps {
+  date: string;
+  healthcareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
+  timeSlots: Date[] | [];
+}
+
+export function BookAppointmentHeader({
+  date,
+  healthcareProvider,
+  timeSlots,
+}: BookAppointmentHeaderProps) {
   return (
     <div className="mt-8">
       <div className="flex flex-col space-y-4">
@@ -56,7 +67,11 @@ export function BookAppointmentHeader() {
 
       <Separator className="my-8" />
 
-      <BookAppointmentForm />
+      <BookAppointmentForm
+        date={date}
+        healthcareProvider={healthcareProvider}
+        timeSlots={timeSlots}
+      />
     </div>
   );
 }

@@ -1,10 +1,13 @@
+"use client";
+
 import React from "react";
 
 import Image from "next/image";
-import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/container";
+
+import HeroSearchInput from "../hero-search-input";
 
 export function Hero() {
   return (
@@ -35,22 +38,17 @@ export function Hero() {
           <div className="mt-12">
             <div className="flex items-center justify-center">
               <div className="w-full">
-                <div className="flex h-[4.5rem] w-full flex-row items-center justify-center gap-x-4 rounded-full border bg-gray-50 px-6 py-3 placeholder-muted-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
-                  <input
-                    type="text"
-                    placeholder="Speaciality, doctor, or center"
-                    className="h-full w-full border-r bg-transparent placeholder-muted-foreground outline-none"
-                  />
-                  <input
-                    type="text"
-                    placeholder="State or city"
-                    className="relative h-full w-full bg-transparent placeholder-muted-foreground outline-none"
-                  />
-                  <Button variant="blue" size="lg" className="rounded-full">
-                    <SearchIcon className="mr-2 h-4 w-4" />
-                    Search
-                  </Button>
-                </div>
+                <HeroSearchInput
+                  onSearch={(s, l) => {
+                    alert(`Searching for ${s} in ${l}`);
+                  }}
+                  onSpecialityChange={(speciality) => {
+                    console.log(speciality);
+                  }}
+                  onLocationChange={(location) => {
+                    console.log(location);
+                  }}
+                />
               </div>
             </div>
           </div>

@@ -166,11 +166,14 @@ export async function getHealthcareCenterById(id: string | undefined) {
  * @param userId
  * @returns
  */
-export async function getPatientById(userId: string | undefined) {
+export async function getPatientByUserId(userId: string | undefined) {
   try {
     const patient = await db.patient.findFirst({
       where: {
         userId,
+      },
+      include: {
+        user: true,
       },
     });
 

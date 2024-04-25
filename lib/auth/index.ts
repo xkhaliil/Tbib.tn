@@ -1,5 +1,6 @@
 import {
   getHealthcareProviderById,
+  getHealthcareProviderByUserId,
   getUserAccountById,
   getUserByEmail,
   getUserById,
@@ -57,9 +58,13 @@ export const {
       }
 
       if (token.speciality && session.user) {
+        session.user.officeState = token.officeState as string;
         session.user.speciality = token.speciality as string;
         session.user.accountVerified = token.accountVerified as boolean;
         session.user.spokenLanguages = token.spokenLanguages as string[];
+        session.user.officeAddress = token.officeAddress as string;
+        session.user.officeLatitude = token.officeLatitude as number;
+        session.user.officeLongitude = token.officeLongitude as number;
       }
 
       if (session.user) {
@@ -81,14 +86,18 @@ export const {
 
       const existingUser = await getUserById(token.sub);
 
-      const existingHealthcareProvider = await getHealthcareProviderById(
-        token.sub,
+      const existingHealthcareProvider = await getHealthcareProviderByUserId(
+        existingUser?.id as string,
       );
 
       if (existingHealthcareProvider) {
         token.speciality = existingHealthcareProvider.speciality;
         token.accountVerified = existingHealthcareProvider.accountVerified;
         token.spokenLanguages = existingHealthcareProvider.spokenLanguages;
+        token.officeState = existingHealthcareProvider.officeState;
+        token.officeAddress = existingHealthcareProvider.officeAddress;
+        token.officeLatitude = existingHealthcareProvider.officeLatitude;
+        token.officeLongitude = existingHealthcareProvider.officeLongitude;
       }
 
       if (!existingUser) return token;

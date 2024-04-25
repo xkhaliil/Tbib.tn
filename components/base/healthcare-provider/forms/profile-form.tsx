@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useHealthcareProviderLocation } from "@/hooks/use-healthcare-provider-location";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { MapClient } from "@/components/map-client";
 import { UploadButton } from "@/components/upload-button";
 
 import { VerifiedAccountBadge } from "../verified-account-badge";
@@ -47,6 +49,7 @@ import { VerifiedAccountBadge } from "../verified-account-badge";
 export function ProfileForm() {
   const user = useCurrentUser();
   const { data: session, update } = useSession();
+  const healthcareProviderLocation = useHealthcareProviderLocation();
 
   const [success, setSuccess] = React.useState<string | undefined>("");
   const [error, setError] = React.useState<string | undefined>("");
@@ -62,6 +65,10 @@ export function ProfileForm() {
       bio: user?.bio || "",
       speciality: user?.speciality || "",
       spokenLanguages: user?.spokenLanguages || [],
+      officeState: user?.officeState || "",
+      officeAddress: user?.officeAddress || "",
+      officeLatitude: user?.officeLatitude || 0,
+      officeLongitude: user?.officeLongitude || 0,
       state: user?.state || "",
       city: user?.city || "",
       postalCode: user?.postalCode || "",
@@ -80,12 +87,37 @@ export function ProfileForm() {
         bio: manageProfileForm.getValues("bio"),
         speciality: manageProfileForm.getValues("speciality"),
         spokenLanguages: manageProfileForm.getValues("spokenLanguages"),
+        officeState: manageProfileForm.getValues("officeState"),
+        officeAddress: manageProfileForm.getValues("officeAddress"),
+        officeLatitude: manageProfileForm.getValues("officeLatitude"),
+        officeLongitude: manageProfileForm.getValues("officeLongitude"),
         state: manageProfileForm.getValues("state"),
         city: manageProfileForm.getValues("city"),
         postalCode: manageProfileForm.getValues("postalCode"),
       },
     });
   }
+
+  React.useEffect(() => {
+    manageProfileForm.setValue(
+      "officeAddress",
+      healthcareProviderLocation.address,
+    );
+    manageProfileForm.setValue("officeState", healthcareProviderLocation.state);
+    manageProfileForm.setValue(
+      "officeLatitude",
+      healthcareProviderLocation.latitude,
+    );
+    manageProfileForm.setValue(
+      "officeLongitude",
+      healthcareProviderLocation.longitude,
+    );
+  }, [
+    healthcareProviderLocation.address,
+    healthcareProviderLocation.state,
+    healthcareProviderLocation.latitude,
+    healthcareProviderLocation.longitude,
+  ]);
 
   const onSubmit: SubmitHandler<
     ManageHealthcareProviderProfileSchemaType
@@ -133,11 +165,7 @@ export function ProfileForm() {
             form="manage-profile-form"
             className="flex items-center justify-center"
             onClick={manageProfileForm.handleSubmit(onSubmit)}
-            disabled={
-              isPending ||
-              success !== "" ||
-              !manageProfileForm.formState.isDirty
-            }
+            disabled={isPending || !manageProfileForm.formState.isDirty}
           >
             {isPending ? (
               <>
@@ -404,6 +432,15 @@ export function ProfileForm() {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+          </div>
+
+          <div className="sm:col-span-4">
+            <MapClient
+              center={[
+                user?.officeLatitude || 36.4,
+                user?.officeLongitude || 10.7,
+              ]}
             />
           </div>
         </form>
