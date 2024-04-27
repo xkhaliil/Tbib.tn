@@ -24,6 +24,7 @@ L.Icon.Default.mergeOptions({
 
 interface MapProps {
   center?: number[];
+  zoom?: number;
   className?: string;
 }
 
@@ -31,11 +32,11 @@ const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-export function Map({ center, className }: MapProps) {
+export function Map({ center, zoom, className }: MapProps) {
   return (
     <MapContainer
       center={(center as L.LatLngExpression) || [51, -0.09]}
-      zoom={center ? 14 : 2}
+      zoom={(center && 16) || zoom || 2}
       scrollWheelZoom={false}
       className={cn("h-[25vh] rounded-lg", className)}
     >

@@ -1,5 +1,8 @@
 import { getAllAppointments } from "@/actions/appointment";
-import { getCurrentSession } from "@/actions/auth";
+import {
+  getCurrentSession,
+  getHealthcareProviderByUserId,
+} from "@/actions/auth";
 import { getPatientsWithAtLeastOneAppointment } from "@/actions/patient";
 import { AppointmentStatus } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -27,8 +30,9 @@ const COLORS = ["#24a581", "#f991dc", "#fea25f", "#93e7fe"];
 
 export default async function DashboardPage() {
   const user = await getCurrentSession();
+  const healthcareProvider = await getHealthcareProviderByUserId(user?.id);
   const patients = await getPatientsWithAtLeastOneAppointment();
-  const appointments = await getAllAppointments();
+  const appointments = await getAllAppointments(healthcareProvider?.id);
 
   const futureAppointments = appointments?.filter(
     (appointment) =>

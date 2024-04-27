@@ -38,7 +38,6 @@ export function SignInDialog() {
   const router = useRouter();
   const signInDialog = useSignInDialog();
   const callbackUrl = usePathname();
-  console.log("callbackUrl", callbackUrl);
 
   const [showTwoFactorAuth, setShowTwoFactorAuth] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>("");

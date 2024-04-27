@@ -281,6 +281,23 @@ export async function getHealthCareProviderById(id: string) {
   return healthCareProvider;
 }
 
+export async function getHealthCareProviderUserAndOpeningHoursAndAbsencesById(
+  id: string,
+) {
+  const healthCareProvider = await db.healthCareProvider.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+      openingHours: true,
+      absences: true,
+    },
+  });
+
+  return healthCareProvider;
+}
+
 export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
   const INTERVAL = 30;
 
@@ -315,11 +332,11 @@ export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
   const slots = [];
 
   const start = new Date(date);
-  start.setHours(openingHour.startTime.getHours() - 1);
+  start.setHours(openingHour.startTime.getHours());
   start.setMinutes(openingHour.startTime.getMinutes());
 
   const end = new Date(date);
-  end.setHours(openingHour.endTime.getHours() - 1);
+  end.setHours(openingHour.endTime.getHours());
   end.setMinutes(openingHour.endTime.getMinutes());
 
   while (start < end) {
