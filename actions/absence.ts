@@ -9,9 +9,13 @@ import { db } from "@/lib/db";
 import { getAllAppointmentsByDate } from "./appointment";
 import { getCurrentSession } from "./auth";
 
-export async function getAllAbsences() {
+export async function getAllAbsences(healthCareProviderId?: string) {
   try {
-    const absences = await db.absence.findMany();
+    const absences = await db.absence.findMany({
+      where: {
+        healthCareProviderId,
+      },
+    });
 
     return absences;
   } catch (error) {

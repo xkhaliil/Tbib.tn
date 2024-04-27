@@ -200,7 +200,7 @@ export function CalendarDay({
                   className={cn(
                     "flex cursor-pointer items-center justify-between rounded-lg px-4 py-1.5 text-xs",
                     appointment?.status === AppointmentStatus.PENDING &&
-                      "bg-warning text-warning-foreground",
+                      "bg-yellow-400 text-yellow-900",
                     appointment?.status === AppointmentStatus.UPCOMING &&
                       "bg-success text-success-foreground",
                     appointment?.status === AppointmentStatus.COMPLETED &&
@@ -213,7 +213,9 @@ export function CalendarDay({
                       "bg-primary text-primary-foreground",
                   )}
                 >
-                  <p className="truncate font-medium">{appointment?.title}</p>
+                  <p className="truncate font-medium">
+                    {appointment?.patient.user.name}
+                  </p>
                   <div className="flex items-center gap-x-2 text-xs">
                     <span>
                       {format(appointment?.startTime!, "H:mm")} -{" "}
@@ -282,7 +284,7 @@ function AppointmentPopover({
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded",
                 appointment?.status === AppointmentStatus.PENDING &&
-                  "bg-warning",
+                  "bg-yellow-400",
                 appointment?.status === AppointmentStatus.UPCOMING &&
                   "bg-success",
                 appointment?.status === AppointmentStatus.COMPLETED &&

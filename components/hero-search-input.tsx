@@ -77,11 +77,19 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         query = qs.parse(params.toString());
       }
 
-      const updatedQuery: Record<string, string> = {
+      let updatedQuery: Record<string, string> = {
         ...query,
         speciality: specialitySearchInput,
         location: locationSearchInput,
       };
+
+      if (specialitySearchInput === "" || locationSearchInput === "") {
+        updatedQuery = {
+          ...query,
+          speciality: "General Practitioner",
+          location: "Tunis",
+        };
+      }
 
       const url = qs.stringifyUrl(
         {

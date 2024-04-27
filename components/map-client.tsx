@@ -13,12 +13,13 @@ const Map = dynamic(() => import("@/components/map").then((mod) => mod.Map), {
 
 interface MapClientProps {
   center?: number[];
+  zoom?: number;
 }
 
-export function MapClient({ center }: MapClientProps) {
+export function MapClient({ center, zoom }: MapClientProps) {
   return (
     <div className="w-full rounded-lg">
-      <Map center={center} />
+      <Map center={center} zoom={zoom} />
     </div>
   );
 }

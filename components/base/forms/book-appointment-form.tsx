@@ -49,6 +49,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
+import { AdditionalImagesDropzone } from "../book-appointment/additional-images-dropzone";
 import { SymptomsCard } from "../symptoms-card";
 
 type FieldName = keyof BookAppointmentSchemaType;
@@ -245,7 +246,7 @@ export function BookAppointmentForm({
                             )}
                           >
                             <CardContent className="flex items-center justify-between px-4 py-2.5 text-sm">
-                              {format(time, "hh:mm a")}
+                              {format(time, "HH:mm")}
                               {isEqual(selectedTime, time) && (
                                 <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600">
                                   <CheckIcon className="h-4 w-4 text-white" />
@@ -479,15 +480,12 @@ export function BookAppointmentForm({
               control={bookAppointmentForm.control}
               name="additionalImages"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="pt-4">
                   <FormLabel>Additional Images</FormLabel>
                   <FormControl>
-                    <Input
-                      type="file"
-                      {...field}
-                      multiple
-                      accept="image/*"
-                      className="w-full"
+                    <AdditionalImagesDropzone
+                      value={field.value}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormDescription>

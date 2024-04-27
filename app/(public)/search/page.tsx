@@ -1,5 +1,6 @@
 import React from "react";
 
+import Image from "next/image";
 import {
   getHealthcareProvidersByParams,
   SearchPageParams,
@@ -41,7 +42,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </div>
         </Container>
       </div>
-      <div className="w-full bg-muted/40 py-8">
+      <div className="w-full border-b bg-muted/40 py-8">
         <Container className="max-w-[1600px]">
           <div className="flex flex-col gap-y-1">
             <h1 className="font-semibold">Search Results</h1>
@@ -50,30 +51,61 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </p>
           </div>
 
-          <div className="mt-6 grid grid-cols-[950px_1fr] gap-6">
-            <div className="grid grid-cols-1 gap-6">
-              {healthcareProviders.map((healthcareProvider) => (
-                <HealthcareProviderCard
-                  key={healthcareProvider.id}
-                  healthcareProvider={healthcareProvider}
-                />
-              ))}
-            </div>
+          <div className="mt-6">
+            <div className="grid grid-cols-[950px_1fr] gap-6">
+              <div className="grid grid-cols-1 gap-6">
+                <div className="flex flex-col">
+                  {healthcareProviders.map((healthcareProvider) => (
+                    <HealthcareProviderCard
+                      key={healthcareProvider.id}
+                      healthcareProvider={healthcareProvider}
+                    />
+                  ))}
+                </div>
+              </div>
 
-            <MapClient
-              locations={healthcareProviders
-                .filter(
-                  (hp) =>
-                    hp.officeLatitude !== null && hp.officeLongitude !== null,
-                )
-                .map((hp) => ({
-                  name: `Dr. ${hp.user.name}`,
-                  coordinates: [hp.officeLatitude!, hp.officeLongitude!],
-                }))}
-            />
+              {healthcareProviders.length > 0 && (
+                <MapClient
+                  locations={healthcareProviders
+                    .filter(
+                      (hp) =>
+                        hp.officeLatitude !== null &&
+                        hp.officeLongitude !== null,
+                    )
+                    .map((hp) => ({
+                      name: `Dr. ${hp.user.name}`,
+                      coordinates: [hp.officeLatitude!, hp.officeLongitude!],
+                    }))}
+                />
+              )}
+            </div>
           </div>
         </Container>
       </div>
+
+      {healthcareProviders.length === 0 && (
+        <Container className="mt-6 max-w-[1600px]">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8">
+            <Image
+              src="empty-placeholder.svg"
+              alt="Empty placeholder"
+              width={130}
+              height={130}
+            />
+
+            <div className="flex flex-col items-center space-y-1">
+              <h2 className="mt-4 text-base font-semibold text-blue-600">
+                Looks like there are no healthcare providers matching your
+                search criteria.
+              </h2>
+
+              <p className="text-sm text-muted-foreground">
+                Try changing your search criteria or location.
+              </p>
+            </div>
+          </div>
+        </Container>
+      )}
     </>
   );
 }

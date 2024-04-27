@@ -74,6 +74,7 @@ export function HealthcareProviderCard({
               src={healthcareProvider.user.image || "/placeholder.svg"}
               alt={healthcareProvider.user.name}
               className="rounded-lg object-cover"
+              style={{ objectPosition: "center" }}
               width={500}
               height={500}
             />
@@ -122,7 +123,7 @@ export function HealthcareProviderCard({
             </Link>
           </Button>
           <Button size="sm" variant="outline" asChild>
-            <Link href={`/healthcare-providers/${healthcareProvider.id}`}>
+            <Link href={`/hp/profile/${healthcareProvider.id}`}>
               View Profile
             </Link>
           </Button>

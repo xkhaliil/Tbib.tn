@@ -104,7 +104,7 @@ export function UpcomingAppointmentCard({
       </div>
 
       <div className="ml-auto flex items-center gap-2 px-6 py-4">
-        <Button variant="blue">Reschedule</Button>
+        <Button variant="warning">Reschedule</Button>
         <Button variant="destructive">Cancel</Button>
         <Button variant="outline">View Details</Button>
       </div>
