@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Calendar } from "@/components/base/healthcare-center/calendar";
+import { Calendar } from "@/components/base/healthcare-center/calendar/weekly";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
 import {
   MobileSidebar,
@@ -9,12 +9,14 @@ import {
 
 export default async function HealthcareCenterAppointmentsPage() {
   return (
-    <div>
+    <div className="flex items-center">
       <Sidebar />
-      <Header className="lg:py-0">
-        <MobileSidebar />
-      </Header>
-      <Calendar />
+      <div className="w-full">
+        <Header className="lg:py-0">
+          <MobileSidebar />
+        </Header>
+        <Calendar />
+      </div>
     </div>
   );
 }
