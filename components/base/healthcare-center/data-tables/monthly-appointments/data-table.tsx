@@ -50,6 +50,7 @@ type TodayAppointment = {
   healthCareProvider: HealthCareProvider & {
     user: User;
   };
+  date: Date;
   startTime: Date;
   endTime: Date;
   status: AppointmentStatus;
@@ -91,7 +92,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   });
 
   return (
-    <Card>
+    <Card className="mt-2">
       <CardHeader className="px-7">
         <CardTitle>This Month's Appointments</CardTitle>
         <CardDescription>
@@ -103,6 +104,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Patient</TableHead>
+              <TableHead>Date</TableHead>
               <TableHead className="hidden sm:table-cell">From</TableHead>
               <TableHead className="hidden sm:table-cell">To</TableHead>
               <TableHead>Healthcare Provider</TableHead>
@@ -132,6 +134,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
                     {row.original?.patient.user.email}
                   </div>
                 </TableCell>
+                <TableCell>
+                  {format(new Date(row.original?.date), "dd/MM/yyyy")}
+                </TableCell>
                 <TableCell className="hidden sm:table-cell">
                   {format(new Date(row.original?.startTime), "HH:mm")}
                 </TableCell>
@@ -151,13 +156,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
                     className={cn(
                       "rounded-sm px-2.5 py-1 text-xs font-medium",
                       row.original?.status === AppointmentStatus.PENDING &&
-                        "bg-yellow-100 text-yellow-600",
-                      row.original?.status === AppointmentStatus.CONFIRMED &&
-                        "bg-green-100 text-green-600",
+                        "bg-[#FFE097] text-[#A78025]",
                       row.original?.status === AppointmentStatus.CANCELLED &&
                         "bg-rose-100 text-rose-600",
                       row.original?.status === AppointmentStatus.COMPLETED &&
                         "bg-blue-100 text-blue-600",
+                      row.original.status === AppointmentStatus.UPCOMING &&
+                        "bg-teal-300 text-teal-600",
                     )}
                   >
                     {row.original?.status.charAt(0).toUpperCase() +

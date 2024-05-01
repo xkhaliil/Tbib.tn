@@ -62,8 +62,8 @@ export function RecentVisitsTable({ visits }: RecentVisitsTableProps) {
               {format(new Date(visit.endTime), "HH:mm a")}
             </TableCell>
             <TableCell className="hidden xl:table-cell">
-              <span className="rounded-sm bg-blue-300 px-2.5 py-1 text-xs font-medium text-blue-800">
-                {visit.status}
+              <span className="rounded-sm bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-600">
+                {visit.status.charAt(0).toUpperCase() + visit.status.slice(1)}
               </span>
             </TableCell>
           </TableRow>

@@ -8,6 +8,7 @@ import {
   EditAppointmentSchemaType,
 } from "@/schemas";
 import { AppointmentStatus } from "@prisma/client";
+import { addHours, setDay, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
 
@@ -24,6 +25,11 @@ export async function getAllAppointments(healthCareProviderId?: string) {
       },
       include: {
         patient: {
+          include: {
+            user: true,
+          },
+        },
+        healthCareProvider: {
           include: {
             user: true,
           },
@@ -208,6 +214,12 @@ export async function cancelAllAppointments(ids: (string | undefined)[]) {
 export async function fetchTodayAppointments() {
   try {
     const appointments = await db.appointment.findMany({
+      where: {
+        date: addHours(startOfToday(), 1),
+        status: {
+          notIn: [AppointmentStatus.EXPIRED],
+        },
+      },
       include: {
         healthCareProvider: {
           include: {
@@ -219,15 +231,6 @@ export async function fetchTodayAppointments() {
             user: true,
           },
         },
-      },
-      // ! TODO: Do not forget to get the appointments for the current date
-      // where: {
-      //   status: {
-      //     notIn: [AppointmentStatus.EXPIRED],
-      //   },
-      // },
-      where: {
-        date: new Date(),
       },
     });
 
@@ -255,8 +258,8 @@ export async function fetchWeeklyAppointments() {
 
       where: {
         date: {
-          gte: new Date(),
-          lte: new Date(new Date().setDate(new Date().getDate() + 7)),
+          gte: addHours(startOfToday(), 1),
+          lte: setDay(startOfToday(), 6),
         },
       },
     });
@@ -285,7 +288,7 @@ export async function fetchMonthlyAppointments() {
 
       where: {
         date: {
-          gte: new Date(),
+          gte: addHours(startOfToday(), 1),
           lte: new Date(new Date().setMonth(new Date().getMonth() + 1)),
         },
       },

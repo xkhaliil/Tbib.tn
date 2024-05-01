@@ -8,6 +8,8 @@ import { DataTable } from "./data-table";
 export async function TodayAppointmentsDataTable() {
   const todayAppointments = await fetchTodayAppointments();
 
+  console.log(todayAppointments);
+
   if (!todayAppointments) {
     return null;
   }

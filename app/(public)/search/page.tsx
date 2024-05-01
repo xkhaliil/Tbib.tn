@@ -54,7 +54,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <div className="mt-6">
             <div className="grid grid-cols-[950px_1fr] gap-6">
               <div className="grid grid-cols-1 gap-6">
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-6">
                   {healthcareProviders.map((healthcareProvider) => (
                     <HealthcareProviderCard
                       key={healthcareProvider.id}
