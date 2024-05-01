@@ -170,8 +170,12 @@ model HealthCareProvider {
   user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   speciality            String?
   licenseNumber         String?
-  officeLocation        String?
+  officeState           String?
+  officeAddress         String?
+  officeLatitude        Float?
+  officeLongitude       Float?
   spokenLanguages       String[]
+  insurances            String[]
   services              String[]
   paymentMethods        String[]
   accountVerified       Boolean  @default(false)
@@ -204,14 +208,14 @@ model OpeningHours {
 }
 
 model HealthCareCenter {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId                String   @unique @db.ObjectId
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                    String               @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String               @unique @db.ObjectId
+  user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   website               String?
   description           String?
-  accountVerified       Boolean  @default(false)
+  accountVerified       Boolean              @default(false)
   verificationDocuments String[]
-  healthCareProviders HealthCareProvider[]
+  healthCareProviders   HealthCareProvider[]
 }
 
 model Document {
@@ -221,6 +225,9 @@ model Document {
   url         String
   patientId   String  @db.ObjectId
   patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Appointment {
@@ -231,6 +238,13 @@ model Appointment {
   startTime    DateTime
   endTime      DateTime
   status       AppointmentStatus @default(PENDING)
+  symptomsType String?
+  symptoms     String?
+  symptomsDuration String?
+  symptomsLength   String?
+  symptomsSeverity String?
+  additionalImages String[]
+
   consultation Consultation?
 
   patientId String  @db.ObjectId

@@ -73,6 +73,9 @@ export async function getHealthcareProviderById(userId: string) {
       where: {
         userId,
       },
+      include: {
+        user: true,
+      },
     });
 
     return healthcareProvider;
