@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getDoctorById } from "@/actions/doctors";
 import {
   Bird,
   Book,
@@ -47,24 +48,30 @@ import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `Service N'${a.length + i}`,
 );
-export function SpecificUserData() {
+type doctor = Awaited<ReturnType<typeof getDoctorById>>;
+interface HealthcareProviderDetailsPageParams {
+  doctor: doctor;
+}
+export function SpecificUserData({
+  doctor,
+}: HealthcareProviderDetailsPageParams) {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">
         <legend className="-ml-1 px-1 text-sm font-medium">
-          Healthcare provider data
+          Healthcare-provider's data
         </legend>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-3">
             <Label htmlFor="speciality">Speciality</Label>
             <div className="font-mono rounded-md border px-4 py-3 text-sm">
-              General Practitioner
+              {doctor?.speciality}
             </div>
           </div>
           <div className="grid gap-3">
             <Label htmlFor="ln">License Number</Label>
             <div className="font-mono rounded-md border px-4 py-3 text-sm">
-              123456789
+              {doctor?.licenseNumber}
             </div>
           </div>
         </div>
@@ -72,7 +79,7 @@ export function SpecificUserData() {
           <div className="grid gap-3">
             <Label htmlFor="ol">Office location</Label>
             <div className="font-mono rounded-md border px-4 py-3 text-sm">
-              Tunis
+              {doctor?.officeAddress}
             </div>
           </div>
         </div>
@@ -80,8 +87,11 @@ export function SpecificUserData() {
           <Label htmlFor="sl">Spoken language</Label>
 
           <div className="flex items-center space-x-3">
-            <Badge variant="info">English</Badge>
-            <Badge variant="info">French</Badge>
+            {doctor?.spokenLanguages.map((lang) => (
+              <Badge key={lang} variant="info">
+                {lang}
+              </Badge>
+            ))}
           </div>
         </div>
         <Label htmlFor="insurances">Insurances</Label>
@@ -91,12 +101,11 @@ export function SpecificUserData() {
             <h4 className="mb-4 text-sm font-medium leading-none">
               List of accepted insurances
             </h4>
-            {tags.map((tag) => (
+            {doctor?.insurances.map((i) => (
               <>
-                <div key={tag} className="text-sm">
-                  {tag}
+                <div key={i} className="text-sm">
+                  {i}
                 </div>
-                <Separator className="my-2" />
               </>
             ))}
           </div>
@@ -109,12 +118,11 @@ export function SpecificUserData() {
             <h4 className="mb-4 text-sm font-medium leading-none">
               List of provided services
             </h4>
-            {tags.map((tag) => (
+            {doctor?.services.map((service) => (
               <>
-                <div key={tag} className="text-sm">
-                  {tag}
+                <div key={service} className="text-sm">
+                  {service}
                 </div>
-                <Separator className="my-2" />
               </>
             ))}
           </div>

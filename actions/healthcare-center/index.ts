@@ -8,6 +8,9 @@ export async function getHealthcareCenterById(id: string) {
       where: {
         id,
       },
+      include: {
+        user: true,
+      },
     });
 
     if (!healthcareCenter) {

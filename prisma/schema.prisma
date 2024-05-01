@@ -175,6 +175,7 @@ model HealthCareProvider {
   officeLatitude        Float?
   officeLongitude       Float?
   spokenLanguages       String[]
+  insurances            String[]
   services              String[]
   paymentMethods        String[]
   accountVerified       Boolean  @default(false)

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { getDoctorById } from "@/actions/doctors";
+import { getSelectedHealthcareCenter } from "@/actions/admin";
 import { FaEye, FaFileDownload } from "react-icons/fa";
 import { FaFilePdf } from "react-icons/fa6";
 
@@ -13,16 +13,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-type Doctor = Awaited<ReturnType<typeof getDoctorById>>;
-
-interface HealthcareProviderDetailsPageParams {
-  doctor: Doctor;
+type hcc = Awaited<ReturnType<typeof getSelectedHealthcareCenter>>;
+interface HealthcareCenterDetailsPageParams {
+  hcc: hcc;
 }
-
-export default function PdfViewer({
-  doctor,
-}: HealthcareProviderDetailsPageParams) {
-export function PdfViewer() {
+export default function PdfViewer({ hcc }: HealthcareCenterDetailsPageParams) {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">
@@ -39,7 +34,7 @@ export function PdfViewer() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  {doctor?.verificationDocuments.map((doc, i) => (
+                  {hcc?.verificationDocuments.map((doc, i) => (
                     <div className="font-mono flex items-center justify-between rounded-md border px-4 py-3 text-sm">
                       <div>Document n°{i + 1}</div>
                       <div className="flex items-center space-x-3">

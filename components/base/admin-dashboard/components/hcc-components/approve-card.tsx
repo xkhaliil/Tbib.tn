@@ -2,28 +2,19 @@
 
 import React, { useState } from "react";
 
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 import {
+  deleteHealthcareCenter,
   deleteHealthcareProvider,
+  getSelectedHealthcareCenter,
   sendCustom,
+  verifyHealthcareCenter,
   verifyHealthcareProvider,
 } from "@/actions/admin";
-import { getHealthcareProviderById } from "@/actions/auth";
-import { CheckIcon, EyeOpenIcon, TrashIcon } from "@radix-ui/react-icons";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -38,20 +29,18 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
-type HealthcareProvider = Awaited<ReturnType<typeof getHealthcareProviderById>>;
-
-interface HealthcareProvidersDataTableActionsProps {
-  healthcareProvider: HealthcareProvider;
+type hcc = Awaited<ReturnType<typeof getSelectedHealthcareCenter>>;
+interface HealthcareCenterDetailsPageParams {
+  hcc: hcc;
 }
-
 export default function ApproveCard({
-  healthcareProvider,
-}: HealthcareProvidersDataTableActionsProps) {
+  hcc,
+}: HealthcareCenterDetailsPageParams) {
   const router = useRouter();
-  const healthcareProviderEmail = healthcareProvider!.user.email;
-  const healthcareProviderName = healthcareProvider!.user.name;
-  const [isPending, startTransition] = React.useTransition();
+  const healthcareCenterEmail = hcc!.user.email;
+  const healthcareCenterName = hcc!.user.name;
   const [content, setContent] = useState("");
+  const [isPending, startTransition] = React.useTransition();
   const handleCustom = () => {
     if (content === "") {
       toast.error("Please type your email content");
@@ -59,10 +48,10 @@ export default function ApproveCard({
     } else {
       startTransition(() => {
         sendCustom(
-          healthcareProviderEmail,
+          healthcareCenterEmail,
           "oladoc-customer-service",
           "From Oladoc customer service team!",
-          healthcareProviderName,
+          healthcareCenterName,
           content,
         ).then(async (data) => {
           if (data?.success) {
@@ -73,16 +62,15 @@ export default function ApproveCard({
       });
     }
   };
-  
   const handleVerify = (id: string) => {
     startTransition(() => {
-      verifyHealthcareProvider(
+      verifyHealthcareCenter(
         id,
-        healthcareProviderEmail,
+        healthcareCenterEmail,
         "oladoc-customer-service",
-        "Your Oladoc pro account is now verified!",
-        healthcareProviderName,
-      ).then(async (data) => {
+        "From Oladoc customer service team!",
+        healthcareCenterName,
+      ).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -96,12 +84,12 @@ export default function ApproveCard({
 
   const handleDelete = (id: string) => {
     startTransition(() => {
-      deleteHealthcareProvider(
+      deleteHealthcareCenter(
         id,
-        healthcareProviderEmail,
+        healthcareCenterEmail,
         "oladoc-customer-service",
-        "Your Oladoc pro account has been deleted!",
-        healthcareProviderName,
+        "From Oladoc customer service team!",
+        healthcareCenterName,
       ).then((data) => {
         if (data?.error) {
           toast.error(data.error);
@@ -109,13 +97,12 @@ export default function ApproveCard({
         }
         if (data?.success) {
           toast.success(data.success);
-          router.push("/admin/healthcare-providers");
+          router.push("/admin/healthcare-centers");
         }
       });
     });
   };
 
-export function ApproveCard() {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">
@@ -172,50 +159,22 @@ export function ApproveCard() {
                 size="sm"
                 variant="green"
                 className="gap-1"
-                onClick={() => handleVerify(healthcareProvider!.id)}
-                disabled={isPending || healthcareProvider?.accountVerified}
+                onClick={() => handleVerify(hcc!.id)}
+                disabled={isPending || hcc?.accountVerified}
               >
                 {isPending ? <Spinner /> : <CheckIcon className="h-4 w-4" />}
                 <span>Verify</span>
               </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="gap-1"
-                    disabled={isPending}
-                  >
-                    {isPending ? (
-                      <Spinner />
-                    ) : (
-                      <TrashIcon className="h-4 w-4" />
-                    )}
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you sure you want to delete this account?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      this account and remove the data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="mt-0">
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => handleDelete(healthcareProvider!.id)}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="gap-1"
+                onClick={() => handleDelete(hcc!.id)}
+                disabled={isPending}
+              >
+                {isPending ? <Spinner /> : <TrashIcon className="h-4 w-4" />}
+                <span>Delete</span>
+              </Button>
             </div>
           </div>
         </div>

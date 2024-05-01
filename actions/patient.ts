@@ -135,6 +135,39 @@ export async function getPatientsByMonth() {
   return PatientsPerMonth;
 }
 
+export async function getRandomSixPatients() {
+  const patients = await db.patient.findMany({
+    include: {
+      user: true,
+    },
+    take: 6,
+  });
+  type people = {
+    id: number;
+    name: string;
+    designation: string;
+    image: string;
+  }[];
+  return {
+    people: patients.map((patient, n) => ({
+      id: n,
+      name: patient.user.name,
+      designation: patient.user.gender,
+      image: patient.user.image,
+    })),
+  };
+}
+export async function getPatientNameGender() {
+  const patients = await db.patient.findMany({
+    include: {
+      user: true,
+    },
+  });
+  return patients.map((patient) => ({
+    value: 1,
+    gender: patient.user.gender,
+  }));
+
 export async function getPatientPastAppointments(id: string | undefined) {
   try {
     const currentUser = await db.user.findUnique({
