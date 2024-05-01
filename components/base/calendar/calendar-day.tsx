@@ -198,19 +198,17 @@ export function CalendarDay({
               >
                 <div
                   className={cn(
-                    "flex cursor-pointer items-center justify-between rounded-lg px-4 py-1.5 text-xs",
+                    "flex cursor-pointer items-center justify-between rounded-sm border-l-4 px-3 py-1.5 text-xs",
                     appointment?.status === AppointmentStatus.PENDING &&
-                      "bg-yellow-400 text-yellow-900",
+                      "border-[#A78025] bg-[#FFE097]",
                     appointment?.status === AppointmentStatus.UPCOMING &&
-                      "bg-success text-success-foreground",
+                      "border-teal-600 bg-teal-300",
                     appointment?.status === AppointmentStatus.COMPLETED &&
-                      "bg-info text-info-foreground",
+                      "border-sky-600 bg-sky-300",
                     appointment?.status === AppointmentStatus.EXPIRED &&
-                      "bg-rose-500/35",
+                      "border-rose-600 bg-rose-500/35",
                     appointment?.status === AppointmentStatus.CANCELLED &&
-                      "bg-destructive text-destructive-foreground",
-                    appointment?.status === AppointmentStatus.CONFIRMED &&
-                      "bg-primary text-primary-foreground",
+                      "border-red-400 bg-red-600 text-white",
                   )}
                 >
                   <p className="truncate font-medium">
@@ -232,9 +230,6 @@ export function CalendarDay({
                     )}
                     {appointment?.status === AppointmentStatus.CANCELLED && (
                       <CrossCircledIcon className="h-3 w-3" />
-                    )}
-                    {appointment?.status === AppointmentStatus.CONFIRMED && (
-                      <ArrowRightIcon className="h-3 w-3" />
                     )}
                   </div>
                 </div>
@@ -284,24 +279,21 @@ function AppointmentPopover({
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded",
                 appointment?.status === AppointmentStatus.PENDING &&
-                  "bg-yellow-400",
+                  "bg-[#FFE097]",
                 appointment?.status === AppointmentStatus.UPCOMING &&
-                  "bg-success",
+                  "bg-teal-400",
                 appointment?.status === AppointmentStatus.COMPLETED &&
-                  "bg-info",
+                  "bg-sky-400",
                 appointment?.status === AppointmentStatus.CANCELLED &&
                   "bg-destructive",
                 appointment?.status === AppointmentStatus.EXPIRED &&
                   "bg-rose-500/35",
-                appointment?.status === AppointmentStatus.CONFIRMED &&
-                  "bg-primary",
               )}
             >
               <span
                 className={cn(
                   "font-medium",
-                  (appointment?.status === AppointmentStatus.CONFIRMED ||
-                    appointment?.status === AppointmentStatus.CANCELLED) &&
+                  appointment?.status === AppointmentStatus.CANCELLED &&
                     "text-white",
                 )}
               >

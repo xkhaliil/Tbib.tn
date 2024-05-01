@@ -9,7 +9,7 @@ import { symptomsTypes, SymptomType } from "@/constants";
 import { BookAppointmentSchema, BookAppointmentSchemaType } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { format, isEqual } from "date-fns";
+import { format, isBefore, isEqual } from "date-fns";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 
@@ -221,14 +221,16 @@ export function BookAppointmentForm({
                             <RadioGroupItem
                               value={time.toString()}
                               className="sr-only"
-                              disabled={healthcareProvider?.appointments.some(
-                                (appointment) =>
-                                  isEqual(new Date(appointment.date), date) &&
-                                  isEqual(
-                                    new Date(appointment.startTime),
-                                    time,
-                                  ),
-                              )}
+                              disabled={
+                                healthcareProvider?.appointments.some(
+                                  (appointment) =>
+                                    isEqual(new Date(appointment.date), date) &&
+                                    isEqual(
+                                      new Date(appointment.startTime),
+                                      time,
+                                    ),
+                                ) || isBefore(time, new Date())
+                              }
                             />
                           </FormControl>
                           <Card
@@ -237,11 +239,12 @@ export function BookAppointmentForm({
                               "w-full cursor-pointer",
                               healthcareProvider?.appointments.some(
                                 (appointment) =>
-                                  isEqual(new Date(appointment.date), date) &&
-                                  isEqual(
-                                    new Date(appointment.startTime),
-                                    time,
-                                  ),
+                                  (isEqual(new Date(appointment.date), date) &&
+                                    isEqual(
+                                      new Date(appointment.startTime),
+                                      time,
+                                    )) ||
+                                  isBefore(time, new Date()),
                               ) && "cursor-not-allowed opacity-50",
                             )}
                           >

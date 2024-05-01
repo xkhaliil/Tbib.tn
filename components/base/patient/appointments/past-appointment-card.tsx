@@ -86,11 +86,11 @@ export function PastAppointmentCard({ appointment }: PastAppointmentCardProps) {
             className={cn(
               "rounded-sm px-2.5 py-1 text-xs font-medium",
               appointment.status === AppointmentStatus.PENDING &&
-                "bg-yellow-100 text-yellow-600",
-              appointment.status === AppointmentStatus.CONFIRMED &&
-                "bg-green-100 text-green-600",
+                "bg-[#FFE097] text-[#A78025]",
               appointment.status === AppointmentStatus.CANCELLED &&
                 "bg-rose-100 text-rose-600",
+              appointment.status === AppointmentStatus.UPCOMING &&
+                "bg-teal-300 text-teal-600",
               appointment.status === AppointmentStatus.COMPLETED &&
                 "bg-blue-100 text-blue-600",
             )}

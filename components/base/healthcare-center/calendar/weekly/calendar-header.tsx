@@ -5,13 +5,10 @@ import {
   ChevronRightIcon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
-import { format, startOfToday } from "date-fns";
-
-import { useCreateAppointmentDialog } from "@/hooks/use-create-appointment-dialog";
+import { format } from "date-fns";
+import { PanelRightOpenIcon, SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { CalendarButton } from "@/components/base/calendar/calendar-button";
 
 interface CalendarHeaderProps {
   startOfWeek: Date;
@@ -26,48 +23,45 @@ export function CalendarHeader({
   previousWeek,
   goToToday,
 }: CalendarHeaderProps) {
-  const today = startOfToday();
-  const { setOpen } = useCreateAppointmentDialog();
   return (
-    <div className="sticky left-0 right-0 top-0 z-40 border-b bg-white">
-      <div className="border-b">
-        <div className="flex flex-auto border-e">
-          <div className="flex h-full flex-col border-e">
-            <div className="flex h-10 w-20 items-center justify-end text-end">
-              <span className="pe-4 text-xs text-muted-foreground">
-                {format(startOfWeek, "MMM yyyy")}
-              </span>
-            </div>
-          </div>
-          <div className="grid w-full grid-cols-7 text-center text-xs font-medium leading-6 text-foreground">
-            <div className="border-r px-3 py-2">Sun</div>
-            <div className="border-r px-3 py-2">Mon</div>
-            <div className="border-r px-3 py-2">Tue</div>
-            <div className="border-r px-3 py-2">Wed</div>
-            <div className="border-r px-3 py-2">Thu</div>
-            <div className="border-r px-3 py-2">Fri</div>
-            <div className="px-3 py-2">Sat</div>
-          </div>
+    <header className="border-b p-4">
+      <div className="-ms-2 mb-3 grid grid-cols-3 gap-2 lg:ms-0">
+        <div className="flex items-center gap-1">
+          <Button variant="outline" size="smallIcon">
+            <PanelRightOpenIcon className="h-4 w-4 text-muted-foreground" />
+          </Button>
+          <Button variant="outline" size="smallIcon">
+            <SearchIcon className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </div>
+        <div className="flex justify-center">
+          <h1 className="inline-flex items-center justify-center gap-1 rounded-md border bg-white px-2 py-0.5 text-xs font-normal text-muted-foreground">
+            Week
+          </h1>
+        </div>
+        <div className="flex justify-end">
+          <Button variant="blue" size="smallIcon">
+            <PlusCircledIcon className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
-      <div className="flex flex-auto">
-        <div className="flex h-full flex-col border-e">
-          <div className="flex h-10 w-20 items-center justify-end text-end">
-            <span className="pe-4 text-xs text-muted-foreground">All day</span>
-          </div>
-        </div>
-
-        <div className="grid w-full grid-cols-7 text-center text-xs font-medium leading-6 text-foreground">
-          <div className="border-r px-3 py-2"></div>
-          <div className="border-r px-3 py-2"></div>
-          <div className="border-r px-3 py-2"></div>
-          <div className="border-r px-3 py-2"></div>
-          <div className="border-r px-3 py-2"></div>
-          <div className="border-r px-3 py-2"></div>
-          <div className="border-r px-3 py-2"></div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-lg font-medium">
+          {format(startOfWeek, "MMMM yyyy")}, Week {format(startOfWeek, "w")}
+        </h2>
+        <div className="flex -space-x-px rounded-md border bg-white">
+          <Button variant="ghost" size="icon" onClick={previousWeek}>
+            <ChevronLeftIcon className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={goToToday}>
+            Today
+          </Button>
+          <Button variant="ghost" size="icon" onClick={nextWeek}>
+            <ChevronRightIcon className="h-4 w-4" />
+          </Button>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

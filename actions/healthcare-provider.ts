@@ -319,8 +319,6 @@ export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
 
   const openingHours = healthCareProvider?.openingHours;
 
-  const appointments = healthCareProvider?.appointments;
-
   const day = date.getDay();
 
   const openingHour = openingHours?.find((hour) => hour.dayOfWeek === day);

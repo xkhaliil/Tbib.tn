@@ -29,6 +29,7 @@ type TodayAppointment = {
   healthCareProvider: HealthCareProvider & {
     user: User;
   };
+  date: Date;
   startTime: Date;
   endTime: Date;
   status: AppointmentStatus;

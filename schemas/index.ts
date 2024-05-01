@@ -293,7 +293,7 @@ export const CreateAppointmentSchema = z
     day: z.date(),
     startTime: z.date(),
     endTime: z.date(),
-    status: z.enum(["PENDING", "CONFIRMED", "UPCOMING"]),
+    status: z.enum(["PENDING", "UPCOMING"]),
     patientId: z.string(),
   })
   .refine(
@@ -339,7 +339,6 @@ export const EditAppointmentSchema = z
     endTime: z.date(),
     status: z.enum([
       "PENDING",
-      "CONFIRMED",
       "UPCOMING",
       "CANCELLED",
       "EXPIRED",

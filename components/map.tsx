@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 
 import { cn } from "@/lib/utils";
 
+import { Geocoder } from "./geocoder";
 import { MapMarker } from "./marker";
 
 const markerIcon = L.icon({ iconUrl: "/images/marker-icon.png" });
@@ -42,6 +43,7 @@ export function Map({ center, zoom, className }: MapProps) {
     >
       <TileLayer url={url} attribution={attribution} />
       {center && <MapMarker center={center as L.LatLngExpression} />}
+      <Geocoder />
     </MapContainer>
   );
 }

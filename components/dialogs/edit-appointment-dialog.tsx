@@ -56,7 +56,6 @@ type TagColors = {
 
 const tagColors: TagColors = {
   PENDING: "warning",
-  CONFIRMED: "default",
   UPCOMING: "success",
   CANCELLED: "destructive",
   EXPIRED: "destructiveOutline",

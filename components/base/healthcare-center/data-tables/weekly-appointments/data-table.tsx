@@ -59,6 +59,7 @@ interface DataTableProps {
   columns: ColumnDef<TodayAppointment, any>[];
   data: TodayAppointment[];
 }
+
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -91,7 +92,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   });
 
   return (
-    <Card>
+    <Card className="mt-2">
       <CardHeader className="px-7">
         <CardTitle>This Week's Appointments</CardTitle>
         <CardDescription>
@@ -151,13 +152,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
                     className={cn(
                       "rounded-sm px-2.5 py-1 text-xs font-medium",
                       row.original?.status === AppointmentStatus.PENDING &&
-                        "bg-yellow-100 text-yellow-600",
-                      row.original?.status === AppointmentStatus.CONFIRMED &&
-                        "bg-green-100 text-green-600",
+                        "bg-[#FFE097] text-[#A78025]",
                       row.original?.status === AppointmentStatus.CANCELLED &&
                         "bg-rose-100 text-rose-600",
                       row.original?.status === AppointmentStatus.COMPLETED &&
                         "bg-blue-100 text-blue-600",
+                      row.original.status === AppointmentStatus.UPCOMING &&
+                        "bg-teal-300 text-teal-600",
                     )}
                   >
                     {row.original?.status.charAt(0).toUpperCase() +

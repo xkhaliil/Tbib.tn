@@ -46,6 +46,7 @@ interface DataTableProps {
   columns: ColumnDef<HealthcareProvider, any>[];
   data: HealthcareProvider[];
 }
+
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -78,7 +79,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   });
 
   return (
-    <Card>
+    <Card className="mt-2">
       <CardHeader>
         <CardTitle>
           Requests <span className="text-primary">({data.length})</span>

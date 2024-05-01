@@ -199,3 +199,39 @@ export async function getHealthcareProviderByHealthcareCenterId(
     console.error("[500] getHealthcareProviderByHealthcareCenterId", error);
   }
 }
+
+export async function getHealthcareCenterAppointments(
+  healthcareProvidersIds: string[] | undefined,
+) {
+  try {
+    const appointments = await db.appointment.findMany({
+      where: {
+        healthCareProviderId: {
+          in: healthcareProvidersIds,
+        },
+      },
+      orderBy: {
+        startTime: "asc",
+      },
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(
+      "[500] getHealthcareCenterAppointmentsByHealthcareProvidersIds",
+      error,
+    );
+  }
+}
