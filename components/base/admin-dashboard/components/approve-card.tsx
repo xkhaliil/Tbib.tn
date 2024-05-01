@@ -38,10 +38,12 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
-type healthcareProvider = Awaited<ReturnType<typeof getHealthcareProviderById>>;
+type HealthcareProvider = Awaited<ReturnType<typeof getHealthcareProviderById>>;
+
 interface HealthcareProvidersDataTableActionsProps {
-  healthcareProvider: healthcareProvider;
+  healthcareProvider: HealthcareProvider;
 }
+
 export default function ApproveCard({
   healthcareProvider,
 }: HealthcareProvidersDataTableActionsProps) {
@@ -71,6 +73,7 @@ export default function ApproveCard({
       });
     }
   };
+  
   const handleVerify = (id: string) => {
     startTransition(() => {
       verifyHealthcareProvider(
@@ -112,6 +115,7 @@ export default function ApproveCard({
     });
   };
 
+export function ApproveCard() {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">

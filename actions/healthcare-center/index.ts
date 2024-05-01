@@ -164,3 +164,41 @@ export async function totalHealthcareCentersYearlyWithIncrease() {
       totalHealthcareCentersInThisYear - totalHealthcareCentersInLastYear,
   };
 }
+
+export async function getHealthcareProvidersByHealthcareCenterId(
+  id: string | undefined,
+) {
+  try {
+    const healthcareProviders = await db.healthCareProvider.findMany({
+      include: {
+        user: true,
+      },
+      where: {
+        healthCareCenterId: id,
+      },
+    });
+
+    return healthcareProviders;
+  } catch (error) {
+    console.error("[500] getHealthcareProvidersByHealthcareCenterId", error);
+  }
+}
+
+export async function getHealthcareProviderByHealthcareCenterId(
+  id: string | undefined,
+) {
+  try {
+    const healthcareProvider = await db.healthCareProvider.findFirst({
+      include: {
+        user: true,
+      },
+      where: {
+        healthCareCenterId: id,
+      },
+    });
+
+    return healthcareProvider;
+  } catch (error) {
+    console.error("[500] getHealthcareProviderByHealthcareCenterId", error);
+  }
+}

@@ -5,7 +5,7 @@ import React from "react";
 import { createAbsence, deleteAbsence } from "@/actions/absence";
 import { CreateAbsenceSchemaType } from "@/schemas";
 import { AppointmentWithPatient } from "@/types";
-import { Absence, AppointmentStatus } from "@prisma/client";
+import { Absence, AppointmentStatus, OpeningHours } from "@prisma/client";
 import {
   ArrowRightIcon,
   CalendarIcon,
@@ -54,6 +54,7 @@ interface DayProps {
   dayIndex: number;
   appointments: AppointmentWithPatient[];
   absences?: Absence[];
+  openingHours?: OpeningHours[];
 }
 
 const colStartClasses = [
@@ -73,6 +74,7 @@ export function CalendarDay({
   dayIndex,
   appointments,
   absences,
+  openingHours,
 }: DayProps) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [appointmentsByAbsence, setAppointmentsByAbsence] = React.useState<
@@ -91,6 +93,7 @@ export function CalendarDay({
   async function handleDeleteAbsence(date: Date) {
     await deleteAbsence(date);
   }
+
   return (
     <div
       className={cn(
@@ -103,11 +106,25 @@ export function CalendarDay({
         !isEqual(day, selectedDay) && "hover:bg-accent/75",
         absences?.some((absence) => isSameDay(absence.date, day)) &&
           "cursor-not-allowed bg-[url('/images/pattern.png')] bg-cover",
+        // If the day index is equals to an opening hour day index and its closed day
+        openingHours?.some(
+          (openingHour) =>
+            openingHour.dayOfWeek === dayIndex && openingHour.isClosed,
+        ) && "cursor-not-allowed bg-rose-100 hover:bg-rose-100",
       )}
     >
       <header className="flex items-center justify-between p-3.5">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild disabled={isBefore(day, startOfToday())}>
+          <DropdownMenuTrigger
+            asChild
+            disabled={
+              isBefore(day, startOfToday()) ||
+              openingHours?.some(
+                (openingHour) =>
+                  openingHour.dayOfWeek === dayIndex && openingHour.isClosed,
+              )
+            }
+          >
             <button
               type="button"
               className={cn(
@@ -183,7 +200,7 @@ export function CalendarDay({
                   className={cn(
                     "flex cursor-pointer items-center justify-between rounded-lg px-4 py-1.5 text-xs",
                     appointment?.status === AppointmentStatus.PENDING &&
-                      "bg-warning text-warning-foreground",
+                      "bg-yellow-400 text-yellow-900",
                     appointment?.status === AppointmentStatus.UPCOMING &&
                       "bg-success text-success-foreground",
                     appointment?.status === AppointmentStatus.COMPLETED &&
@@ -196,7 +213,9 @@ export function CalendarDay({
                       "bg-primary text-primary-foreground",
                   )}
                 >
-                  <p className="truncate font-medium">{appointment?.title}</p>
+                  <p className="truncate font-medium">
+                    {appointment?.patient.user.name}
+                  </p>
                   <div className="flex items-center gap-x-2 text-xs">
                     <span>
                       {format(appointment?.startTime!, "H:mm")} -{" "}
@@ -221,6 +240,14 @@ export function CalendarDay({
                 </div>
               </AppointmentPopover>
             ))}
+          {openingHours?.some(
+            (openingHour) =>
+              openingHour.dayOfWeek === dayIndex && openingHour.isClosed,
+          ) && (
+            <div className="flex items-center justify-center text-xs font-medium text-rose-500">
+              Closed
+            </div>
+          )}
         </div>
       </div>
 
@@ -257,7 +284,7 @@ function AppointmentPopover({
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded",
                 appointment?.status === AppointmentStatus.PENDING &&
-                  "bg-warning",
+                  "bg-yellow-400",
                 appointment?.status === AppointmentStatus.UPCOMING &&
                   "bg-success",
                 appointment?.status === AppointmentStatus.COMPLETED &&

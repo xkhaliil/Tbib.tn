@@ -16,12 +16,12 @@ export async function BookApppointmentNavbar() {
       <div className="border-b py-5">
         <Container className="max-w-[1600px]">
           <div className="flex flex-row items-center justify-between gap-4 md:gap-0">
-            <div className="flex items-center">
+            <Link className="flex items-center" href="/">
               <Logo className="h-7 w-7" />
               <span className="ml-2 text-2xl font-bold tracking-tighter text-blue-600">
                 Oladoc
               </span>
-            </div>
+            </Link>
 
             {authenticatedUser ? (
               <UserButton />

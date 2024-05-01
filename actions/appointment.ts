@@ -13,11 +13,14 @@ import { db } from "@/lib/db";
 
 import { getCurrentSession } from "./auth";
 
-export async function getAllAppointments() {
+export async function getAllAppointments(healthCareProviderId?: string) {
   try {
     const appointments = await db.appointment.findMany({
+      where: {
+        healthCareProviderId,
+      },
       orderBy: {
-        date: "asc",
+        startTime: "asc",
       },
       include: {
         patient: {

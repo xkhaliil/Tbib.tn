@@ -1,45 +1,22 @@
 import React from "react";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
+import { Calendar } from "@/components/base/healthcare-center/calendar/weekly";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
-import { SearchButton } from "@/components/base/healthcare-center/dashboard/search-button";
 import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
 
-export default function HealthcareCenterAppointmentsPage() {
+export default async function HealthcareCenterAppointmentsPage() {
   return (
-    <div>
+    <div className="flex items-center">
       <Sidebar />
-      <Header>
-        <MobileSidebar />
-        <Breadcrumb className="hidden md:flex">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/hc/dashboard">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/hc/dashboard">Dashboard</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Appointments</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <SearchButton />
-        <HealthcareCenterButton />
-      </Header>
+      <div className="w-full">
+        <Header className="lg:py-0">
+          <MobileSidebar />
+        </Header>
+        <Calendar />
+      </div>
     </div>
   );
 }

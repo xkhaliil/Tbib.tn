@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import Image from "next/image";
+import { getHealthcareProviderByHealthcareCenterId } from "@/actions/healthcare-center";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
@@ -15,6 +16,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,15 +43,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-type HealthcareProvider = {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  speciality: string;
-  totalConsultations: number;
-  joinedAt: Date;
-};
+type HealthcareProvider = Awaited<
+  ReturnType<typeof getHealthcareProviderByHealthcareCenterId>
+>;
 
 interface DataTableProps {
   columns: ColumnDef<HealthcareProvider, any>[];
@@ -104,9 +100,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
               <TableHead>Name</TableHead>
               <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead>Speciality</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Total Consultations
-              </TableHead>
               <TableHead className="hidden md:table-cell">Joined At</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
@@ -115,26 +108,24 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.original.id}>
+              <TableRow key={row.original?.id}>
                 <TableCell className="hidden sm:table-cell">
                   <Image
                     alt="Profile Image"
                     className="aspect-square rounded-md object-cover"
                     height="64"
-                    src="/placeholder.svg"
+                    src={row.original?.user.image || "/placeholder.svg"}
                     width="64"
                   />
                 </TableCell>
-                <TableCell>{row.original.name}</TableCell>
+                <TableCell>{row.original?.user.name}</TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {row.original.email}
+                  {row.original?.user.email}
                 </TableCell>
-                <TableCell>{row.original.speciality}</TableCell>
+                <TableCell>{row.original?.speciality}</TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {row.original.totalConsultations}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {new Date(row.original.joinedAt).toLocaleDateString()}
+                  {row.original?.user.createdAt &&
+                    format(new Date(row.original.user.createdAt), "dd/MM/yyyy")}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>

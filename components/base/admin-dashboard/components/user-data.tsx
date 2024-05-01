@@ -1,13 +1,20 @@
+import React from "react";
+
 import { getDoctorById } from "@/actions/doctors";
+
+import { HealthCareProvider, User } from "@prisma/client";
+import { format } from "date-fns";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 
-type doctorType = Awaited<ReturnType<typeof getDoctorById>>;
+type Doctor = Awaited<ReturnType<typeof getDoctorById>>;
+
 interface HealthcareProviderDetailsPageParams {
-  doctor: doctorType;
+  doctor: Doctor;
 }
+
 export function UserData({ doctor }: HealthcareProviderDetailsPageParams) {
   return (
     <form className="grid w-full items-start gap-6">
@@ -31,8 +38,26 @@ export function UserData({ doctor }: HealthcareProviderDetailsPageParams) {
             <div className="font-mono rounded-md border px-4 py-3 text-sm">
               {doctor?.user.email}
             </div>
+        <div className="flex items-center space-x-4">
+          <Avatar className="h-16 w-16">
+            <AvatarImage
+              src={healthcareProvider?.user.image || ""}
+              alt={healthcareProvider?.user.name || ""}
+            />
+            <AvatarFallback>
+              {healthcareProvider?.user.name?.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <h2 className="text-lg font-semibold">
+              {healthcareProvider?.user.name || "N/A"}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {healthcareProvider?.user.email || "N/A"}
+            </p>
           </div>
         </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-3">
             <Label htmlFor="gender">Gender</Label>
@@ -87,7 +112,6 @@ export function UserData({ doctor }: HealthcareProviderDetailsPageParams) {
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="name">Email verification</Label>
-          {/* <Badge variant="success">Verified</Badge> */}
           {doctor?.user.emailVerified ? (
             <Badge variant="success">Verified</Badge>
           ) : (

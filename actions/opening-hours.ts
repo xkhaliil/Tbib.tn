@@ -10,7 +10,9 @@ import { db } from "@/lib/db";
 
 import { getCurrentSession } from "./auth";
 
-export async function getOpeningHoursByProviderId(providerId: string) {
+export async function getOpeningHoursByProviderId(
+  providerId: string | undefined,
+) {
   try {
     const openingHours = await db.openingHours.findMany({
       where: {

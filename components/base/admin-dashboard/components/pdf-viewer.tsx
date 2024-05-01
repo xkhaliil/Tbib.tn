@@ -12,15 +12,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Label } from "@/components/ui/label";
 
-type doctor = Awaited<ReturnType<typeof getDoctorById>>;
+type Doctor = Awaited<ReturnType<typeof getDoctorById>>;
+
 interface HealthcareProviderDetailsPageParams {
-  doctor: doctor;
+  doctor: Doctor;
 }
+
 export default function PdfViewer({
   doctor,
 }: HealthcareProviderDetailsPageParams) {
+export function PdfViewer() {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">

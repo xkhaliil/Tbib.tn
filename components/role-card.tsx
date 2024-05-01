@@ -30,7 +30,7 @@ export function RoleCard({
         </div>
 
         {checked && (
-          <div className="absolute right-4 top-4 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-600">
+          <div className="absolute right-4 top-4 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600">
             <CheckIcon className="h-4 w-4 text-white" />
           </div>
         )}
