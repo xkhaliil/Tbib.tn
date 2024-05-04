@@ -157,16 +157,39 @@ export async function getRandomSixPatients() {
     })),
   };
 }
-export async function getPatientNameGender() {
+export async function getPatientsByGender() {
+  var male: number = 0;
+  var female: number = 0;
   const patients = await db.patient.findMany({
     include: {
       user: true,
     },
   });
-  return patients.map((patient) => ({
-    value: 1,
-    gender: patient.user.gender,
-  }));
+  //return number of patients for each gender
+  patients.map((patient) => {
+    if (patient.user.gender === "MALE") {
+      male++;
+    } else {
+      female++;
+    }
+  });
+  const PatientsByGender = [
+    {
+      data: [
+        {
+          id: 0,
+          value: male,
+          label: "Male",
+        },
+        {
+          id: 1,
+          value: female,
+          label: "Female",
+        },
+      ],
+    },
+  ];
+  return PatientsByGender;
 }
 
 export async function getPatientPastAppointments(id: string | undefined) {

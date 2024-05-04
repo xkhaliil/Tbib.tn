@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-  getPatientNameGender,
+  getPatientsByGender,
   getPatientsByMonth,
   getRandomSixPatients,
 } from "@/actions/patient";
@@ -11,9 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
-import { PatientGenderChart } from "@/components/base/admin-dashboard/charts/gender-patients-chart";
-import AdminPatientChartDashboard from "@/components/base/admin-dashboard/charts/patients-chart";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
+import { PatientGenderChart } from "@/components/base/admin-dashboard/charts/gender-patients-chart";
 import { AdminPatientChartDashboard } from "@/components/base/admin-dashboard/charts/patients-chart";
 import { AdminPatientTable } from "@/components/base/admin-dashboard/data-table/admin-patients-table/admin-patient-table";
 
@@ -33,7 +32,7 @@ export default async function PatientsAdminDashboard() {
     designation: patient.designation || "Patient",
     image: patient.image || "/images/avatars/avatar1.jpg",
   }));
-  const GenderChart = await getPatientNameGender();
+  const GenderChart = await getPatientsByGender();
   return (
     <div className="grid h-screen md:grid-cols-[220px_1fr] md:grid-rows-[56px_1fr] lg:grid-cols-[280px_1fr]">
       <AdminNavbar />

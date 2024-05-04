@@ -1,31 +1,18 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 
-import { getPatientNameGender } from "@/actions/patient";
-import { DonutChart, Legend } from "@tremor/react";
+import { getPatientsByGender } from "@/actions/patient";
+import { PieChart } from "@mui/x-charts/PieChart";
 
-type GenderChartType = Awaited<ReturnType<typeof getPatientNameGender>>;
+type GenderChartType = Awaited<ReturnType<typeof getPatientsByGender>>;
 interface GenderChartProps {
   patients: GenderChartType;
 }
 export function PatientGenderChart({ patients }: GenderChartProps) {
   return (
     <>
-      <div className="flex items-center justify-center space-x-6">
-        <DonutChart
-          data={patients}
-          category="value"
-          index="gender"
-          colors={["blue", "violet"]}
-          className="w-40"
-        />
-        <Legend
-          categories={["Male", "Female"]}
-          colors={["blue", "violet"]}
-          className="max-w-xs"
-        />
-      </div>
+      <PieChart series={patients} width={400} height={200} />
     </>
   );
 }
