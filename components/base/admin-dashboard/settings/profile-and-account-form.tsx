@@ -54,6 +54,8 @@ enum GENDERS {
 }
 export function ProfileAndAccountFormAdmin() {
   const user = useCurrentUser();
+
+
   const { data: session, update } = useSession();
   const [success, setSuccess] = React.useState<string | undefined>("");
   const [error, setError] = React.useState<string | undefined>("");

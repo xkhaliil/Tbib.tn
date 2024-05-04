@@ -3,13 +3,14 @@ import { getDoctorById } from "@/actions/doctors";
 import { getHealthcareProviderById } from "@/actions/auth";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
-import { ApproveCard } from "@/components/base/admin-dashboard/components/approve-card";
-import { PdfViewer } from "@/components/base/admin-dashboard/components/pdf-viewer";
-import { SpecificUserData } from "@/components/base/admin-dashboard/components/specific-user-data";
 import { UserData } from "@/components/base/admin-dashboard/components/user-data";
+import { SpecificUserData } from "@/components/base/admin-dashboard/components/specific-user-data";
+import PdfViewer from "@/components/base/admin-dashboard/components/pdf-viewer";
+import ApproveCard from "@/components/base/admin-dashboard/components/approve-card";
+
+
 
 interface HealthcareProviderDetailsPageParams {
   params: {
@@ -57,21 +58,10 @@ export default async function HealthcareProviderDetailsPage({
                   </div>
                 </div>
               </main>
-          <main className="grid flex-1 gap-4 overflow-auto p-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <div className="relative flex-col items-start gap-8 md:flex">
-              <UserData healthcareProvider={healthcareProvider} />
             </div>
-            <div>
-              <SpecificUserData />
-            </div>
-            <div className="grid grid-rows-6 flex-col ">
-              <PdfViewer />
-              <div>
-                <ApproveCard />
-              </div>
-            </div>
-          </main>
+          </div>
         </div>
+        
       </ScrollArea>
     </div>
   );

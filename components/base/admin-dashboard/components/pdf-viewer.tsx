@@ -22,7 +22,6 @@ interface HealthcareProviderDetailsPageParams {
 export default function PdfViewer({
   doctor,
 }: HealthcareProviderDetailsPageParams) {
-export function PdfViewer() {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">
