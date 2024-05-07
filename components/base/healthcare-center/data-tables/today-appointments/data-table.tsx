@@ -179,9 +179,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
           Showing{" "}
           <strong>
             {table.getRowModel().rows.length > 0}
-            {table.getRowModel().rows.length > 1 ? "s" : ""}{" "}
-            {table.getRowModel().rows.length > 0 ? "1-" : ""}{" "}
-            {table.getRowModel().rows.length}-
+            {table.getRowModel().rows.length > 0 ? "1-" : ""}
+            {table.getRowModel().rows.length} of{" "}
           </strong>
           <strong>{data.length}</strong> appointments
         </div>

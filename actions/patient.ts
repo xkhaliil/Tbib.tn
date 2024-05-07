@@ -165,7 +165,12 @@ export async function getPatientsByGender() {
       user: true,
     },
   });
-  //return number of patients for each gender
+  
+  return patients.map((patient) => ({
+    value: 1,
+    gender: patient.user.gender,
+  }));
+
   patients.map((patient) => {
     if (patient.user.gender === "MALE") {
       male++;

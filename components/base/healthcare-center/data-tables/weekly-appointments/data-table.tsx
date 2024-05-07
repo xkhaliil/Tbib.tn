@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
                   colSpan={6}
                   className="p-8 text-center text-muted-foreground"
                 >
-                  No appointments for today.
+                  No appointments for this week.
                 </TableCell>
               </TableRow>
             )}
@@ -177,7 +177,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
       </CardContent>
       <CardFooter className="flex items-center justify-between px-7">
         <div className="text-xs text-muted-foreground">
-          Showing <strong>1-{table.getRowModel().rows.length}</strong> of{" "}
+          Showing{" "}
+          <strong>
+            {table.getRowModel().rows.length > 0}
+            {table.getRowModel().rows.length > 0 ? "1-" : ""}
+            {table.getRowModel().rows.length} of{" "}
+          </strong>
           <strong>{data.length}</strong> appointments
         </div>
 
