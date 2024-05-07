@@ -167,6 +167,7 @@ export async function getPatientNameGender() {
     value: 1,
     gender: patient.user.gender,
   }));
+}
 
 export async function getPatientPastAppointments(id: string | undefined) {
   try {

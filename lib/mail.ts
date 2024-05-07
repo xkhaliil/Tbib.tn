@@ -166,16 +166,19 @@ export async function sendCustomEmail({
     console.log(err);
   }
 }
+
 export async function compileVerifiedUserEmailTemplate(sendname: string) {
   const template = handlebars.compile(welcomeTemplate);
   const htmlBody = template({ sendname: sendname });
   return htmlBody;
 }
+
 export async function compileRejectedUserEmailTemplate(sendname: string) {
   const template = handlebars.compile(rejectHealthcareProviderTemplate);
   const htmlBody = template({ sendname: sendname });
   return htmlBody;
 }
+
 export async function compileRequestCustomEmailTemplate(
   sendname: string,
   custom: string,
@@ -184,6 +187,7 @@ export async function compileRequestCustomEmailTemplate(
   const htmlBody = template({ sendname: sendname, custom: custom });
   return htmlBody;
 }
+
 export async function compileUnderReviewEmailTemplate(sendname: string) {
   const template = handlebars.compile(underReviewTemplate);
   const htmlBody = template({ sendname: sendname });
