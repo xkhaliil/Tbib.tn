@@ -165,11 +165,6 @@ export async function getPatientsByGender() {
       user: true,
     },
   });
-  
-  return patients.map((patient) => ({
-    value: 1,
-    gender: patient.user.gender,
-  }));
 
   patients.map((patient) => {
     if (patient.user.gender === "MALE") {
