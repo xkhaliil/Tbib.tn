@@ -540,6 +540,26 @@ export const UploadDocumentSchema = z
     },
   );
 
+export const SendNewMessageSchema = z
+  .object({
+    content: z.optional(z.string()),
+    file: z.optional(z.string()),
+  })
+  .refine(
+    // * If the content and file fields are empty, return false and show an error message.
+    (data) => {
+      if (!data.content && !data.file) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "Content or file is required!",
+      path: ["content"],
+    },
+  );
+
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 export type ForgotPasswordSchemaType = z.infer<typeof ForgotPasswordSchema>;
@@ -558,3 +578,4 @@ export type ManageOpeningHoursSchemaType = z.infer<
   typeof ManageOpeningHoursSchema
 >;
 export type UploadDocumentSchemaType = z.infer<typeof UploadDocumentSchema>;
+export type SendNewMessageSchemaType = z.infer<typeof SendNewMessageSchema>;

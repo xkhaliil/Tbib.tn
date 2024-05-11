@@ -59,6 +59,7 @@ interface DataTableProps {
   columns: ColumnDef<TodayAppointment, any>[];
   data: TodayAppointment[];
 }
+
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

@@ -9,6 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 import { Toaster } from "@/components/ui/sonner";
+import { ActiveStatus } from "@/components/base/chat/active-status";
 
 const lexend = Lexend({ subsets: ["latin"], variable: "--font-heading" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -34,6 +35,7 @@ export default function RootLayout({
       >
         <Toaster />
         <DialogProvider />
+        <ActiveStatus />
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

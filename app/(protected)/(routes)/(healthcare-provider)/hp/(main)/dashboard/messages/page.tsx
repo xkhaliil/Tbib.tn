@@ -1,22 +1,30 @@
 import React from "react";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Navbar } from "@/components/base/healthcare-provider-dashboard/navbar";
+import Image from "next/image";
+import { getAllConversationsForHP } from "@/actions/conversation";
+
+import { ChatSidebar } from "@/components/base/chat/hp/chat-sidebar";
 import { Sidebar } from "@/components/base/navigation/sidebar";
 
-export default function MessagesPage() {
+export default async function MessagesPage() {
+  const conversations = await getAllConversationsForHP();
   return (
-    <div className="grid h-screen grid-cols-[70px_352px_1fr] grid-rows-[64px_1fr]">
-      <Navbar />
+    <div className="grid h-screen grid-cols-[70px_352px_1fr]">
       <Sidebar />
-      <div className="row-start-1 row-end-3 border-r bg-white">
-        <div className="flex h-16 items-center justify-start border-b">
-          <h1 className="pl-4 text-lg font-semibold tracking-tight">
-            Messages
-          </h1>
+      <ChatSidebar conversations={conversations} />
+      <div className="col-start-3 flex h-screen w-full flex-col items-center justify-center bg-muted/40">
+        <div className="flex flex-col items-center space-y-6">
+          <Image src="/messages.svg" width="150" height="150" alt="Messages" />
+          <div className="flex flex-col items-center space-y-1">
+            <p className="text-center text-xl font-bold tracking-tight text-slate-600">
+              Select a conversation to start chatting
+            </p>
+            <span className="text-sm text-muted-foreground">
+              You can view all your conversations here.
+            </span>
+          </div>
         </div>
       </div>
-      <ScrollArea className="col-start-3 bg-secondary"></ScrollArea>
     </div>
   );
 }

@@ -189,3 +189,5 @@ export const languages: ILanguage[] = [
   { value: "English", label: "English" },
   { value: "French", label: "French" },
 ];
+
+export const imageFileTypes = ["image/jpeg", "image/png"];

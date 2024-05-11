@@ -301,25 +301,27 @@ model Conversation {
   createdAt     DateTime @default(now())
   lastMessageAt DateTime @default(now())
 
-  patientId String  @unique @db.ObjectId
-  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId String  @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id])
 
-  healthCareProviderId String             @unique @db.ObjectId
-  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+  healthCareProviderId String             @db.ObjectId
+  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id])
 
   messages Message[]
 }
 
 model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
+  content   String?
   file      String?
+  fileType  String?
+  fileName  String?
   createdAt DateTime @default(now())
 
-  conversationId String       @unique @db.ObjectId
+  conversationId String       @db.ObjectId
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
-  senderId String @unique @db.ObjectId
+  senderId String @db.ObjectId
   sender   User   @relation(fields: [senderId], references: [id])
 
   seenIds String[] @db.ObjectId

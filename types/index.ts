@@ -4,6 +4,7 @@ import {
   getHealthcareProviderById,
 } from "@/actions/auth";
 import { getPatientById } from "@/actions/patient";
+import { Message as PrismaMessage, User } from "@prisma/client";
 
 export type AppointmentsWithPatient = Awaited<
   ReturnType<typeof getAllAppointments>
@@ -22,3 +23,7 @@ export type HealthCareProvider = Awaited<
 export type HealthcareCenter = Awaited<
   ReturnType<typeof getHealthcareCenterById>
 >;
+
+export type Message = PrismaMessage & {
+  sender: User;
+};
