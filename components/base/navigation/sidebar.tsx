@@ -47,7 +47,7 @@ export function Sidebar() {
           label="Messages"
           icon={MessagesSquareIcon}
           onClick={() => router.push("/hp/dashboard/messages")}
-          isActive={pathname === "/hp/dashboard/messages"}
+          isActive={pathname.startsWith("/hp/dashboard/messages")}
         />
         <SidebarButton label="Patients" icon={UsersIcon} />
         <SidebarButton label="Consultations" icon={HeartPulseIcon} />

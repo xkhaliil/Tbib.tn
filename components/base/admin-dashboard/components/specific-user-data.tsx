@@ -1,57 +1,16 @@
 import React from "react";
 
 import { getDoctorById } from "@/actions/doctors";
-import {
-  Bird,
-  Book,
-  Bot,
-  Code2,
-  CornerDownLeft,
-  LifeBuoy,
-  Mic,
-  Paperclip,
-  Rabbit,
-  Settings,
-  Settings2,
-  Share,
-  SquareUser,
-  Triangle,
-  Turtle,
-} from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
-import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `Service N'${a.length + i}`,
-);
 type doctor = Awaited<ReturnType<typeof getDoctorById>>;
 interface HealthcareProviderDetailsPageParams {
   doctor: doctor;
 }
+
 export function SpecificUserData({
   doctor,
 }: HealthcareProviderDetailsPageParams) {

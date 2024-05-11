@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { getAllPatients } from "@/actions/patient";
+import { Patient, User } from "@prisma/client";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
@@ -14,43 +16,37 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Patient = Awaited<ReturnType<typeof getAllPatients>>;
-const columnHelper = createColumnHelper<Patient>();
+export type PatientType = Patient & {
+  user: User;
+};
+
+const columnHelper = createColumnHelper<PatientType>();
+
 export const columns = [
   columnHelper.accessor("user.name", {
     header: "Name",
     id: "name",
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
-  }),
-  columnHelper.accessor("user.email", {
-    id: "email",
-    header: ({ column }) => {
+    cell: ({ row }) => {
+      const email = row?.original?.user?.email;
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex items-center space-x-4">
+          <Image
+            alt="Profile Image"
+            className="aspect-square rounded-md object-cover"
+            src={row?.original?.user?.image ?? "/placeholder.svg"}
+            height="36"
+            width="36"
+          />
+          <div className="flex flex-col">
+            <h1 className="font-medium">{row.getValue("name")}</h1>
+            <div className="hidden text-sm text-muted-foreground md:inline">
+              {email}
+            </div>
+          </div>
+        </div>
       );
     },
   }),
-  columnHelper.accessor("user.gender", {
-    id: "gender",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Gender
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  }),
-
   {
     id: "actions",
     cell: () => (

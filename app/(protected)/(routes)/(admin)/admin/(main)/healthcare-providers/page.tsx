@@ -11,12 +11,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { TotalHealthcareProvidersCard } from "@/components/base/admin-dashboard/cards/total-hp-card";
-import { TotalHealthCareProvidersUsersCard } from "@/components/base/admin-dashboard/cards/total-hp-users-card";
-import { HealthcareProvidersChart } from "@/components/base/admin-dashboard/charts/doctors-chart";
 import { HealthcareProvidersTable } from "@/components/base/admin-dashboard/data-table/healthcare-providers-table";
 
 export default async function AdminDoctorsDashboard() {
-  const healthcareProvidersPerMonth = await getHealthCareProvidersByMonth();
   const healthcareProvidersWeeklyStats =
     await totalHealthcareProvidersWeeklyWithIncrease();
   const healthcareProvidersMonthlyStats =
