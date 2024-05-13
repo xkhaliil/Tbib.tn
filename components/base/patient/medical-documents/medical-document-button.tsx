@@ -19,7 +19,6 @@ import {
 import { ViewMedicalDocumentDialog } from "@/components/base/patient/medical-documents/dialogs/view-medical-document-dialog";
 
 enum ButtonType {
-  VIEW,
   DOWNLOAD,
   DELETE,
 }
@@ -45,10 +44,6 @@ export function MedicalDocumentButton({
   async function handleButtonClick(type: ButtonType) {
     startTransition(() => {
       switch (type) {
-        case ButtonType.VIEW:
-          viewMedicalDocumentDialog.setMedicalDocument(medicalDocument);
-          viewMedicalDocumentDialog.setOpen(true);
-          break;
         case ButtonType.DOWNLOAD:
           window.open(medicalDocument.url, "_blank");
           break;

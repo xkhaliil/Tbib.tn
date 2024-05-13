@@ -9,7 +9,6 @@ import { DownloadIcon, EyeIcon, FileIcon, TrashIcon } from "lucide-react";
 import { MedicalDocumentButton } from "@/components/base/patient/medical-documents/medical-document-button";
 
 enum ButtonType {
-  VIEW,
   DOWNLOAD,
   DELETE,
 }
@@ -43,13 +42,6 @@ export function MedicalDocumentCard({
 
           <div className="ml-auto hidden items-center space-x-4 xl:flex">
             <MedicalDocumentButton
-              label="View"
-              icon={EyeIcon}
-              variant="blue"
-              buttonType={ButtonType.VIEW}
-              medicalDocument={medicalDocument}
-            />
-            <MedicalDocumentButton
               label="Download"
               icon={DownloadIcon}
               variant="outline"
@@ -68,13 +60,6 @@ export function MedicalDocumentCard({
       </div>
 
       <div className="mt-4 xl:hidden">
-        <MedicalDocumentButton
-          label="View"
-          icon={EyeIcon}
-          variant="blue"
-          buttonType={ButtonType.VIEW}
-          medicalDocument={medicalDocument}
-        />
         <MedicalDocumentButton
           label="Download"
           icon={DownloadIcon}

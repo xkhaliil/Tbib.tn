@@ -45,12 +45,6 @@ export function Navbar() {
             My Messages
           </NavbarLink>
           <NavbarLink
-            href="/patient/dashboard/consultations"
-            isActive={pathname === "/patient/dashboard/consultations"}
-          >
-            My Consultations
-          </NavbarLink>
-          <NavbarLink
             href="/patient/dashboard/medical-documents"
             isActive={pathname === "/patient/dashboard/medical-documents"}
           >
