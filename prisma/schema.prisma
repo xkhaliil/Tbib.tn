@@ -230,15 +230,15 @@ model Document {
 }
 
 model Appointment {
-  id           String            @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String?
-  date         DateTime
-  startTime    DateTime
-  endTime      DateTime
-  status       AppointmentStatus @default(PENDING)
-  symptomsType String?
-  symptoms     String?
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  description      String?
+  date             DateTime
+  startTime        DateTime
+  endTime          DateTime
+  status           AppointmentStatus @default(PENDING)
+  symptomsType     String?
+  symptoms         String?
   symptomsDuration String?
   symptomsLength   String?
   symptomsSeverity String?
@@ -277,14 +277,14 @@ model Consultation {
 
 model Review {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  rating  Int
+  rating  Float
   comment String?
   date    DateTime
 
-  patientId String  @unique @db.ObjectId
+  patientId String  @db.ObjectId
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
-  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProviderId String             @db.ObjectId
   healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
 }
 
