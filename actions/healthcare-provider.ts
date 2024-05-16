@@ -292,6 +292,11 @@ export async function getHealthCareProviderUserAndOpeningHoursAndAbsencesById(
       user: true,
       openingHours: true,
       absences: true,
+      reviews: {
+        include: {
+          patient: { include: { user: true } },
+        },
+      },
     },
   });
 

@@ -19,7 +19,9 @@ export default async function HealthcareProviderProfilePage({
   return (
     <>
       <Navbar />
-      <Profile healthcareProvider={healthcareProvider} />
+      <Profile
+        healthcareProvider={healthcareProvider}
+      />
     </>
   );
 }

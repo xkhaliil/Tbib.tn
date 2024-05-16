@@ -560,6 +560,11 @@ export const SendNewMessageSchema = z
     },
   );
 
+export const AddNewReviewSchema = z.object({
+  rating: z.number(),
+  comment: z.string(),
+});
+
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 export type ForgotPasswordSchemaType = z.infer<typeof ForgotPasswordSchema>;
@@ -579,3 +584,4 @@ export type ManageOpeningHoursSchemaType = z.infer<
 >;
 export type UploadDocumentSchemaType = z.infer<typeof UploadDocumentSchema>;
 export type SendNewMessageSchemaType = z.infer<typeof SendNewMessageSchema>;
+export type AddNewReviewSchemaType = z.infer<typeof AddNewReviewSchema>;

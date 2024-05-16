@@ -1,22 +1,8 @@
 import React from "react";
 
 import Image from "next/image";
-import {
-  Absence,
-  HealthCareProvider,
-  OpeningHours,
-  User,
-} from "@prisma/client";
-import { format, sub } from "date-fns";
+import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Container } from "@/components/container";
 
@@ -26,18 +12,13 @@ import { OpeningHoursCard } from "./opening-hours-card";
 import { PaymentsMethodsCard } from "./payments-methods-card";
 import { PresentationCard } from "./presentation-card";
 import { PricingAndRefundsCard } from "./pricing-refunds-card";
+import { Reviewscard } from "./reviews-card";
 import { ServicesCard } from "./services-card";
 
 interface ProfileProps {
-  healthcareProvider:
-    | (HealthCareProvider & {
-        user: User;
-      } & {
-        openingHours: OpeningHours[];
-      } & {
-        absences: Absence[];
-      })
-    | null;
+  healthcareProvider: Awaited<
+    ReturnType<typeof getHealthCareProviderUserAndOpeningHoursAndAbsencesById>
+  >;
 }
 
 export function Profile({ healthcareProvider }: ProfileProps) {
@@ -98,6 +79,12 @@ export function Profile({ healthcareProvider }: ProfileProps) {
               >
                 Pricing
               </TabsTrigger>
+              <TabsTrigger
+                value="reviews"
+                className="w-full px-4 py-2 data-[state=active]:bg-blue-600/90 data-[state=active]:text-white"
+              >
+                Reviews ({healthcareProvider?.reviews.length})
+              </TabsTrigger>
             </TabsList>
           </Container>
         </div>
@@ -137,6 +124,26 @@ export function Profile({ healthcareProvider }: ProfileProps) {
             <TabsContent value="location">
               <div className="flex flex-col">
                 <h1 className="text-2xl font-semibold">Location</h1>
+              </div>
+            </TabsContent>
+            <TabsContent value="presentation">
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-semibold">presentation</h1>
+              </div>
+            </TabsContent>
+            <TabsContent value="opening-hours">
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-semibold">Opening Hours</h1>
+              </div>
+            </TabsContent>
+            <TabsContent value="pricing">
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-semibold">Pricing</h1>
+              </div>
+            </TabsContent>
+            <TabsContent value="reviews">
+              <div className="flex flex-col">
+                <Reviewscard healthcareProvider={healthcareProvider} />
               </div>
             </TabsContent>
 
