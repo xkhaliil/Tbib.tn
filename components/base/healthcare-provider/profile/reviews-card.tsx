@@ -75,27 +75,37 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
               </div>
               <div className="flex w-full flex-col gap-2">
                 <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(5)}
+                  percentFilled={parseFloat(
+                    getPercentageByRating(5).toFixed(2),
+                  )}
                 >
                   5 stars
                 </FlowbiteRating.Advanced>
                 <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(4)}
+                  percentFilled={parseFloat(
+                    getPercentageByRating(4).toFixed(2),
+                  )}
                 >
                   4 stars
                 </FlowbiteRating.Advanced>
                 <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(3)}
+                  percentFilled={parseFloat(
+                    getPercentageByRating(3).toFixed(2),
+                  )}
                 >
                   3 stars
                 </FlowbiteRating.Advanced>
                 <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(2)}
+                  percentFilled={parseFloat(
+                    getPercentageByRating(2).toFixed(2),
+                  )}
                 >
                   2 stars
                 </FlowbiteRating.Advanced>
                 <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(1)}
+                  percentFilled={parseFloat(
+                    getPercentageByRating(1).toFixed(2),
+                  )}
                 >
                   <span className="mr-2.5">1 star </span>
                 </FlowbiteRating.Advanced>

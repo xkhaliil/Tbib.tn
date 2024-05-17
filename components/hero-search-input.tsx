@@ -67,7 +67,10 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
     };
 
     const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setLocationSearchInput(e.target.value);
+      const inputValue = e.target.value;
+      const formattedInput =
+        inputValue.charAt(0).toUpperCase() + inputValue.slice(1).toLowerCase();
+      setLocationSearchInput(formattedInput);
     };
 
     const onApply = React.useCallback(() => {
@@ -83,10 +86,24 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         location: locationSearchInput,
       };
 
-      if (specialitySearchInput === "" || locationSearchInput === "") {
+      if (specialitySearchInput === "" && locationSearchInput === "") {
         updatedQuery = {
           ...query,
           speciality: "General Practitioner",
+          location: "Tunis",
+        };
+      }
+      if (specialitySearchInput === "" || locationSearchInput != "") {
+        updatedQuery = {
+          ...query,
+          speciality: "General Practitioner",
+          location: locationSearchInput,
+        };
+      }
+      if (specialitySearchInput != "" || locationSearchInput === "") {
+        updatedQuery = {
+          ...query,
+          speciality: specialitySearchInput,
           location: "Tunis",
         };
       }
@@ -101,7 +118,6 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
 
       router.push(url);
     }, [params, specialitySearchInput, locationSearchInput, router]);
-
     return (
       <div className="flex h-[4.5rem] w-full flex-row items-center justify-center gap-x-4 rounded-full border bg-gray-50 px-6 py-3 placeholder-muted-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
         <div className="relative w-full">

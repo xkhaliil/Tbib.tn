@@ -19,10 +19,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background">
       <div className="mx-auto flex w-full max-w-[1800px] items-center px-4 md:px-6">
         <nav className="hidden gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-          <NavbarLink
-            href="/patient/dashboard"
-            isActive={pathname === "/patient/dashboard"}
-          >
+          <NavbarLink href="/" isActive={pathname === "/"}>
             <Logo className="h-6 w-6" />
             <span className="sr-only">Oladoc</span>
           </NavbarLink>

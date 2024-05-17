@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { MapPinIcon, SearchIcon } from "lucide-react";
 
@@ -18,12 +19,14 @@ export function SearchResultsNavbar() {
   return (
     <div className="border-b bg-muted/40">
       <div className="flex items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-        <div className="flex items-center">
-          <Logo className="h-8 w-8" />
-          <span className="ml-3 text-xl font-bold tracking-tight text-blue-600">
-            Oladoc
-          </span>
-        </div>
+        <Link href="/">
+          <div className="flex items-center">
+            <Logo className="h-8 w-8" />
+            <span className="ml-3 text-xl font-bold tracking-tight text-blue-600">
+              Oladoc
+            </span>
+          </div>
+        </Link>
         <div className="flex items-center gap-x-4">
           <Button variant="blue" className="rounded-full">
             Sign In

@@ -8,6 +8,7 @@ import {
   Absence,
   HealthCareProvider,
   OpeningHours,
+  Review,
   User,
 } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
@@ -24,7 +25,7 @@ import {
   startOfToday,
   startOfWeek,
 } from "date-fns";
-import { BriefcaseIcon, MapPinIcon } from "lucide-react";
+import { BriefcaseIcon, MapPinIcon, Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -37,6 +38,8 @@ interface HealthcareProviderCardProps {
     openingHours: OpeningHours[];
   } & {
     absences: Absence[];
+  } & {
+    reviews: Review[];
   };
 }
 
@@ -64,7 +67,21 @@ export function HealthcareProviderCard({
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
-
+  const calculateAverageRating = () => {
+    if (healthcareProvider?.reviews) {
+      const total = healthcareProvider.reviews.length || 1;
+      return (
+        healthcareProvider.reviews.reduce(
+          (acc, review) => acc + review.rating,
+          0,
+        ) / total
+      );
+    }
+    return 0;
+  };
+  const calculateReviewsCount = () => {
+    return healthcareProvider.reviews.length;
+  };
   return (
     <div className="grid grid-cols-1 rounded-lg border bg-white p-6 shadow-sm sm:grid-cols-2">
       <div className="flex flex-col border-r pr-6">
@@ -83,6 +100,16 @@ export function HealthcareProviderCard({
             <h2 className="text-lg font-semibold">
               Dr. {healthcareProvider.user.name}
             </h2>
+            <div className="flex items-center gap-1.5">
+              <Star className="h-4 w-4 text-blue-600" />
+              <p className="text-sm text-muted-foreground">
+                {calculateAverageRating()}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                ({calculateReviewsCount()}
+                {calculateReviewsCount() > 1 ? " reviews" : " review"})
+              </p>
+            </div>
             <div className="flex items-center gap-1.5">
               <BriefcaseIcon className="h-4 w-4 text-blue-600" />
               <p className="text-sm text-muted-foreground">
