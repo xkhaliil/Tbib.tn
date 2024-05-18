@@ -12,12 +12,14 @@ export function Navbar() {
     <header className="relative z-50 flex-none pt-12">
       <Container className="max-w-[1200px]">
         <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center">
-            <Logo className="h-8 w-8" />
-            <span className="ml-3 text-2xl font-bold tracking-tighter text-blue-600">
-              Oladoc
-            </span>
-          </div>
+          <Link href="/">
+            <div className="flex items-center">
+              <Logo className="h-8 w-8" />
+              <span className="ml-3 text-2xl font-bold tracking-tighter text-blue-600">
+                Oladoc
+              </span>
+            </div>
+          </Link>
 
           <div className="hidden items-center space-x-4 md:flex">
             <Button variant="blue" size="lg" className="rounded-2xl" asChild>

@@ -27,6 +27,7 @@ export async function getHealthcareProvidersByParams(params: SearchPageParams) {
         user: true,
         openingHours: true,
         absences: true,
+        reviews: true,
       },
     });
 

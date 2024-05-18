@@ -73,6 +73,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                   {healthcareProvider?.reviews.length} ratings
                 </p>
               </div>
+              
               <div className="flex w-full flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <p className="text-nowrap text-sm font-medium text-muted-foreground">
