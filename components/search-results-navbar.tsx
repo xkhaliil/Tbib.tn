@@ -14,8 +14,8 @@ import { Button } from "./ui/button";
 export function SearchResultsNavbar() {
   const searchParams = useSearchParams();
 
-  const speciality = searchParams.get("speciality");
-  const location = searchParams.get("location");
+  const speciality = searchParams?.get("speciality");
+  const location = searchParams?.get("location");
   return (
     <div className="border-b bg-muted/40">
       <div className="flex items-center justify-between px-4 py-6 sm:px-6 lg:px-8">

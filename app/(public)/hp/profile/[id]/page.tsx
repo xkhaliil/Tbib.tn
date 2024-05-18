@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getCurrentSession } from "@/actions/auth";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
 
 import { Profile } from "@/components/base/healthcare-provider/profile";
@@ -16,12 +17,11 @@ export default async function HealthcareProviderProfilePage({
 }: HealthcareProviderProfilePageProps) {
   const healthcareProvider =
     await getHealthCareProviderUserAndOpeningHoursAndAbsencesById(params.id);
+  const authenticatedUser = await getCurrentSession();
   return (
     <>
-      <Navbar />
-      <Profile
-        healthcareProvider={healthcareProvider}
-      />
+      <Navbar authenticatedUser={authenticatedUser} />
+      <Profile healthcareProvider={healthcareProvider} />
     </>
   );
 }

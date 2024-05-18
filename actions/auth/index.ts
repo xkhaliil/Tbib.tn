@@ -128,6 +128,7 @@ export async function getHealthcareCenterByUserId(userId: string | undefined) {
       },
       include: {
         user: true,
+        openingHours: true,
       },
     });
 

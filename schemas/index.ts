@@ -503,6 +503,12 @@ export const BookAppointmentSchema = z.object({
   additionalImages: z.optional(z.array(z.string())),
 });
 
+export const BookAppointmentWithSpecialistSchema = z.object({
+  date: z.date(),
+  time: z.string({ required_error: "Please select a time" }),
+  additionalImages: z.optional(z.array(z.string())),
+});
+
 export const ManageOpeningHoursSchema = z.object({
   openingHours: z.array(
     z.object({
@@ -579,6 +585,9 @@ export type ManageHealthcareProviderProfileSchemaType = z.infer<
   typeof ManageHealthcareProviderProfileSchema
 >;
 export type BookAppointmentSchemaType = z.infer<typeof BookAppointmentSchema>;
+export type BookAppointmentWithSpecialistSchemaType = z.infer<
+  typeof BookAppointmentWithSpecialistSchema
+>;
 export type ManageOpeningHoursSchemaType = z.infer<
   typeof ManageOpeningHoursSchema
 >;

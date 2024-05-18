@@ -1,6 +1,7 @@
 import React from "react";
 
 import Link from "next/link";
+import { getCurrentSession, getHealthcareCenterByUserId } from "@/actions/auth";
 import { FileIcon } from "lucide-react";
 
 import {
@@ -29,7 +30,11 @@ import { MonthlyAppointmentsDataTable } from "@/components/base/healthcare-cente
 import { TodayAppointmentsDataTable } from "@/components/base/healthcare-center/data-tables/today-appointments";
 import { WeeklyAppointmentsDataTable } from "@/components/base/healthcare-center/data-tables/weekly-appointments";
 
-export default function HealthcareCenterDashboardPage() {
+export default async function HealthcareCenterDashboardPage() {
+  const authenticatedUser = await getCurrentSession();
+  const healthcareCenter = await getHealthcareCenterByUserId(
+    authenticatedUser?.id as string,
+  );
   return (
     <div>
       <Sidebar />
@@ -65,10 +70,6 @@ export default function HealthcareCenterDashboardPage() {
                 <TabsTrigger value="month">This Month</TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
-                <Button size="sm" variant="outline" className="h-7 gap-1.5">
-                  <FileIcon className="h-3.5 w-3.5" />
-                  <span className="sm:whitespace-nowrap">Export</span>
-                </Button>
                 <Button
                   size="sm"
                   variant="blue"
@@ -91,7 +92,7 @@ export default function HealthcareCenterDashboardPage() {
           </Tabs>
         </div>
         <div className="grid gap-4">
-          <OpeningHoursCard />
+          <OpeningHoursCard healthcareCenter={healthcareCenter} />
           <NotificationsCard />
         </div>
       </main>

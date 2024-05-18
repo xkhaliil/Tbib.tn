@@ -1,5 +1,7 @@
 import React from "react";
 
+import { fetchTodayAppointments } from "@/actions/appointment";
+
 import {
   Card,
   CardContent,
@@ -8,12 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export function TodayAppointmentsCard() {
+export async function TodayAppointmentsCard() {
+  const todayAppointments = await fetchTodayAppointments();
   return (
     <Card>
       <CardHeader className="pb-2">
         <CardDescription>Today</CardDescription>
-        <CardTitle className="text-4xl">+3</CardTitle>
+        <CardTitle className="text-4xl">{todayAppointments?.length}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-xs text-muted-foreground">Appointments</div>

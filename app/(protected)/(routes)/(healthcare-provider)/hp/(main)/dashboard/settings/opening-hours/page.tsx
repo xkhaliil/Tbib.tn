@@ -1,7 +1,10 @@
 import React from "react";
 
 import Link from "next/link";
-import { getCurrentSession, getHealthcareProviderById } from "@/actions/auth";
+import {
+  getCurrentSession,
+  getHealthcareProviderByUserId,
+} from "@/actions/auth";
 import { getOpeningHoursByProviderId } from "@/actions/opening-hours";
 
 import {
@@ -16,12 +19,13 @@ import { ManageOpeningHoursForm } from "@/components/base/healthcare-provider/fo
 
 export default async function OpeningHoursSettingsPage() {
   const authenticatedUser = await getCurrentSession();
-  const healthCareProvider = await getHealthcareProviderById(
+  const healthCareProvider = await getHealthcareProviderByUserId(
     authenticatedUser?.id as string,
   );
   const openingHours = await getOpeningHoursByProviderId(
     healthCareProvider?.id as string,
   );
+
   return (
     <div className="p-8">
       <Breadcrumb>

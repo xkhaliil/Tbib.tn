@@ -15,6 +15,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+import { AppointmentDetailsDialog } from "./dialogs/appointment-details-dialog";
+import { CancelAppointmentAlertDialog } from "./dialogs/cancel-appointment-alert-dialog";
+
 interface UpcomingAppointmentCardProps {
   appointment: Appointment & {
     healthCareProvider: HealthCareProvider & {
@@ -70,8 +73,8 @@ export function UpcomingAppointmentCard({
         <div className="flex items-center gap-2 text-sm">
           <ClockIcon className="h-5 w-4 text-muted-foreground" />
           <div className="flex items-center gap-1 text-muted-foreground">
-            <p>{format(new Date(appointment.startTime), "hh:mm a")} - </p>
-            <p>{format(new Date(appointment.endTime), "hh:mm a")}</p>
+            <p>{format(new Date(appointment.startTime), "HH:mm")} - </p>
+            <p>{format(new Date(appointment.endTime), "HH:mm")}</p>
           </div>
         </div>
       </div>
@@ -104,9 +107,13 @@ export function UpcomingAppointmentCard({
       </div>
 
       <div className="ml-auto flex items-center gap-2 px-6 py-4">
-        <Button variant="warning">Reschedule</Button>
-        <Button variant="destructive">Cancel</Button>
-        <Button variant="outline">View Details</Button>
+        {appointment.status !== AppointmentStatus.CANCELLED && (
+          <>
+            <Button variant="warning">Reschedule</Button>
+            <CancelAppointmentAlertDialog appointment={appointment} />
+          </>
+        )}
+        <AppointmentDetailsDialog appointment={appointment} />
       </div>
     </div>
   );

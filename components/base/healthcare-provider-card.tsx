@@ -67,6 +67,32 @@ export function HealthcareProviderCard({
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
+
+  const getIndexesOfClosedDays = () => {
+    return healthcareProvider?.openingHours
+      ?.filter((openingHour) => openingHour.isClosed)
+      .map((openingHour) => openingHour.dayOfWeek);
+  };
+
+  const closedDays: number[] = [];
+
+  for (let i = 0; i <= getIndexesOfClosedDays()?.length! ?? 0; i++) {
+    const array = [
+      getIndexesOfClosedDays()?.[i] ?? 0,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 7,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 14,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 21,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 28,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 35,
+    ];
+
+    closedDays.push(...array);
+  }
+
+  const isClosed = (dayIndex: number) => {
+    return closedDays.includes(dayIndex);
+  };
+
   const calculateAverageRating = () => {
     if (healthcareProvider?.reviews) {
       const total = healthcareProvider.reviews.length || 1;
@@ -79,9 +105,11 @@ export function HealthcareProviderCard({
     }
     return 0;
   };
+    
   const calculateReviewsCount = () => {
     return healthcareProvider.reviews.length;
   };
+   
   return (
     <div className="grid grid-cols-1 rounded-lg border bg-white p-6 shadow-sm sm:grid-cols-2">
       <div className="flex flex-col border-r pr-6">
@@ -90,7 +118,7 @@ export function HealthcareProviderCard({
             <Image
               src={healthcareProvider.user.image || "/placeholder.svg"}
               alt={healthcareProvider.user.name}
-              className="rounded-lg object-cover"
+              className="h-full rounded-lg object-cover"
               style={{ objectPosition: "center" }}
               width={500}
               height={500}
@@ -127,17 +155,17 @@ export function HealthcareProviderCard({
         <div className="mt-4 flex flex-col space-y-1.5">
           <h3 className="text-sm font-semibold">Payment Options</h3>
           <p className="text-sm text-muted-foreground">
-            Check, Cash, Credit Card
+            {healthcareProvider.paymentMethods.join(", ") || "N/A"}
           </p>
 
           <h3 className="text-sm font-semibold">Expertises and acts</h3>
           <p className="text-sm text-muted-foreground">
-            General Medicine, Cardiology, Dermatology
+            {healthcareProvider.services.join(", ") || "N/A"}
           </p>
 
           <h3 className="text-sm font-semibold">Insurance</h3>
           <p className="text-sm text-muted-foreground">
-            Aetna, Blue Cross Blue Shield, Cigna, United Healthcare
+            {healthcareProvider.insurances.join(", ") || "N/A"}
           </p>
         </div>
 
@@ -194,11 +222,7 @@ export function HealthcareProviderCard({
                     healthcareProvider.absences?.some((absence) =>
                       isSameDay(absence.date, day),
                     ) ||
-                    healthcareProvider.openingHours?.some(
-                      (openingHour) =>
-                        openingHour.dayOfWeek === dayIdx &&
-                        openingHour.isClosed,
-                    ) ||
+                    isClosed(dayIdx) ||
                     isBefore(day, startOfToday())
                   )
                     return;
@@ -210,10 +234,7 @@ export function HealthcareProviderCard({
                     isSameDay(absence.date, day),
                   ) &&
                     "cursor-not-allowed bg-[url('/images/pattern.png')] bg-cover",
-                  healthcareProvider.openingHours?.some(
-                    (openingHour) =>
-                      openingHour.dayOfWeek === dayIdx && openingHour.isClosed,
-                  ) &&
+                  isClosed(dayIdx) &&
                     "cursor-not-allowed bg-rose-400 text-white hover:bg-rose-400",
                   isBefore(day, startOfToday()) &&
                     "cursor-not-allowed opacity-50",
