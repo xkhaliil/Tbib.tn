@@ -15,6 +15,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+import { AppointmentDetailsDialog } from "./dialogs/appointment-details-dialog";
+
 interface PastAppointmentCardProps {
   appointment: Appointment & {
     healthCareProvider: HealthCareProvider & {
@@ -102,7 +104,7 @@ export function PastAppointmentCard({ appointment }: PastAppointmentCardProps) {
       </div>
 
       <div className="ml-auto flex items-center gap-2 px-6 py-4">
-        <Button variant="blue">View Details</Button>
+        <AppointmentDetailsDialog appointment={appointment} />
       </div>
     </div>
   );

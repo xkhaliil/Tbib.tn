@@ -1,5 +1,8 @@
 import React from "react";
 
+import { getCurrentSession, getHealthcareCenterByUserId } from "@/actions/auth";
+import { getOpeningHoursByHealthcareCenterId } from "@/actions/opening-hours";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,8 +18,16 @@ import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
+import { ManageOpeningHoursForm } from "@/components/base/healthcare-center/forms/manage-opening-hours-form";
 
-export default function HealthcareCenterOpeningHoursPage() {
+export default async function HealthcareCenterOpeningHoursPage() {
+  const authenticatedUser = await getCurrentSession();
+  const healthcareCenter = await getHealthcareCenterByUserId(
+    authenticatedUser?.id as string,
+  );
+  const openingHours = await getOpeningHoursByHealthcareCenterId(
+    healthcareCenter?.id,
+  );
   return (
     <div>
       <Sidebar />
@@ -40,6 +51,10 @@ export default function HealthcareCenterOpeningHoursPage() {
         <SearchButton />
         <HealthcareCenterButton />
       </Header>
+
+      <main className="pb-12 lg:ml-20 lg:mr-8">
+        <ManageOpeningHoursForm openingHours={openingHours} />
+      </main>
     </div>
   );
 }

@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { BookAppointmentForm } from "../forms/book-appointment-form";
+import { BookAppointmentWithSpecialistForm } from "../forms/book-appointment-with-specialist-form";
 
 interface BookAppointmentHeaderProps {
   date: string;
@@ -67,11 +68,19 @@ export function BookAppointmentHeader({
 
       <Separator className="my-8" />
 
-      <BookAppointmentForm
-        date={date}
-        healthcareProvider={healthcareProvider}
-        timeSlots={timeSlots}
-      />
+      {healthcareProvider?.speciality === "General Practitioner" ? (
+        <BookAppointmentForm
+          date={date}
+          healthcareProvider={healthcareProvider}
+          timeSlots={timeSlots}
+        />
+      ) : (
+        <BookAppointmentWithSpecialistForm
+          date={date}
+          healthcareProvider={healthcareProvider}
+          timeSlots={timeSlots}
+        />
+      )}
     </div>
   );
 }

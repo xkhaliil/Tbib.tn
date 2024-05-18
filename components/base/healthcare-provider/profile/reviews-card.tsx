@@ -5,9 +5,9 @@ import React from "react";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
 import Rating from "@mui/material/Rating";
 import { format } from "date-fns";
-import { Rating as FlowbiteRating } from "flowbite-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 
 import { AddReview } from "./add-review";
@@ -73,32 +73,76 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                   {healthcareProvider?.reviews.length} ratings
                 </p>
               </div>
-              <div className="flex w-full flex-col gap-2">
-                <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(5)}
-                >
-                  5 stars
-                </FlowbiteRating.Advanced>
-                <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(4)}
-                >
-                  4 stars
-                </FlowbiteRating.Advanced>
-                <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(3)}
-                >
-                  3 stars
-                </FlowbiteRating.Advanced>
-                <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(2)}
-                >
-                  2 stars
-                </FlowbiteRating.Advanced>
-                <FlowbiteRating.Advanced
-                  percentFilled={getPercentageByRating(1)}
-                >
-                  <span className="mr-2.5">1 star </span>
-                </FlowbiteRating.Advanced>
+              <div className="flex w-full flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <p className="text-nowrap text-sm font-medium text-muted-foreground">
+                    5 stars
+                  </p>
+                  <Progress
+                    value={getPercentageByRating(5)}
+                    className="h-6 w-3/4 rounded-sm"
+                    indicatorColor="bg-yellow-500"
+                  />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {getPercentageByRating(5)}%
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <p className="text-nowrap text-sm font-medium text-muted-foreground">
+                    4 stars
+                  </p>
+                  <Progress
+                    value={getPercentageByRating(4)}
+                    className="h-6 w-3/4 rounded-sm"
+                    indicatorColor="bg-yellow-500"
+                  />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {getPercentageByRating(4)}%
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <p className="text-nowrap text-sm font-medium text-muted-foreground">
+                    3 stars
+                  </p>
+                  <Progress
+                    value={getPercentageByRating(3)}
+                    className="h-6 w-3/4 rounded-sm"
+                    indicatorColor="bg-yellow-500"
+                  />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {getPercentageByRating(3)}%
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <p className="text-nowrap text-sm font-medium text-muted-foreground">
+                    2 stars
+                  </p>
+                  <Progress
+                    value={getPercentageByRating(2)}
+                    className="h-6 w-3/4 rounded-sm"
+                    indicatorColor="bg-yellow-500"
+                  />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {getPercentageByRating(2)}%
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <p className="mr-2.5 text-nowrap text-sm font-medium text-muted-foreground">
+                    1 star
+                  </p>
+                  <Progress
+                    value={getPercentageByRating(1)}
+                    className="h-6 w-3/4 rounded-sm"
+                    indicatorColor="bg-yellow-500"
+                  />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {getPercentageByRating(1)}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -109,6 +153,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
             Reviews ({healthcareProvider?.reviews.length})
           </h2>
         </div>
+
         {healthcareProvider?.reviews.map((review, idx) => (
           <div className="mt-6 rounded-xl border bg-muted/40 p-6" key={idx}>
             <div className="gap-3 sm:flex sm:items-start">
@@ -146,6 +191,16 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
             </div>
           </div>
         ))}
+
+        {healthcareProvider?.reviews.length === 0 && (
+          <div className="mt-6 rounded-xl border bg-muted/40 p-6">
+            <div className="text-center">
+              <p className="text-lg font-medium text-muted-foreground">
+                No reviews available for this healthcare provider
+              </p>
+            </div>
+          </div>
+        )}
       </section>
     </>
   );

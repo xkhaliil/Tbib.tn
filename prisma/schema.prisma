@@ -202,8 +202,11 @@ model OpeningHours {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  healthCareProviderId String             @db.ObjectId
-  healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+  healthCareProviderId String?             @db.ObjectId
+  healthCareProvider   HealthCareProvider? @relation(fields: [healthCareProviderId], references: [id], onDelete: SetNull)
+
+  healthCareCenterId String?           @db.ObjectId
+  healthCareCenter   HealthCareCenter? @relation(fields: [healthCareCenterId], references: [id], onDelete: SetNull)
 }
 
 model HealthCareCenter {
@@ -215,6 +218,8 @@ model HealthCareCenter {
   accountVerified       Boolean              @default(false)
   verificationDocuments String[]
   healthCareProviders   HealthCareProvider[]
+
+  openingHours OpeningHours[]
 }
 
 model Document {

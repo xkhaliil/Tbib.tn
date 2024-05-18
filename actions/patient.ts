@@ -4,8 +4,11 @@ import { revalidatePath } from "next/cache";
 import {
   BookAppointmentSchema,
   BookAppointmentSchemaType,
+  BookAppointmentWithSpecialistSchema,
+  BookAppointmentWithSpecialistSchemaType,
   UploadDocumentSchemaType,
 } from "@/schemas";
+import { AppointmentStatus } from "@prisma/client";
 import { add, format, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
@@ -413,6 +416,74 @@ export async function bookAppointment(
     });
 
     return { success: "Appointment booked successfully." };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function BookAppointmentWithSpecialist(
+  values: BookAppointmentWithSpecialistSchemaType,
+  healthCareProviderId: string | undefined,
+) {
+  try {
+    const user = await getCurrentSession();
+
+    const patient = await getPatientByUserId(user?.id);
+
+    const validatedFields =
+      BookAppointmentWithSpecialistSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" };
+    }
+
+    const { date, time, additionalImages } = validatedFields.data;
+
+    await db.appointment.create({
+      data: {
+        title: `Appointment with ${patient?.user.name}`,
+        description: `Appointment with ${patient?.user.name} on ${format(
+          new Date(date),
+          "EEEE, MMMM d yyyy",
+        )} at ${format(new Date(time), "HH:mm")}`,
+        date,
+        startTime: new Date(time),
+        endTime: add(new Date(time), { minutes: 30 }),
+        additionalImages,
+        patient: {
+          connect: {
+            id: patient?.id,
+          },
+        },
+        healthCareProvider: {
+          connect: {
+            id: healthCareProviderId,
+          },
+        },
+      },
+    });
+
+    return { success: "Appointment booked successfully." };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function cancelAppointment(id: string | undefined) {
+  try {
+    const appointment = await db.appointment.update({
+      where: {
+        id,
+      },
+      data: {
+        status: AppointmentStatus.CANCELLED,
+      },
+    });
+
+    if (appointment) {
+      revalidatePath("/patient/dashboard/appointments");
+      return { success: "Appointment cancelled successfully." };
+    }
   } catch (error) {
     console.error(error);
   }

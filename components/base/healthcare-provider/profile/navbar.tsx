@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 
 import Link from "next/link";
-import { getCurrentSession } from "@/actions/auth";
+import { User } from "next-auth";
+
+import { useSignInDialog } from "@/hooks/use-sign-in-dialog";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,8 +13,12 @@ import { UserButton } from "@/components/auth/user-button";
 import { Container } from "@/components/container";
 import { Logo } from "@/components/marketing/logo";
 
-export async function Navbar() {
-  const authenticatedUser = await getCurrentSession();
+interface NavbarProps {
+  authenticatedUser: User | undefined;
+}
+
+export function Navbar({ authenticatedUser }: NavbarProps) {
+  const signInDialog = useSignInDialog();
   return (
     <header className="z-10 w-full bg-background">
       <div className="border-b py-5">
@@ -31,8 +39,13 @@ export async function Navbar() {
                   <Link href="/help">Help</Link>
                 </Button>
                 <Separator orientation="vertical" className="h-6" />
-                <Button variant="blue" asChild>
-                  <Link href="/auth/sign-in">Sign In</Link>
+                <Button
+                  variant="blue"
+                  onClick={() => {
+                    signInDialog.setOpen(true);
+                  }}
+                >
+                  Sign In
                 </Button>
                 <Button variant="white" asChild>
                   <Link href="/auth/sign-up">Sign Up</Link>

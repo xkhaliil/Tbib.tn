@@ -4,9 +4,11 @@ import React from "react";
 
 import { useRouter } from "next/navigation";
 import { getHealthCareProviderById } from "@/actions/healthcare-provider";
-import { bookAppointment } from "@/actions/patient";
-import { symptomsTypes, SymptomType } from "@/constants";
-import { BookAppointmentSchema, BookAppointmentSchemaType } from "@/schemas";
+import { BookAppointmentWithSpecialist } from "@/actions/patient";
+import {
+  BookAppointmentWithSpecialistSchema,
+  BookAppointmentWithSpecialistSchemaType,
+} from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { format, isBefore, isEqual } from "date-fns";
@@ -35,24 +37,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { Textarea } from "@/components/ui/textarea";
 
 import { AdditionalImagesDropzone } from "../book-appointment/additional-images-dropzone";
-import { SymptomsCard } from "../symptoms-card";
 
-type FieldName = keyof BookAppointmentSchemaType;
+type FieldName = keyof BookAppointmentWithSpecialistSchemaType;
 
 interface StepsType {
   id: string;
@@ -65,17 +55,6 @@ const steps: StepsType[] = [
     id: "date-time",
     name: "Date & Time",
     fields: ["date", "time"],
-  },
-  {
-    id: "symptoms",
-    name: "Symptoms",
-    fields: [
-      "symptomsType",
-      "symptoms",
-      "symptomsDuration",
-      "symptomsLength",
-      "symptomsSeverity",
-    ],
   },
   {
     id: "additional-information",
@@ -92,17 +71,17 @@ const steps: StepsType[] = [
   },
 ];
 
-interface BookAppointmentFormProps {
+interface BookAppointmentWithSpecialistFormProps {
   date: string;
   healthcareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
   timeSlots: Date[];
 }
 
-export function BookAppointmentForm({
+export function BookAppointmentWithSpecialistForm({
   date,
   healthcareProvider,
   timeSlots,
-}: BookAppointmentFormProps) {
+}: BookAppointmentWithSpecialistFormProps) {
   const authenticatedUser = useCurrentUser();
   const signInDialog = useSignInDialog();
   const router = useRouter();
@@ -111,22 +90,19 @@ export function BookAppointmentForm({
   const [isPending, startTransition] = React.useTransition();
   const delta = currentStep - previousStep;
 
-  const bookAppointmentForm = useForm<BookAppointmentSchemaType>({
-    resolver: zodResolver(BookAppointmentSchema),
+  const bookAppointmentForm = useForm<BookAppointmentWithSpecialistSchemaType>({
+    resolver: zodResolver(BookAppointmentWithSpecialistSchema),
     defaultValues: {
       date: new Date(date),
-      symptomsType: SymptomType.MUSCLES_JOINTS,
-      symptoms: "",
-      symptomsDuration: "1",
-      symptomsLength: "DAYS",
-      symptomsSeverity: "LOW",
       additionalImages: [],
     },
   });
 
-  const processForm = async (values: BookAppointmentSchemaType) => {
+  const processForm = async (
+    values: BookAppointmentWithSpecialistSchemaType,
+  ) => {
     startTransition(() => {
-      bookAppointment(values, healthcareProvider?.id)
+      BookAppointmentWithSpecialist(values, healthcareProvider?.id)
         .then((data) => {
           if (data?.error) {
             bookAppointmentForm.reset();
@@ -153,7 +129,6 @@ export function BookAppointmentForm({
 
     if (!output) return;
 
-    // Submit the form if it's the last step
     if (currentStep < steps.length - 1) {
       if (currentStep === steps.length - 2) {
         await bookAppointmentForm.handleSubmit(processForm)();
@@ -179,7 +154,6 @@ export function BookAppointmentForm({
     });
   }
 
-  const selectedLength = bookAppointmentForm.watch("symptomsLength");
   const selectedTime = bookAppointmentForm.watch("time");
 
   return (
@@ -268,206 +242,8 @@ export function BookAppointmentForm({
             />
           </motion.div>
         )}
+
         {currentStep === 1 && (
-          <motion.div
-            initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
-            <div className="grid grid-cols-1 place-content-between gap-6 lg:grid-cols-2">
-              <div className="flex flex-col space-y-1">
-                <h3 className="text-sm font-semibold">Symptoms Information</h3>
-                <p className="text-sm text-muted-foreground">
-                  Provide information about the symptoms you are experiencing.
-                </p>
-              </div>
-
-              <Card>
-                <CardContent className="p-6">
-                  <FormField
-                    control={bookAppointmentForm.control}
-                    name="symptomsType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-col space-y-4"
-                        >
-                          {symptomsTypes.map((type) => (
-                            <FormItem key={type.title}>
-                              <FormLabel className="ring-white/60 ring-offset-2 ring-offset-blue-600 [&:has([data-state=checked])>div]:ring-2">
-                                <FormControl>
-                                  <RadioGroupItem
-                                    value={type.title}
-                                    className="sr-only"
-                                  />
-                                </FormControl>
-                                <SymptomsCard
-                                  title={type.title}
-                                  description={type.description}
-                                  checked={field.value === type.value}
-                                />
-                              </FormLabel>
-                            </FormItem>
-                          ))}
-                        </RadioGroup>
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
-            </div>
-
-            <Separator className="my-6" />
-
-            <div className="grid grid-cols-1 place-content-between gap-6 lg:grid-cols-2">
-              <div className="flex flex-col space-y-1">
-                <h3 className="text-sm font-semibold">Symptoms Details</h3>
-                <p className="text-sm text-muted-foreground">
-                  Provide additional details about the symptoms you are
-                  experiencing.
-                </p>
-              </div>
-
-              <Card>
-                <CardContent className="p-6">
-                  <FormField
-                    control={bookAppointmentForm.control}
-                    name="symptoms"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Symptoms</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            placeholder="Enter symptoms"
-                            className="w-full"
-                            rows={5}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Provide additional details about the symptoms you are
-                          experiencing.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <FormField
-                      control={bookAppointmentForm.control}
-                      name="symptomsDuration"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            Symptoms Duration
-                            {selectedLength === "DAYS" && (
-                              <span className="text-muted-foreground">
-                                {" "}
-                                (in days)
-                              </span>
-                            )}
-                            {selectedLength === "WEEKS" && (
-                              <span className="text-muted-foreground">
-                                {" "}
-                                (in weeks)
-                              </span>
-                            )}
-                            {selectedLength === "MONTHS" && (
-                              <span className="text-muted-foreground">
-                                {" "}
-                                (in months)
-                              </span>
-                            )}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              {...field}
-                              placeholder="Enter duration"
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            How long have you been experiencing these symptoms?
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={bookAppointmentForm.control}
-                      name="symptomsLength"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Symptoms Length</FormLabel>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select length" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectGroup>
-                                {["DAYS", "WEEKS", "MONTHS"].map((value) => (
-                                  <SelectItem key={value} value={value}>
-                                    {value.charAt(0) +
-                                      value.slice(1).toLowerCase()}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="mt-4">
-                    <FormField
-                      control={bookAppointmentForm.control}
-                      name="symptomsSeverity"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Symptoms Severity</FormLabel>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select severity" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectGroup>
-                                {["LOW", "MEDIUM", "HIGH"].map((value) => (
-                                  <SelectItem key={value} value={value}>
-                                    {value.charAt(0) +
-                                      value.slice(1).toLowerCase()}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </motion.div>
-        )}
-
-        {currentStep === 2 && (
           <motion.div
             initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -502,7 +278,7 @@ export function BookAppointmentForm({
           </motion.div>
         )}
 
-        {currentStep === 3 && (
+        {currentStep === 2 && (
           <motion.div
             initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -540,63 +316,13 @@ export function BookAppointmentForm({
                       {format(selectedTime, "hh:mm a")}
                     </div>
                   </div>
-
-                  <Separator className="my-4" />
-
-                  <div className="grid gap-2">
-                    <div className="font-semibold">Symptoms Type</div>
-                    <div>
-                      {
-                        symptomsTypes.find(
-                          (type) =>
-                            type.value ===
-                            bookAppointmentForm.watch("symptomsType"),
-                        )?.title
-                      }
-                    </div>
-                  </div>
-
-                  <Separator className="my-4" />
-
-                  <div className="grid gap-2">
-                    <div className="font-semibold">Symptoms Description</div>
-                    <div>{bookAppointmentForm.watch("symptoms")}</div>
-                  </div>
-
-                  <Separator className="my-4" />
-
-                  <div className="grid gap-2">
-                    <div className="font-semibold">Symptoms Duration</div>
-                    <div>
-                      {bookAppointmentForm.watch("symptomsDuration")}{" "}
-                      {bookAppointmentForm
-                        .watch("symptomsLength")
-                        ?.toLowerCase()}
-                    </div>
-                  </div>
-
-                  <Separator className="my-4" />
-
-                  <div className="grid gap-2">
-                    <div className="font-semibold">Symptoms Severity</div>
-                    <div>
-                      {bookAppointmentForm
-                        .watch("symptomsSeverity")
-                        ?.charAt(0)
-                        .toUpperCase()}
-                      {bookAppointmentForm
-                        .watch("symptomsSeverity")
-                        ?.slice(1)
-                        .toLowerCase()}
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>
           </motion.div>
         )}
 
-        {currentStep === 4 && (
+        {currentStep === 3 && (
           <motion.div
             initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

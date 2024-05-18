@@ -87,7 +87,6 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         updatedQuery = {
           ...query,
           speciality: "General Practitioner",
-          location: "Tunis",
         };
       }
 

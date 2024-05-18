@@ -122,29 +122,25 @@ export function Profile({ healthcareProvider }: ProfileProps) {
             </TabsContent>
 
             <TabsContent value="location">
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-semibold">Location</h1>
-              </div>
+              <LocationCard healthcareProvider={healthcareProvider} />
             </TabsContent>
             <TabsContent value="presentation">
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-semibold">presentation</h1>
+              <div className="flex flex-col gap-4">
+                <PresentationCard healthcareProvider={healthcareProvider} />
+                <ServicesCard healthcareProvider={healthcareProvider} />
               </div>
             </TabsContent>
             <TabsContent value="opening-hours">
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-semibold">Opening Hours</h1>
-              </div>
+              <OpeningHoursCard healthcareProvider={healthcareProvider} />
             </TabsContent>
             <TabsContent value="pricing">
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-semibold">Pricing</h1>
+              <div className="flex flex-col gap-4">
+                <PricingAndRefundsCard />
+                <PaymentsMethodsCard healthcareProvider={healthcareProvider} />
               </div>
             </TabsContent>
             <TabsContent value="reviews">
-              <div className="flex flex-col">
-                <Reviewscard healthcareProvider={healthcareProvider} />
-              </div>
+              <Reviewscard healthcareProvider={healthcareProvider} />
             </TabsContent>
 
             <div className="flex flex-col justify-start">

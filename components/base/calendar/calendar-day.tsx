@@ -17,6 +17,7 @@ import {
 import {
   format,
   getDay,
+  getWeeksInMonth,
   isBefore,
   isEqual,
   isSameDay,
@@ -94,6 +95,31 @@ export function CalendarDay({
     await deleteAbsence(date);
   }
 
+  const getIndexesOfClosedDays = () => {
+    return openingHours
+      ?.filter((openingHour) => openingHour.isClosed)
+      .map((openingHour) => openingHour.dayOfWeek);
+  };
+
+  const closedDays: number[] = [];
+
+  for (let i = 0; i <= getIndexesOfClosedDays()?.length! ?? 0; i++) {
+    const array = [
+      getIndexesOfClosedDays()?.[i] ?? 0,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 7,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 14,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 21,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 28,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 35,
+    ];
+
+    closedDays.push(...array);
+  }
+
+  const isClosed = () => {
+    return closedDays.includes(dayIndex);
+  };
+
   return (
     <div
       className={cn(
@@ -106,11 +132,7 @@ export function CalendarDay({
         !isEqual(day, selectedDay) && "hover:bg-accent/75",
         absences?.some((absence) => isSameDay(absence.date, day)) &&
           "cursor-not-allowed bg-[url('/images/pattern.png')] bg-cover",
-        // If the day index is equals to an opening hour day index and its closed day
-        openingHours?.some(
-          (openingHour) =>
-            openingHour.dayOfWeek === dayIndex && openingHour.isClosed,
-        ) && "cursor-not-allowed bg-rose-100 hover:bg-rose-100",
+        isClosed() && "cursor-not-allowed bg-rose-100 hover:bg-rose-100",
       )}
     >
       <header className="flex items-center justify-between p-3.5">
@@ -119,10 +141,8 @@ export function CalendarDay({
             asChild
             disabled={
               isBefore(day, startOfToday()) ||
-              openingHours?.some(
-                (openingHour) =>
-                  openingHour.dayOfWeek === dayIndex && openingHour.isClosed,
-              )
+              isClosed() ||
+              absences?.some((absence) => isSameDay(absence.date, day))
             }
           >
             <button
@@ -235,10 +255,7 @@ export function CalendarDay({
                 </div>
               </AppointmentPopover>
             ))}
-          {openingHours?.some(
-            (openingHour) =>
-              openingHour.dayOfWeek === dayIndex && openingHour.isClosed,
-          ) && (
+          {isClosed() && (
             <div className="flex items-center justify-center text-xs font-medium text-rose-500">
               Closed
             </div>

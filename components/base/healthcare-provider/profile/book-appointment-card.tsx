@@ -73,6 +73,31 @@ export function BookAppointmentCard({
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
+  const getIndexesOfClosedDays = () => {
+    return healthcareProvider?.openingHours
+      ?.filter((openingHour) => openingHour.isClosed)
+      .map((openingHour) => openingHour.dayOfWeek);
+  };
+
+  const closedDays: number[] = [];
+
+  for (let i = 0; i <= getIndexesOfClosedDays()?.length! ?? 0; i++) {
+    const array = [
+      getIndexesOfClosedDays()?.[i] ?? 0,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 7,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 14,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 21,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 28,
+      (getIndexesOfClosedDays()?.[i] ?? 0) + 35,
+    ];
+
+    closedDays.push(...array);
+  }
+
+  const isClosed = (dayIndex: number) => {
+    return closedDays.includes(dayIndex);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-start border-b bg-muted/50">
@@ -124,11 +149,7 @@ export function BookAppointmentCard({
                       healthcareProvider?.absences?.some((absence) =>
                         isSameDay(absence.date, day),
                       ) ||
-                      healthcareProvider?.openingHours?.some(
-                        (openingHour) =>
-                          openingHour.dayOfWeek === dayIdx &&
-                          openingHour.isClosed,
-                      ) ||
+                      isClosed(dayIdx) ||
                       isBefore(day, startOfToday())
                     )
                       return;
@@ -140,12 +161,8 @@ export function BookAppointmentCard({
                       isSameDay(absence.date, day),
                     ) &&
                       "cursor-not-allowed bg-[url('/images/pattern.png')] bg-cover",
-                    healthcareProvider?.openingHours?.some(
-                      (openingHour) =>
-                        openingHour.dayOfWeek === dayIdx &&
-                        openingHour.isClosed,
-                    ) &&
-                      "cursor-not-allowed bg-rose-400 text-white hover:bg-rose-400",
+                    isClosed(dayIdx) &&
+                      "cursor-not-allowed bg-rose-200 text-white hover:bg-rose-200",
                     isBefore(day, startOfToday()) &&
                       "cursor-not-allowed opacity-50",
                     "mx-auto flex h-10 w-10 items-center justify-center rounded",
