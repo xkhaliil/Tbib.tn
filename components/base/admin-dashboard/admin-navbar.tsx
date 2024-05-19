@@ -4,6 +4,7 @@ import { MenuIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { UserButton } from "@/components/auth/user-button";
 
 export function AdminNavbar() {
   return (
@@ -17,6 +18,9 @@ export function AdminNavbar() {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col"></SheetContent>
       </Sheet>
+      <div className="ml-auto flex items-center">
+        <UserButton side="bottom" align="end" />
+      </div>
     </header>
   );
 }

@@ -4,7 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 import { Role } from "@prisma/client";
-import { LogOutIcon, SettingsIcon } from "lucide-react";
+import { LayoutDashboard, LogOutIcon, SettingsIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -29,6 +29,7 @@ export function UserButton({
   const user = useCurrentUser();
 
   let href: string;
+  let href2: string = "/patient/dashboard";
 
   if (user?.role === Role.PATIENT) {
     href = "/patient/dashboard/settings";
@@ -86,6 +87,19 @@ export function UserButton({
         </div>
 
         <div className="mt-4 flex flex-col space-y-1">
+          {user?.role === Role.PATIENT && (
+            <Button
+              variant="ghost"
+              className="flex w-full justify-start px-2.5 text-muted-foreground"
+              asChild
+            >
+              <Link href={href2}>
+                <LayoutDashboard className="mr-7 h-4 w-4 text-muted-foreground" />
+                Dashboard
+              </Link>
+            </Button>
+          )}
+
           <Button
             variant="ghost"
             className="flex w-full justify-start px-2.5 text-muted-foreground"
