@@ -4,6 +4,7 @@ import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Absence,
   HealthCareProvider,
@@ -46,6 +47,7 @@ interface HealthcareProviderCardProps {
 export function HealthcareProviderCard({
   healthcareProvider,
 }: HealthcareProviderCardProps) {
+  const router = useRouter();
   const today = new Date();
   const [selectedDay, setSelectedDay] = React.useState(today);
   const [currentMonth, setCurrentMonth] = React.useState(
@@ -105,11 +107,23 @@ export function HealthcareProviderCard({
     }
     return 0;
   };
-    
+
   const calculateReviewsCount = () => {
     return healthcareProvider.reviews.length;
   };
-   
+
+  React.useEffect(() => {
+    if (
+      healthcareProvider.absences?.some((absence) =>
+        isSameDay(absence.date, selectedDay),
+      ) ||
+      isClosed(getDay(selectedDay)) ||
+      isBefore(selectedDay, startOfToday())
+    ) {
+      setSelectedDay(add(selectedDay, { days: 1 }));
+    }
+  }, [selectedDay]);
+
   return (
     <div className="grid grid-cols-1 rounded-lg border bg-white p-6 shadow-sm sm:grid-cols-2">
       <div className="flex flex-col border-r pr-6">
@@ -169,15 +183,8 @@ export function HealthcareProviderCard({
           </p>
         </div>
 
-        <div className="mt-4 flex flex-col space-y-2.5">
-          <Button size="sm" variant="blue" asChild>
-            <Link
-              href={`/book/healthcare-providers/${healthcareProvider.id}/${format(selectedDay, "yyyy-MM-dd")}`}
-            >
-              Book an appointment
-            </Link>
-          </Button>
-          <Button size="sm" variant="outline" asChild>
+        <div className="mt-6 flex flex-col space-y-2.5">
+          <Button size="lg" variant="outline" asChild>
             <Link href={`/hp/profile/${healthcareProvider.id}`}>
               View Profile
             </Link>
@@ -226,7 +233,12 @@ export function HealthcareProviderCard({
                     isBefore(day, startOfToday())
                   )
                     return;
-                  setSelectedDay(day);
+                  router.push(
+                    `/book/healthcare-providers/${healthcareProvider.id}/${format(
+                      day,
+                      "yyyy-MM-dd",
+                    )}`,
+                  );
                 }}
                 className={cn(
                   isSameDay(day, selectedDay) && "bg-blue-600 text-white",
@@ -238,7 +250,7 @@ export function HealthcareProviderCard({
                     "cursor-not-allowed bg-rose-400 text-white hover:bg-rose-400",
                   isBefore(day, startOfToday()) &&
                     "cursor-not-allowed opacity-50",
-                  "mx-auto flex h-9 w-9 items-center justify-center rounded",
+                  "mx-auto flex h-10 w-10 items-center justify-center rounded",
                 )}
               >
                 <time dateTime={format(day, "yyyy-MM-dd")}>
