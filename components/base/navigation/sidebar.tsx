@@ -47,12 +47,10 @@ export function Sidebar() {
           label="Messages"
           icon={MessagesSquareIcon}
           onClick={() => router.push("/hp/dashboard/messages")}
-          isActive={pathname.startsWith("/hp/dashboard/messages")}
+          isActive={pathname?.startsWith("/hp/dashboard/messages")}
         />
         <SidebarButton label="Patients" icon={UsersIcon} />
-        <SidebarButton label="Consultations" icon={HeartPulseIcon} />
         <SidebarButton label="Medications" icon={PillIcon} />
-        <SidebarButton label="Documents" icon={FileTextIcon} />
 
         <Separator className="mb-4 w-10" />
 
@@ -60,7 +58,7 @@ export function Sidebar() {
           label="Settings"
           icon={SettingsIcon}
           onClick={() => router.push("/hp/dashboard/settings")}
-          isActive={pathname.startsWith("/hp/dashboard/settings")}
+          isActive={pathname?.startsWith("/hp/dashboard/settings")}
         />
         <SidebarButton label="Support" icon={LifeBuoyIcon} />
       </div>

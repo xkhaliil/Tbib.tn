@@ -24,7 +24,7 @@ export async function BookApppointmentNavbar() {
             </Link>
 
             {authenticatedUser ? (
-              <UserButton />
+              <UserButton side="bottom" align="end" />
             ) : (
               <div className="flex items-center gap-4">
                 <Button variant="link" asChild className="px-0">

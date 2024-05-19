@@ -20,7 +20,7 @@ export function Navbar({ className }: NavbarProps) {
   return (
     <header
       className={cn(
-        "col-start-3 col-end-4 flex w-full items-center justify-between border-b bg-white px-8 py-[0.77rem]",
+        "z-10 col-start-3 col-end-4 flex h-16 w-full items-center justify-between border-b bg-white px-8",
         className,
       )}
     >

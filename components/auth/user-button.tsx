@@ -2,11 +2,12 @@
 
 import React from "react";
 
+import Link from "next/link";
+import { Role } from "@prisma/client";
 import { LogOutIcon, SettingsIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { useManageAccountDialog } from "@/hooks/use-manage-account-dialog";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,19 @@ export function UserButton({
   align = "start",
 }: UserButtonProps) {
   const user = useCurrentUser();
-  const manageAccountDialog = useManageAccountDialog();
+
+  let href: string;
+
+  if (user?.role === Role.PATIENT) {
+    href = "/patient/dashboard/settings";
+  } else if (user?.role === Role.HEALTHCARE_PROVIDER) {
+    href = "/hp/dashboard/settings";
+  } else if (user?.role === Role.HEALTHCARE_CENTER) {
+    href = "/hc/dashboard/settings";
+  } else {
+    href = "/admin/dashboard/settings";
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -76,10 +89,12 @@ export function UserButton({
           <Button
             variant="ghost"
             className="flex w-full justify-start px-2.5 text-muted-foreground"
-            onClick={() => manageAccountDialog.setOpen(true)}
+            asChild
           >
-            <SettingsIcon className="mr-7 h-4 w-4 text-muted-foreground" />
-            Manage account
+            <Link href={href}>
+              <SettingsIcon className="mr-7 h-4 w-4 text-muted-foreground" />
+              Manage account
+            </Link>
           </Button>
 
           <Button

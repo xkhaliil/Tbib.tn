@@ -6,7 +6,7 @@ import {
 import { getPatientsWithAtLeastOneAppointment } from "@/actions/patient";
 import { AppointmentStatus } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, startOfToday } from "date-fns";
+import { format, isEqual, startOfToday } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,15 +31,13 @@ const COLORS = ["#24a581", "#f991dc", "#fea25f", "#93e7fe"];
 export default async function DashboardPage() {
   const user = await getCurrentSession();
   const healthcareProvider = await getHealthcareProviderByUserId(user?.id);
-  const patients = await getPatientsWithAtLeastOneAppointment();
+  const patients = await getPatientsWithAtLeastOneAppointment(
+    healthcareProvider?.id,
+  );
   const appointments = await getAllAppointments(healthcareProvider?.id);
 
-  const futureAppointments = appointments?.filter(
-    (appointment) =>
-      new Date(appointment.date) >= startOfToday() &&
-      appointment.status !== AppointmentStatus.CANCELLED &&
-      appointment.status !== AppointmentStatus.COMPLETED &&
-      appointment.status !== AppointmentStatus.EXPIRED,
+  const todayAppointments = appointments?.filter((appointment) =>
+    isEqual(new Date(appointment.date), startOfToday()),
   );
 
   const pastAppointments = appointments?.filter(
@@ -60,7 +58,7 @@ export default async function DashboardPage() {
       <Navbar />
       <Sidebar />
       <AppointmentsSidebar
-        futureAppointments={futureAppointments}
+        futureAppointments={todayAppointments}
         pastAppointments={pastAppointments}
         cancelledAppointments={cancelledAppointments}
         expiredAppointments={expiredAppointments}
@@ -86,7 +84,7 @@ export default async function DashboardPage() {
             </Button>
           </div>
 
-          <StatsCards />
+          <StatsCards healthcareProviderId={healthcareProvider?.id} />
 
           <div className="mt-8">
             <div className="grid gap-8 lg:grid-cols-3 xl:grid-cols-8">

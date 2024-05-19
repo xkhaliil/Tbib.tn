@@ -1,6 +1,10 @@
 import React from "react";
 
 import {
+  getHealthCareProviderById,
+  getHealthCareProviderTimeSlots,
+} from "@/actions/healthcare-provider";
+import {
   Appointment,
   AppointmentStatus,
   HealthCareProvider,
@@ -17,12 +21,11 @@ import { Separator } from "@/components/ui/separator";
 
 import { AppointmentDetailsDialog } from "./dialogs/appointment-details-dialog";
 import { CancelAppointmentAlertDialog } from "./dialogs/cancel-appointment-alert-dialog";
+import { RescheduleAppointmentDialog } from "./dialogs/reschedule-appointment-dialog";
 
 interface UpcomingAppointmentCardProps {
   appointment: Appointment & {
-    healthCareProvider: HealthCareProvider & {
-      user: User;
-    };
+    healthCareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
   };
 }
 
@@ -30,9 +33,15 @@ function getDayOfWeek(date: Date) {
   return date.toLocaleDateString("en-US", { weekday: "short" });
 }
 
-export function UpcomingAppointmentCard({
+export async function UpcomingAppointmentCard({
   appointment,
 }: UpcomingAppointmentCardProps) {
+  const healthcareProviderTimeSlots = await getHealthCareProviderTimeSlots(
+    appointment.healthCareProviderId,
+    appointment.date,
+  );
+
+  
   return (
     <div className="flex rounded-xl border bg-white py-4">
       <div className="flex flex-col items-center justify-center gap-1 px-12">
@@ -53,19 +62,19 @@ export function UpcomingAppointmentCard({
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src={appointment.healthCareProvider.user.image || ""}
-              alt={appointment.healthCareProvider.user.name}
+              src={appointment.healthCareProvider?.user.image || ""}
+              alt={appointment.healthCareProvider?.user.name}
             />
             <AvatarFallback>
-              {appointment.healthCareProvider.user.name[0]}
+              {appointment.healthCareProvider?.user.name[0]}
             </AvatarFallback>
           </Avatar>
           <div className="text-sm">
             <p className="font-semibold">
-              {appointment.healthCareProvider.user.name}
+              {appointment.healthCareProvider?.user.name}
             </p>
             <p className="text-muted-foreground">
-              {appointment.healthCareProvider.speciality}
+              {appointment.healthCareProvider?.speciality}
             </p>
           </div>
         </div>
@@ -109,7 +118,11 @@ export function UpcomingAppointmentCard({
       <div className="ml-auto flex items-center gap-2 px-6 py-4">
         {appointment.status !== AppointmentStatus.CANCELLED && (
           <>
-            <Button variant="warning">Reschedule</Button>
+            <RescheduleAppointmentDialog
+              appointment={appointment}
+              healthcareProvider={appointment.healthCareProvider}
+              timeSlots={healthcareProviderTimeSlots}
+            />
             <CancelAppointmentAlertDialog appointment={appointment} />
           </>
         )}

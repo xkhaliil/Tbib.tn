@@ -70,12 +70,16 @@ export async function getNewPatients() {
   }
 }
 
-export async function getPatientsWithAtLeastOneAppointment() {
+export async function getPatientsWithAtLeastOneAppointment(
+  healthcareProviderId: string | undefined,
+) {
   try {
     const patientsWithAtLeastOneAppointment = await db.patient.findMany({
       where: {
         appointments: {
-          some: {},
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
         },
       },
       include: {
@@ -91,15 +95,46 @@ export async function getPatientsWithAtLeastOneAppointment() {
   }
 }
 
-export async function getPatientsCount() {
+export async function getPatientsCount(
+  healthcareProviderId: string | undefined,
+) {
   try {
-    const patientsCount = await db.patient.count();
+    const patientsCount = await db.patient.count({
+      where: {
+        appointments: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+      },
+    });
 
     return patientsCount;
   } catch (error) {
     console.error(error);
   }
 }
+
+export async function getLatestPatients() {
+  try {
+    const latestPatients = await db.patient.findMany({
+      include: {
+        user: true,
+      },
+      orderBy: {
+        user: {
+          createdAt: "desc",
+        },
+      },
+      take: 5,
+    });
+
+    return latestPatients;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getPatientsByMonth() {
   const users = await db.user.findMany({
     select: {

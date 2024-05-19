@@ -1,13 +1,19 @@
 import React from "react";
 
 import Link from "next/link";
+import { getCurrentSession } from "@/actions/auth";
 
+import { Button } from "@/components/ui/button";
 import { Container } from "@/components/container";
+import { Logo } from "@/components/marketing/logo";
 
-import { Button } from "../ui/button";
-import { Logo } from "./logo";
+import { UserButton } from "../auth/user-button";
 
-export function Navbar() {
+interface NavbarProps {
+  authenticatedUser: Awaited<ReturnType<typeof getCurrentSession>>;
+}
+
+export function Navbar({ authenticatedUser }: NavbarProps) {
   return (
     <header className="relative z-50 flex-none pt-12">
       <Container className="max-w-[1200px]">
@@ -21,14 +27,18 @@ export function Navbar() {
             </div>
           </Link>
 
-          <div className="hidden items-center space-x-4 md:flex">
-            <Button variant="blue" size="lg" className="rounded-2xl" asChild>
-              <Link href="/auth/sign-in">Sign in</Link>
-            </Button>
-            <Button variant="white" size="lg" className="rounded-2xl" asChild>
-              <Link href="/auth/sign-up">Get Started</Link>
-            </Button>
-          </div>
+          {authenticatedUser ? (
+            <UserButton side="bottom" align="end" />
+          ) : (
+            <div className="hidden items-center space-x-4 md:flex">
+              <Button variant="blue" size="lg" className="rounded-2xl" asChild>
+                <Link href="/auth/sign-in">Sign in</Link>
+              </Button>
+              <Button variant="white" size="lg" className="rounded-2xl" asChild>
+                <Link href="/auth/sign-up">Get Started</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </Container>
     </header>

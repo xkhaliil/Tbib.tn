@@ -571,6 +571,11 @@ export const AddNewReviewSchema = z.object({
   comment: z.string(),
 });
 
+export const RescheduleAppointmentSchema = z.object({
+  date: z.date(),
+  time: z.date({ required_error: "Please select a time" }),
+});
+
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 export type ForgotPasswordSchemaType = z.infer<typeof ForgotPasswordSchema>;
@@ -594,3 +599,6 @@ export type ManageOpeningHoursSchemaType = z.infer<
 export type UploadDocumentSchemaType = z.infer<typeof UploadDocumentSchema>;
 export type SendNewMessageSchemaType = z.infer<typeof SendNewMessageSchema>;
 export type AddNewReviewSchemaType = z.infer<typeof AddNewReviewSchema>;
+export type RescheduleAppointmentSchemaType = z.infer<
+  typeof RescheduleAppointmentSchema
+>;

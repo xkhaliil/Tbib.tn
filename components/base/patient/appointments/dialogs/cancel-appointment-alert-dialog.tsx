@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import { cancelAppointment } from "@/actions/patient";
 import { Appointment, HealthCareProvider, User } from "@prisma/client";
 import { toast } from "sonner";
@@ -22,9 +23,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 interface CancelAppointmentAlertDialogProps {
   appointment: Appointment & {
-    healthCareProvider: HealthCareProvider & {
-      user: User;
-    };
+    healthCareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
   };
 }
 

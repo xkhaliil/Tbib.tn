@@ -1,5 +1,7 @@
 import React from "react";
 
+import Image from "next/image";
+
 import { SignInForm } from "@/components/forms/sign-in-form";
 
 export default function SignIn() {
@@ -8,7 +10,15 @@ export default function SignIn() {
       <div className="flex flex-col items-center justify-center">
         <SignInForm />
       </div>
-      <div className="hidden border-l bg-muted lg:flex"></div>
+      <div className="hidden border-l bg-muted lg:flex">
+        <Image
+          src="/images/sign-in-cover.jpg"
+          alt="Sign in"
+          className="h-full w-full object-cover"
+          width={2000}
+          height={2000}
+        />
+      </div>
     </div>
   );
 }

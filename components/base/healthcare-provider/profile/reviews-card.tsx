@@ -73,7 +73,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                   {healthcareProvider?.reviews.length} ratings
                 </p>
               </div>
-              
+
               <div className="flex w-full flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <p className="text-nowrap text-sm font-medium text-muted-foreground">
@@ -85,7 +85,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                     indicatorColor="bg-yellow-500"
                   />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {getPercentageByRating(5)}%
+                    {getPercentageByRating(5).toFixed(1)}%
                   </span>
                 </div>
 
@@ -99,7 +99,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                     indicatorColor="bg-yellow-500"
                   />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {getPercentageByRating(4)}%
+                    {getPercentageByRating(4).toFixed(1)}%
                   </span>
                 </div>
 
@@ -113,7 +113,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                     indicatorColor="bg-yellow-500"
                   />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {getPercentageByRating(3)}%
+                    {getPercentageByRating(3).toFixed(1)}%
                   </span>
                 </div>
 
@@ -127,7 +127,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                     indicatorColor="bg-yellow-500"
                   />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {getPercentageByRating(2)}%
+                    {getPercentageByRating(2).toFixed(1)}%
                   </span>
                 </div>
 
@@ -141,7 +141,7 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                     indicatorColor="bg-yellow-500"
                   />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {getPercentageByRating(1)}%
+                    {getPercentageByRating(1).toFixed(1)}%
                   </span>
                 </div>
               </div>

@@ -166,9 +166,9 @@ export function SignUpForm() {
 
   return (
     <div className="w-full max-w-md p-6 xl:max-w-[600px]">
-      <div className="flex flex-col items-center space-y-3">
-        <Logo />
-        <h1 className="text-3xl font-bold">Sign Up to Oladoc</h1>
+      <div className="flex flex-col items-center space-y-2">
+        <Logo className="h-10 w-10" />
+        <h1 className="text-3xl font-bold tracking-tight">Sign Up to Oladoc</h1>
 
         <p className="text-center text-muted-foreground">
           Begin your journey with Oladoc by signing up.

@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import { Appointment, HealthCareProvider, User } from "@prisma/client";
 import {
   CalendarIcon,
@@ -25,9 +26,7 @@ import {
 
 interface AppointmentDetailsDialogProps {
   appointment: Appointment & {
-    healthCareProvider: HealthCareProvider & {
-      user: User;
-    };
+    healthCareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
   };
 }
 
@@ -64,21 +63,21 @@ export function AppointmentDetailsDialog({
                 <Avatar className="h-12 w-12">
                   <AvatarImage
                     src={
-                      appointment.healthCareProvider.user.image ||
+                      appointment.healthCareProvider?.user.image ||
                       "/placeholder.svg"
                     }
                   />
                   <AvatarFallback>
-                    {appointment.healthCareProvider.user.name[0]}
+                    {appointment.healthCareProvider?.user.name[0]}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="flex flex-col">
                   <p className="text-lg font-semibold">
-                    {appointment.healthCareProvider.user.name}
+                    {appointment.healthCareProvider?.user.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {appointment.healthCareProvider.speciality}
+                    {appointment.healthCareProvider?.speciality}
                   </p>
                 </div>
               </div>
@@ -87,21 +86,21 @@ export function AppointmentDetailsDialog({
                 <div className="flex items-center gap-2">
                   <EnvelopeClosedIcon className="h-4 w-4 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    {appointment.healthCareProvider.user.email}
+                    {appointment.healthCareProvider?.user.email}
                   </p>
                 </div>
                 <span className="text-muted-foreground">|</span>
                 <div className="flex items-center gap-2">
                   <PhoneIcon className="h-4 w-4 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    (+216) {appointment.healthCareProvider.user.phone}
+                    (+216) {appointment.healthCareProvider?.user.phone}
                   </p>
                 </div>
               </div>
 
               <div className="mt-4 rounded-xl bg-muted p-4">
                 <p className="text-sm">
-                  {appointment.healthCareProvider.user.bio}
+                  {appointment.healthCareProvider?.user.bio}
                 </p>
               </div>
             </CardContent>

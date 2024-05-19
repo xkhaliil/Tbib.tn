@@ -1,6 +1,7 @@
 import React from "react";
 
 import Image from "next/image";
+import { getCurrentSession } from "@/actions/auth";
 import {
   getHealthcareProvidersByParams,
   SearchPageParams,
@@ -19,12 +20,13 @@ interface SearchPageProps {
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const currentUser = await getCurrentSession();
   const healthcareProviders =
     await getHealthcareProvidersByParams(searchParams);
 
   return (
     <>
-      <SearchResultsNavbar />
+      <SearchResultsNavbar currentUser={currentUser} />
       <div className="w-full border-b bg-white py-6">
         <Container className="max-w-[1600px]">
           <div className="flex items-center space-x-4">

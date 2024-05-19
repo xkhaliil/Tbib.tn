@@ -59,7 +59,16 @@ export const columns = [
   columnHelper.accessor("user.gender", {
     id: "gender",
     header: "Gender",
-    cell: ({ row }) => <div>{row.getValue("gender")}</div>,
+    cell: ({ row }) => {
+      const gender = row.original?.user.gender;
+      return (
+        <div>
+          {/** @ts-ignore */}
+          {gender?.charAt(0).toUpperCase() + gender?.slice(1).toLowerCase() ??
+            "N/A"}
+        </div>
+      );
+    },
   }),
   columnHelper.accessor((patient) => patient?.appointments[0].date, {
     header: "Date",

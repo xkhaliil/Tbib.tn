@@ -4,14 +4,20 @@ import React from "react";
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { getCurrentSession } from "@/actions/auth";
+import { User } from "@prisma/client";
 import { MapPinIcon, SearchIcon } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import { UserButton } from "@/components/auth/user-button";
 import { Container } from "@/components/container";
 import { Logo } from "@/components/marketing/logo";
 
-import { Button } from "./ui/button";
+interface SearchResultsNavbarProps {
+  currentUser: Awaited<ReturnType<typeof getCurrentSession>>;
+}
 
-export function SearchResultsNavbar() {
+export function SearchResultsNavbar({ currentUser }: SearchResultsNavbarProps) {
   const searchParams = useSearchParams();
 
   const speciality = searchParams?.get("speciality");
@@ -27,18 +33,22 @@ export function SearchResultsNavbar() {
             </span>
           </div>
         </Link>
-        <div className="flex items-center gap-x-4">
-          <Button variant="blue" className="rounded-full">
-            Sign In
-          </Button>
-          <Button variant="secondary" className="rounded-full">
-            Get Started
-          </Button>
-        </div>
+        {currentUser ? (
+          <UserButton side="bottom" align="end" />
+        ) : (
+          <div className="flex items-center gap-x-4">
+            <Button variant="blue" className="rounded-full" asChild>
+              <Link href="/auth/sign-in">Sign In</Link>
+            </Button>
+            <Button variant="secondary" className="rounded-full" asChild>
+              <Link href="/auth/sign-up">Get Started</Link>
+            </Button>
+          </div>
+        )}
       </div>
       <Container className="max-w-[1600px]">
         <div className="flex items-center justify-center pb-6">
-          <div className="flex h-[4rem] w-full flex-row items-center justify-center gap-x-4 rounded-full border bg-gray-50 px-6 py-3 placeholder-muted-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
+          <div className="flex h-[4rem] w-full flex-row items-center justify-center gap-x-4 rounded-full border bg-white px-6 py-3 placeholder-muted-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
             <div className="relative flex w-full items-center">
               <SearchIcon className="absolute h-5 w-5 text-muted-foreground" />
               <input

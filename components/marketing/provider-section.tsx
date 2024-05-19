@@ -1,6 +1,7 @@
 import React from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { Container } from "@/components/container";
 
@@ -47,8 +48,13 @@ export function ProviderSection() {
             </ul>
 
             <div className="my-12 lg:mb-0 lg:pt-6">
-              <Button variant="blue" size="lg" className="h-12 rounded-2xl">
-                Join our network
+              <Button
+                variant="blue"
+                size="lg"
+                className="h-12 rounded-2xl"
+                asChild
+              >
+                <Link href="/auth/sign-up">Join our network</Link>
               </Button>
             </div>
           </div>

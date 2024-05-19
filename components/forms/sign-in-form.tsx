@@ -30,7 +30,7 @@ export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl =
-    searchParams.get("error") === "OAuthAccountNotLinked"
+    searchParams?.get("error") === "OAuthAccountNotLinked"
       ? "This email is already in use with a different provider."
       : "";
   const [showTwoFactorAuth, setShowTwoFactorAuth] = React.useState(false);
@@ -81,7 +81,7 @@ export function SignInForm() {
   return (
     <div className="w-full max-w-md p-6 xl:max-w-[550px]">
       <div className="mb-8 flex flex-col items-start">
-        <Logo />
+        <Logo className="h-11 w-11" />
         <h1 className="mt-4 text-3xl font-bold">
           {showTwoFactorAuth ? "Two Factor Authentication" : "Welcome back!"}
         </h1>

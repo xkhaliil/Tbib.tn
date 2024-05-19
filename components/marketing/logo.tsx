@@ -13,8 +13,8 @@ export function Logo({ className }: LogoProps) {
     <Image
       src="/logo.svg"
       alt="Logo"
-      width={45}
-      height={45}
+      width={100}
+      height={100}
       className={cn(className)}
     />
   );
