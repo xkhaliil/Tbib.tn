@@ -4,12 +4,11 @@ import React from "react";
 
 import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import { cancelAppointment } from "@/actions/patient";
-import { Appointment, HealthCareProvider, User } from "@prisma/client";
+import { Appointment } from "@prisma/client";
 import { toast } from "sonner";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,

@@ -573,7 +573,7 @@ export const AddNewReviewSchema = z.object({
 
 export const RescheduleAppointmentSchema = z.object({
   date: z.date(),
-  time: z.date({ required_error: "Please select a time" }),
+  time: z.string({ required_error: "Please select a time" }),
 });
 
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
