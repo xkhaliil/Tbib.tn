@@ -6,7 +6,7 @@ interface StatisticsCardProps {
   title: string;
   description: string;
   icon: React.ElementType;
-  value: string;
+  value: number | undefined;
 }
 
 export function StatisticsCard({

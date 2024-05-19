@@ -6,6 +6,7 @@ import { Document } from "@prisma/client";
 import { format, formatDistance } from "date-fns";
 import { DownloadIcon, EyeIcon, FileIcon, TrashIcon } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { MedicalDocumentButton } from "@/components/base/patient/medical-documents/medical-document-button";
 
 enum ButtonType {
@@ -23,9 +24,16 @@ export function MedicalDocumentCard({
   return (
     <div className="flex w-full flex-col rounded-xl border bg-white p-5 shadow-sm xl:flex-row">
       <div className="flex items-center space-x-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border">
-          <FileIcon className="h-5 w-5 text-blue-600" />
+        <div className="flex items-center">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 rounded-full"
+          >
+            <FileIcon className="h-5 w-5 text-blue-600" />
+          </Button>
         </div>
+
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-col">
             <h1 className="text-md font-semibold">{medicalDocument.name}</h1>

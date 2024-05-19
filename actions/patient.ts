@@ -6,6 +6,8 @@ import {
   BookAppointmentSchemaType,
   BookAppointmentWithSpecialistSchema,
   BookAppointmentWithSpecialistSchemaType,
+  RescheduleAppointmentSchema,
+  RescheduleAppointmentSchemaType,
   UploadDocumentSchemaType,
 } from "@/schemas";
 import { AppointmentStatus } from "@prisma/client";
@@ -519,6 +521,119 @@ export async function cancelAppointment(id: string | undefined) {
       revalidatePath("/patient/dashboard/appointments");
       return { success: "Appointment cancelled successfully." };
     }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function rescheduleAppointment(
+  id: string | undefined,
+  values: RescheduleAppointmentSchemaType,
+) {
+  try {
+    const validatedFields = RescheduleAppointmentSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" };
+    }
+
+    const { date, time } = validatedFields.data;
+
+    await db.appointment.update({
+      where: {
+        id,
+      },
+      data: {
+        date,
+        startTime: new Date(time),
+        endTime: add(new Date(time), { minutes: 30 }),
+        description: `Appointment rescheduled on ${format(
+          new Date(date),
+          "EEEE, MMMM d yyyy",
+        )} at ${format(new Date(time), "HH:mm")}`,
+      },
+    });
+
+    revalidatePath("/patient/dashboard/appointments");
+
+    return { success: "Appointment rescheduled successfully." };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientTotalAppointments() {
+  try {
+    const user = await getCurrentSession();
+
+    const patient = await getPatientByUserId(user?.id);
+
+    const totalAppointments = await db.appointment.count({
+      where: {
+        patientId: patient?.id,
+      },
+    });
+
+    return totalAppointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientTotalConsultations() {
+  try {
+    const user = await getCurrentSession();
+
+    const patient = await getPatientByUserId(user?.id);
+
+    const totalConsultations = await db.appointment.count({
+      where: {
+        patientId: patient?.id,
+        status: AppointmentStatus.COMPLETED,
+      },
+    });
+
+    return totalConsultations;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientTotalMedicalDocuments() {
+  try {
+    const user = await getCurrentSession();
+
+    const patient = await getPatientByUserId(user?.id);
+
+    const totalMedicalDocuments = await db.document.count({
+      where: {
+        patientId: patient?.id,
+      },
+    });
+
+    return totalMedicalDocuments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientRecentMedicalDocuments() {
+  try {
+    const user = await getCurrentSession();
+
+    const patient = await getPatientByUserId(user?.id);
+
+    const recentMedicalDocuments = await db.document.findMany({
+      where: {
+        patientId: patient?.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 5,
+    });
+
+    return recentMedicalDocuments;
   } catch (error) {
     console.error(error);
   }

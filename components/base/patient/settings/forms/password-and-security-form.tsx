@@ -181,28 +181,6 @@ export function PasswordAndSecurityForm() {
               )}
             />
 
-            <div className="space-y-2">
-              <Label htmlFor="delete-account">Delete Account</Label>
-              <Card className="rounded-lg shadow-none">
-                <CardHeader className="space-y-3">
-                  <CardTitle>Delete Account</CardTitle>
-                  <CardDescription>
-                    Permanently remove your Personal Account and all of its
-                    contents from our platform. This action is not reversible,
-                    so please continue with caution.
-                  </CardDescription>
-                </CardHeader>
-
-                <Separator />
-
-                <CardFooter className="flex justify-end px-6 py-3">
-                  <Button variant="destructive" type="button">
-                    Delete Account
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-
             <FormError message={error} />
             <FormSuccess message={success} />
           </form>

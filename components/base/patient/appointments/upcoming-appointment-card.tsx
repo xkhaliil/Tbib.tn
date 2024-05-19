@@ -1,22 +1,13 @@
 import React from "react";
 
-import {
-  getHealthCareProviderById,
-  getHealthCareProviderTimeSlots,
-} from "@/actions/healthcare-provider";
-import {
-  Appointment,
-  AppointmentStatus,
-  HealthCareProvider,
-  User,
-} from "@prisma/client";
+import { getHealthCareProviderById } from "@/actions/healthcare-provider";
+import { Appointment, AppointmentStatus } from "@prisma/client";
 import { ClockIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { AppointmentDetailsDialog } from "./dialogs/appointment-details-dialog";
@@ -36,12 +27,10 @@ function getDayOfWeek(date: Date) {
 export async function UpcomingAppointmentCard({
   appointment,
 }: UpcomingAppointmentCardProps) {
-  const healthcareProviderTimeSlots = await getHealthCareProviderTimeSlots(
+  const healthcareProvider = await getHealthCareProviderById(
     appointment.healthCareProviderId,
-    appointment.date,
   );
 
-  
   return (
     <div className="flex rounded-xl border bg-white py-4">
       <div className="flex flex-col items-center justify-center gap-1 px-12">
@@ -120,8 +109,7 @@ export async function UpcomingAppointmentCard({
           <>
             <RescheduleAppointmentDialog
               appointment={appointment}
-              healthcareProvider={appointment.healthCareProvider}
-              timeSlots={healthcareProviderTimeSlots}
+              healthcareProvider={healthcareProvider}
             />
             <CancelAppointmentAlertDialog appointment={appointment} />
           </>
