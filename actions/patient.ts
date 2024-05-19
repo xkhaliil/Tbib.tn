@@ -95,19 +95,9 @@ export async function getPatientsWithAtLeastOneAppointment(
   }
 }
 
-export async function getPatientsCount(
-  healthcareProviderId: string | undefined,
-) {
+export async function getPatientsCount() {
   try {
-    const patientsCount = await db.patient.count({
-      where: {
-        appointments: {
-          some: {
-            healthCareProviderId: healthcareProviderId,
-          },
-        },
-      },
-    });
+    const patientsCount = await db.patient.count();
 
     return patientsCount;
   } catch (error) {

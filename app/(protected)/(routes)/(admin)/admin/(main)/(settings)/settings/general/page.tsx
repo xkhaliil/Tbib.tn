@@ -19,7 +19,7 @@ export default function Dashboard() {
           </div>
           <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <nav className="grid gap-4 text-sm text-muted-foreground">
-              <Link href="#" className="font-semibold text-primary">
+              <Link href="/admin/" className="font-semibold text-primary">
                 General
               </Link>
               <Link href="/admin/settings/security">Security</Link>

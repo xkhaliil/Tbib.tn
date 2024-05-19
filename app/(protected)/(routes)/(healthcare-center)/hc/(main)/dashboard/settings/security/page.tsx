@@ -14,13 +14,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
 import { SearchButton } from "@/components/base/healthcare-center/dashboard/search-button";
-import ProfileAndAccountFormHc from "@/components/base/healthcare-center/dashboard/settings/profile-and-account-form";
+import PasswordAndSecurityFormHc from "@/components/base/healthcare-center/dashboard/settings/password-and-security-form";
 import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
 
-export default function HealthcareCenterSettingsPage() {
+export default function SecurityHcPage() {
   return (
     <div>
       <Sidebar />
@@ -39,6 +39,10 @@ export default function HealthcareCenterSettingsPage() {
             <BreadcrumbItem>
               <BreadcrumbPage>Settings</BreadcrumbPage>
             </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Security</BreadcrumbPage>
+            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <SearchButton />
@@ -51,19 +55,19 @@ export default function HealthcareCenterSettingsPage() {
           </div>
           <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <nav className="grid gap-4 text-sm text-muted-foreground">
+              <Link href="/hc/dashboard/settings">General</Link>
               <Link
-                href="/hc/dashboard/settings"
+                href="/hc/dashboard/settings/security"
                 className="font-semibold text-primary"
               >
-                General
+                Security
               </Link>
-              <Link href="/hc/dashboard/settings/security">Security</Link>
               <Link href="/hc/dashboard/settings/notifications">
                 Notifications
               </Link>
             </nav>
             <div className="grid gap-6">
-              <ProfileAndAccountFormHc />
+              <PasswordAndSecurityFormHc />
             </div>
           </div>
         </main>
