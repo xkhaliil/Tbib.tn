@@ -43,6 +43,71 @@ export async function getAllAppointments(healthCareProviderId?: string) {
   }
 }
 
+export async function getAllTodayAppointments(healthCareProviderId?: string) {
+  try {
+    const appointments = await db.appointment.findMany({
+      where: {
+        healthCareProviderId,
+        date: addHours(startOfToday(), 1),
+      },
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getAllLastWeekPastAppointments(
+  healthCareProviderId?: string,
+) {
+  try {
+    const appointments = await db.appointment.findMany({
+      where: {
+        healthCareProviderId,
+        date: {
+          gte: startOfToday(),
+          lte: setDay(startOfToday(), 6),
+        },
+        startTime: {
+          lt: startOfToday(),
+        },
+        endTime: {
+          lt: startOfToday(),
+        },
+      },
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getAppointmentById(id: string | undefined) {
   try {
     const appointment = await db.appointment.findFirst({

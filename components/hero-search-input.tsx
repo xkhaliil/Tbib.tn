@@ -90,16 +90,18 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         updatedQuery = {
           ...query,
           speciality: "General Practitioner",
+          location: "Tunis",
         };
       }
-      if (specialitySearchInput === "" || locationSearchInput != "") {
+
+      if (specialitySearchInput === "" || locationSearchInput !== "") {
         updatedQuery = {
           ...query,
           speciality: "General Practitioner",
           location: locationSearchInput,
         };
       }
-      if (specialitySearchInput != "" || locationSearchInput === "") {
+      if (specialitySearchInput && locationSearchInput === "") {
         updatedQuery = {
           ...query,
           speciality: specialitySearchInput,

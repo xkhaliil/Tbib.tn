@@ -145,12 +145,14 @@ model Patient {
   chronicDiseases String[]
   vaccinations    String[]
   surgeries       String[]
-  familyHistory   String?
+  familyHistory   String[]
   bloodType       BloodType?
   weight          Float?
   height          Float?
   bmi             Float?
   occupation      String?
+  smoker          Boolean?
+  alcohol         Boolean?
 
   appointments  Appointment[]
   consultations Consultation[]
@@ -348,7 +350,7 @@ model Prescription {
   id          String           @id @default(auto()) @map("_id") @db.ObjectId
   date        DateTime         @default(now())
   type        PrescriptionType
-  medications String
+  medications String[]
   dosage      String
   duration    String
   notes       String?

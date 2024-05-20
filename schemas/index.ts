@@ -1,5 +1,5 @@
 import { SymptomType } from "@/constants";
-import { Role } from "@prisma/client";
+import { BloodType, Role } from "@prisma/client";
 import { isEqual } from "date-fns";
 import * as z from "zod";
 
@@ -576,6 +576,24 @@ export const RescheduleAppointmentSchema = z.object({
   time: z.string({ required_error: "Please select a time" }),
 });
 
+export const CreateFollowUpDataSchema = z.object({
+  weight: z.number(),
+  height: z.number(),
+  bmi: z.number(),
+});
+
+export const ManagePatientBackgroundSchema = z.object({
+  allergies: z.optional(z.array(z.string())),
+  chronicDiseases: z.optional(z.array(z.string())),
+  vaccinations: z.optional(z.array(z.string())),
+  surgeries: z.optional(z.array(z.string())),
+  familyHistory: z.optional(z.array(z.string())),
+  bloodType: z.nativeEnum(BloodType),
+  smoker: z.boolean(),
+  alcohol: z.boolean(),
+  occupation: z.string(),
+});
+
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 export type ForgotPasswordSchemaType = z.infer<typeof ForgotPasswordSchema>;
@@ -601,4 +619,10 @@ export type SendNewMessageSchemaType = z.infer<typeof SendNewMessageSchema>;
 export type AddNewReviewSchemaType = z.infer<typeof AddNewReviewSchema>;
 export type RescheduleAppointmentSchemaType = z.infer<
   typeof RescheduleAppointmentSchema
+>;
+export type CreateFollowUpDataSchemaType = z.infer<
+  typeof CreateFollowUpDataSchema
+>;
+export type ManagePatientBackgroundSchemaType = z.infer<
+  typeof ManagePatientBackgroundSchema
 >;

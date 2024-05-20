@@ -350,3 +350,43 @@ export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
 
   return slots;
 }
+
+export async function getAllHealthcareProviderPatients(
+  healthcareProviderId: string | undefined,
+) {
+  const patients = await db.patient.count({
+    where: {
+      appointments: {
+        some: {
+          healthCareProviderId: healthcareProviderId,
+        },
+      },
+    },
+  });
+
+  return patients;
+}
+
+export async function getHealthcareProviderHealthcareCenter(
+  healthcareProviderId: string | undefined,
+) {
+  const healthcareCenter = await db.healthCareCenter.findFirst({
+    where: {
+      healthCareProviders: {
+        some: {
+          id: healthcareProviderId,
+        },
+      },
+    },
+    include: {
+      user: true,
+      healthCareProviders: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+
+  return healthcareCenter;
+}

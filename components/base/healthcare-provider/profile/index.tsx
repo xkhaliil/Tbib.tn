@@ -1,6 +1,7 @@
 import React from "react";
 
 import Image from "next/image";
+import { getCurrentSession, getPatientByUserId } from "@/actions/auth";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +22,9 @@ interface ProfileProps {
   >;
 }
 
-export function Profile({ healthcareProvider }: ProfileProps) {
+export async function Profile({ healthcareProvider }: ProfileProps) {
+  const currentUser = await getCurrentSession();
+  const patient = await getPatientByUserId(currentUser?.id);
   return (
     <div className="flex w-full flex-col">
       <div className="flex h-52 w-full flex-col justify-center border-b bg-muted">
@@ -140,7 +143,10 @@ export function Profile({ healthcareProvider }: ProfileProps) {
               </div>
             </TabsContent>
             <TabsContent value="reviews">
-              <Reviewscard healthcareProvider={healthcareProvider} />
+              <Reviewscard
+                healthcareProvider={healthcareProvider}
+                patient={patient}
+              />
             </TabsContent>
 
             <div className="flex flex-col justify-start">

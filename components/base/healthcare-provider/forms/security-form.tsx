@@ -14,13 +14,6 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -30,7 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
@@ -219,34 +211,6 @@ export function SecurityForm() {
               />
             </div>
           </>
-
-          <div className="sm:col-span-6">
-            <div className="space-y-2">
-              <Label htmlFor="delete-account">Delete Account</Label>
-              <Card className="rounded-lg shadow-none">
-                <CardHeader className="space-y-3">
-                  <CardTitle>Delete Account</CardTitle>
-                  <CardDescription>
-                    Permanently remove your Personal Account and all of its
-                    contents from our platform. This action is not reversible,
-                    so please continue with caution.
-                  </CardDescription>
-                </CardHeader>
-
-                <Separator />
-
-                <CardFooter className="flex justify-end px-6 py-3">
-                  <Button
-                    variant="destructive"
-                    type="button"
-                    onClick={() => {}}
-                  >
-                    Delete Account
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
         </form>
       </Form>
     </div>
