@@ -76,14 +76,6 @@ export const columns = [
       return <div>{format(row.renderValue()!, "MMM d, yyyy")}</div>;
     },
   }),
-  columnHelper.accessor((patient) => patient?.appointments[0].title, {
-    header: "Appointed for",
-    cell: (row) => (
-      <div className="w-[160px]">
-        <Badge variant="white">{row.renderValue()}</Badge>
-      </div>
-    ),
-  }),
   {
     id: "actions",
     cell: () => (

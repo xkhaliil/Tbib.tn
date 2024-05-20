@@ -2,11 +2,14 @@
 
 import React from "react";
 
+import { getPatientByUserId } from "@/actions/auth";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
 import Rating from "@mui/material/Rating";
 import { format } from "date-fns";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 
@@ -16,9 +19,10 @@ type ReviewscardProps = {
   healthcareProvider: Awaited<
     ReturnType<typeof getHealthCareProviderUserAndOpeningHoursAndAbsencesById>
   >;
+  patient: Awaited<ReturnType<typeof getPatientByUserId>>;
 };
 
-export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
+export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
   const calculateAverageRating = () => {
     if (healthcareProvider?.reviews) {
       const total = healthcareProvider.reviews.length || 1;
@@ -184,7 +188,17 @@ export function Reviewscard({ healthcareProvider }: ReviewscardProps) {
                 </div>
               </div>
 
-              <div className="mt-4 min-w-0 flex-1 space-y-4 sm:mt-0">
+              <div className="min-w-0 flex-1 space-y-4 sm:mt-0">
+                {patient?.id === review.patientId && (
+                  <div className="flex items-center justify-end gap-2">
+                    <Button variant="blue" size="icon">
+                      <PencilIcon className="h-4 w-4" />
+                    </Button>
+                    <Button variant="destructive" size="icon">
+                      <Trash2Icon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
                 <p className="text-base font-normal text-muted-foreground">
                   {review.comment}
                 </p>

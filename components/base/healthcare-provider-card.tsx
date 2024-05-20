@@ -145,7 +145,7 @@ export function HealthcareProviderCard({
             <div className="flex items-center gap-1.5">
               <Star className="h-4 w-4 text-blue-600" />
               <p className="text-sm text-muted-foreground">
-                {calculateAverageRating()}
+                {calculateAverageRating().toFixed(1)}
               </p>
               <p className="text-sm text-muted-foreground">
                 ({calculateReviewsCount()}

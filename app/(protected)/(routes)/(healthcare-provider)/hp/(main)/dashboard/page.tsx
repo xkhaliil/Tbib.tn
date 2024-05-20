@@ -1,4 +1,8 @@
-import { getAllAppointments } from "@/actions/appointment";
+import {
+  getAllAppointments,
+  getAllLastWeekPastAppointments,
+  getAllTodayAppointments,
+} from "@/actions/appointment";
 import {
   getCurrentSession,
   getHealthcareProviderByUserId,
@@ -35,15 +39,12 @@ export default async function DashboardPage() {
     healthcareProvider?.id,
   );
   const appointments = await getAllAppointments(healthcareProvider?.id);
-
-  const todayAppointments = appointments?.filter((appointment) =>
-    isEqual(new Date(appointment.date), startOfToday()),
+  const pastAppointments = await getAllLastWeekPastAppointments(
+    healthcareProvider?.id,
   );
 
-  const pastAppointments = appointments?.filter(
-    (appointment) =>
-      new Date(appointment.date) < startOfToday() ||
-      appointment.status === AppointmentStatus.COMPLETED,
+  const todayAppointments = await getAllTodayAppointments(
+    healthcareProvider?.id,
   );
 
   const cancelledAppointments = appointments?.filter(

@@ -60,7 +60,6 @@ export function Sidebar() {
           onClick={() => router.push("/hp/dashboard/settings")}
           isActive={pathname?.startsWith("/hp/dashboard/settings")}
         />
-        <SidebarButton label="Support" icon={LifeBuoyIcon} />
       </div>
 
       <div className="mb-4 mt-auto flex flex-col items-center">

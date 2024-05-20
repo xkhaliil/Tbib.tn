@@ -41,6 +41,7 @@ export async function getPatientById(id: string | undefined) {
       include: {
         user: true,
         appointments: true,
+        prescriptions: true,
       },
     });
 

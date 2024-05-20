@@ -68,8 +68,8 @@ export function FutureAppointments({ appointments }: FutureAppointmentsProps) {
           </div>
         ))
       ) : (
-        <div className="border-b p-6 text-center">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex border-b p-4">
+          <p className="text-xs text-muted-foreground">
             No appointments found for today.
           </p>
         </div>
