@@ -4,17 +4,29 @@ import React from "react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const data = [
-  { name: "Child", value: 55 },
-  { name: "Teen", value: 15 },
-  { name: "Adult", value: 30 },
-  { name: "Elderly", value: 10 },
-];
+interface PatientsOverviewChartProps {
+  totalChildPatients: number | undefined;
+  totalTeenPatients: number | undefined;
+  totalAdultPatients: number | undefined;
+  totalElderlyPatients: number | undefined;
+}
 
 const COLORS = ["#24a581", "#f991dc", "#fea25f", "#93e7fe"];
 
-export function PatientsOverviewChart() {
+export function PatientsOverviewChart({
+  totalChildPatients,
+  totalTeenPatients,
+  totalAdultPatients,
+  totalElderlyPatients,
+}: PatientsOverviewChartProps) {
   const [isMounted, setIsMounted] = React.useState(false);
+
+  const data = [
+    { name: "Child", value: totalChildPatients },
+    { name: "Teen", value: totalTeenPatients },
+    { name: "Adult", value: totalAdultPatients },
+    { name: "Elderly", value: totalElderlyPatients },
+  ];
 
   React.useEffect(() => {
     setIsMounted(true);

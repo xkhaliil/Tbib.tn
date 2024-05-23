@@ -1,13 +1,19 @@
 import {
   getAllAppointments,
-  getAllLastWeekPastAppointments,
   getAllTodayAppointments,
+  getPastAppointments,
 } from "@/actions/appointment";
 import {
   getCurrentSession,
   getHealthcareProviderByUserId,
 } from "@/actions/auth";
-import { getPatientsWithAtLeastOneAppointment } from "@/actions/patient";
+import {
+  getPatientsWithAtLeastOneAppointment,
+  getTotalAdultPatients,
+  getTotalChildPatients,
+  getTotalElderlyPatients,
+  getTotalTeenPatients,
+} from "@/actions/patient";
 import { AppointmentStatus } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, isEqual, startOfToday } from "date-fns";
@@ -23,13 +29,6 @@ import { columns } from "@/components/base/healthcare-provider-dashboard/new-pat
 import { StatsCards } from "@/components/base/healthcare-provider-dashboard/stats-cards";
 import { Sidebar } from "@/components/base/navigation/sidebar";
 
-const piedata = [
-  { name: "Child", value: 55 },
-  { name: "Teen", value: 15 },
-  { name: "Adult", value: 30 },
-  { name: "Elderly", value: 10 },
-];
-
 const COLORS = ["#24a581", "#f991dc", "#fea25f", "#93e7fe"];
 
 export default async function DashboardPage() {
@@ -39,9 +38,7 @@ export default async function DashboardPage() {
     healthcareProvider?.id,
   );
   const appointments = await getAllAppointments(healthcareProvider?.id);
-  const pastAppointments = await getAllLastWeekPastAppointments(
-    healthcareProvider?.id,
-  );
+  const pastAppointments = await getPastAppointments(healthcareProvider?.id);
 
   const todayAppointments = await getAllTodayAppointments(
     healthcareProvider?.id,
@@ -54,6 +51,24 @@ export default async function DashboardPage() {
   const expiredAppointments = appointments?.filter(
     (appointment) => appointment.status === AppointmentStatus.EXPIRED,
   );
+
+  const totalChildPatients = await getTotalChildPatients(
+    healthcareProvider?.id,
+  );
+  const totalTeenPatients = await getTotalTeenPatients(healthcareProvider?.id);
+  const totalAdultPatients = await getTotalAdultPatients(
+    healthcareProvider?.id,
+  );
+  const totalElderlyPatients = await getTotalElderlyPatients(
+    healthcareProvider?.id,
+  );
+
+  const piedata = [
+    { name: "Child", value: totalChildPatients },
+    { name: "Teen", value: totalTeenPatients },
+    { name: "Adult", value: totalAdultPatients },
+    { name: "Elderly", value: totalElderlyPatients },
+  ];
   return (
     <div className="grid h-screen grid-cols-[70px_352px_1fr] grid-rows-[3.5rem_1fr]">
       <Navbar />
@@ -124,7 +139,12 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className="flex items-center justify-around">
-                  <PatientsOverviewChart />
+                  <PatientsOverviewChart
+                    totalChildPatients={totalChildPatients}
+                    totalTeenPatients={totalTeenPatients}
+                    totalAdultPatients={totalAdultPatients}
+                    totalElderlyPatients={totalElderlyPatients}
+                  />
 
                   <div className="flex items-center">
                     <div className="ml-4 flex flex-col space-y-2.5">

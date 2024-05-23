@@ -42,10 +42,38 @@ export async function getPatientById(id: string | undefined) {
         user: true,
         appointments: true,
         prescriptions: true,
+        records: true,
       },
     });
 
     return patient;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientRecord(
+  patientId: string | undefined,
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const record = await db.record.findFirst({
+      where: {
+        patientId,
+        healthCareProviderId: healthcareProviderId,
+      },
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+        healthCareProvider: true,
+        currentMedications: true,
+      },
+    });
+
+    return record;
   } catch (error) {
     console.error(error);
   }
@@ -241,7 +269,7 @@ export async function getPatientPastAppointments(id: string | undefined) {
       where: {
         patientId: currentPatient?.id,
         date: {
-          lt: startOfToday(),
+          lt: new Date(),
         },
       },
       include: {
@@ -284,6 +312,9 @@ export async function getPatientUpcomingAppointments(id: string | undefined) {
         healthCareProvider: {
           include: {
             user: true,
+            openingHours: true,
+            absences: true,
+            appointments: true,
           },
         },
       },
@@ -625,6 +656,147 @@ export async function getPatientRecentMedicalDocuments() {
     });
 
     return recentMedicalDocuments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getTotalChildPatients(
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const childPatients = await db.patient.count({
+      where: {
+        user: {
+          dateOfBirth: {
+            gt: new Date(new Date().setFullYear(new Date().getFullYear() - 12)),
+          },
+        },
+        appointments: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+      },
+    });
+
+    return childPatients;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getTotalTeenPatients(
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const teenPatients = await db.patient.count({
+      where: {
+        user: {
+          dateOfBirth: {
+            lte: new Date(
+              new Date().setFullYear(new Date().getFullYear() - 15),
+            ),
+            gt: new Date(new Date().setFullYear(new Date().getFullYear() - 22)),
+          },
+        },
+        appointments: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+      },
+    });
+
+    return teenPatients;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getTotalAdultPatients(
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const adultPatients = await db.patient.count({
+      where: {
+        user: {
+          dateOfBirth: {
+            lte: new Date(
+              new Date().setFullYear(new Date().getFullYear() - 22),
+            ),
+          },
+        },
+        appointments: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+      },
+    });
+
+    return adultPatients;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getTotalElderlyPatients(
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const elderlyPatients = await db.patient.count({
+      where: {
+        user: {
+          dateOfBirth: {
+            lte: new Date(
+              new Date().setFullYear(new Date().getFullYear() - 60),
+            ),
+          },
+        },
+        appointments: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+      },
+    });
+
+    return elderlyPatients;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientByIdForHealthcareProvider(
+  patientId: string | undefined,
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const patient = await db.patient.findUnique({
+      where: {
+        id: patientId,
+        appointments: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+        consultations: {
+          some: {
+            healthCareProviderId: healthcareProviderId,
+          },
+        },
+      },
+      select: {
+        user: true,
+        records: true,
+        prescriptions: true,
+        appointments: true,
+        consultations: true,
+      },
+    });
+
+    return patient;
   } catch (error) {
     console.error(error);
   }

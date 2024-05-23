@@ -1,7 +1,13 @@
 import React from "react";
 
 import Link from "next/link";
-import { getPatientById } from "@/actions/patient";
+import {
+  getCurrentSession,
+  getHealthcareProviderByUserId,
+} from "@/actions/auth";
+import { getPatientById, getPatientRecord } from "@/actions/patient";
+
+import { patientHasCompleteRecord } from "@/lib/helpers";
 
 import {
   Breadcrumb,
@@ -11,6 +17,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -20,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BackgroundInfoForm } from "@/components/base/consultation/forms/background-info-form";
+import { CurrentMedicationsForm } from "@/components/base/consultation/forms/current-medications-form";
 import { FollowUpInfoForm } from "@/components/base/consultation/forms/follow-up-info-form";
 import { PatientRecordSidebar } from "@/components/base/consultation/patient-record-sidebar";
 import { Navbar } from "@/components/base/healthcare-provider-dashboard/navbar";
@@ -35,12 +43,21 @@ interface ConsultationsPageProps {
 export default async function ConsultationsPage({
   params,
 }: ConsultationsPageProps) {
+  const authenticatedUser = await getCurrentSession();
+  const healthcareProvider = await getHealthcareProviderByUserId(
+    authenticatedUser?.id,
+  );
   const patient = await getPatientById(params.patientId);
+  const record = await getPatientRecord(
+    params.patientId,
+    healthcareProvider?.id,
+  );
+
   return (
     <div className="grid h-screen grid-cols-[70px_352px_1fr] grid-rows-[3.5rem_1fr]">
       <Navbar />
       <Sidebar />
-      <PatientRecordSidebar patient={patient} />
+      <PatientRecordSidebar patient={patient} record={record} />
       <ScrollArea className="col-start-3 bg-secondary p-8">
         <Breadcrumb>
           <BreadcrumbList>
@@ -66,20 +83,15 @@ export default async function ConsultationsPage({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <BackgroundInfoForm patient={patient} />
+                <BackgroundInfoForm
+                  appointmentId={params.appointmentId}
+                  record={record}
+                />
               </CardContent>
             </Card>
           </div>
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Current Medications</CardTitle>
-                <CardDescription>
-                  This section contains the patient's current medications.
-                </CardDescription>
-              </CardHeader>
-              <CardContent></CardContent>
-            </Card>
+            <CurrentMedicationsForm />
           </div>
           <div className="grid auto-rows-max gap-4 lg:gap-8">
             <Card>
@@ -90,11 +102,26 @@ export default async function ConsultationsPage({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <FollowUpInfoForm />
+                <FollowUpInfoForm
+                  appointmentId={params.appointmentId}
+                  record={record}
+                />
               </CardContent>
             </Card>
           </div>
         </div>
+
+        {patientHasCompleteRecord(record) && (
+          <div className="mt-8 flex justify-end">
+            <Button variant="blue" asChild>
+              <Link
+                href={`/hp/dashboard/consultations/new-consultation/${params.appointmentId}/${record?.id}/${params.patientId}`}
+              >
+                Save and Continue to Consultation
+              </Link>
+            </Button>
+          </div>
+        )}
       </ScrollArea>
     </div>
   );

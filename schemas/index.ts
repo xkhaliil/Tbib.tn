@@ -1,5 +1,5 @@
 import { SymptomType } from "@/constants";
-import { BloodType, Role } from "@prisma/client";
+import { BloodType, PrescriptionType, Role } from "@prisma/client";
 import { isEqual } from "date-fns";
 import * as z from "zod";
 
@@ -576,10 +576,11 @@ export const RescheduleAppointmentSchema = z.object({
   time: z.string({ required_error: "Please select a time" }),
 });
 
-export const CreateFollowUpDataSchema = z.object({
-  weight: z.number(),
-  height: z.number(),
-  bmi: z.number(),
+export const ManageFollowUpDataSchema = z.object({
+  weight: z.coerce.number(),
+  height: z.coerce.number(),
+  bloodPressure: z.coerce.number(),
+  bmi: z.coerce.number(),
 });
 
 export const ManagePatientBackgroundSchema = z.object({
@@ -592,6 +593,59 @@ export const ManagePatientBackgroundSchema = z.object({
   smoker: z.boolean(),
   alcohol: z.boolean(),
   occupation: z.string(),
+});
+
+export const ManageCurrentMedicationsSchema = z.object({
+  currentMedications: z.optional(
+    z.array(
+      z.object({
+        name: z.string(),
+        dosage: z.string(),
+        duration: z.string(),
+      }),
+    ),
+  ),
+});
+
+export const CreateConsultationSchema = z.object({
+  diagnosis: z
+    .string()
+    .min(10, { message: "Diagnosis must be at least 10 characters long." })
+    .max(512, { message: "Diagnosis must be at most 512 characters long." }),
+  followUp: z
+    .string()
+    .min(10, { message: "Follow up must be at least 10 characters long." })
+    .max(512, { message: "Follow up must be at most 512 characters long." }),
+  notes: z.optional(z.string()),
+  prescription: z.optional(
+    z.object({
+      date: z.date(),
+      type: z.nativeEnum(PrescriptionType),
+      medications: z.array(
+        z.object({
+          name: z.string(),
+          dosage: z.string(),
+          duration: z.string(),
+        }),
+      ),
+      biologyTestType: z.optional(z.string()),
+      biologyTestReason: z.optional(z.string()),
+      biologyTestNotes: z.optional(z.string()),
+      imagingStudyType: z.optional(z.string()),
+      imagingStudyReason: z.optional(z.string()),
+      imagingStudyNotes: z.optional(z.string()),
+      medicalCertificateType: z.optional(z.string()),
+      medicalCertificatePurpose: z.optional(z.string()),
+      medicalCertificateStartDate: z.optional(z.date()),
+      medicalCertificateEndDate: z.optional(z.date()),
+      medicalCertificateNotes: z.optional(z.string()),
+      paramedicalActType: z.optional(z.string()),
+      paramedicalActReason: z.optional(z.string()),
+      paramedicalActDuration: z.optional(z.string()),
+      paramedicalActNotes: z.optional(z.string()),
+      notes: z.optional(z.string()),
+    }),
+  ),
 });
 
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
@@ -620,9 +674,15 @@ export type AddNewReviewSchemaType = z.infer<typeof AddNewReviewSchema>;
 export type RescheduleAppointmentSchemaType = z.infer<
   typeof RescheduleAppointmentSchema
 >;
-export type CreateFollowUpDataSchemaType = z.infer<
-  typeof CreateFollowUpDataSchema
+export type ManageFollowUpDataSchemaType = z.infer<
+  typeof ManageFollowUpDataSchema
 >;
 export type ManagePatientBackgroundSchemaType = z.infer<
   typeof ManagePatientBackgroundSchema
+>;
+export type ManageCurrentMedicationsSchemaType = z.infer<
+  typeof ManageCurrentMedicationsSchema
+>;
+export type CreateConsultationSchemaType = z.infer<
+  typeof CreateConsultationSchema
 >;

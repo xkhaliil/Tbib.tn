@@ -57,8 +57,6 @@ export function ExpiredAppointments({
                 </div>
               </div>
             </div>
-
-            <AppointmentActions appointment={appointment} />
           </div>
         ))
       ) : (

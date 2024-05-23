@@ -64,6 +64,7 @@
     "framer-motion": "^11.1.7",
     "fs": "^0.0.1-security",
     "handlebars": "^4.7.8",
+    "handlebars-loader": "^1.7.3",
     "input-otp": "^0.3.0-beta.1",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",

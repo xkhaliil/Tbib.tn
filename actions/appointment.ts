@@ -48,7 +48,12 @@ export async function getAllTodayAppointments(healthCareProviderId?: string) {
     const appointments = await db.appointment.findMany({
       where: {
         healthCareProviderId,
-        date: addHours(startOfToday(), 1),
+        startTime: {
+          gte: new Date(),
+        },
+        status: {
+          in: [AppointmentStatus.PENDING, AppointmentStatus.UPCOMING],
+        },
       },
       include: {
         patient: {
@@ -70,22 +75,13 @@ export async function getAllTodayAppointments(healthCareProviderId?: string) {
   }
 }
 
-export async function getAllLastWeekPastAppointments(
-  healthCareProviderId?: string,
-) {
+export async function getPastAppointments(healthCareProviderId?: string) {
   try {
     const appointments = await db.appointment.findMany({
       where: {
         healthCareProviderId,
-        date: {
-          gte: startOfToday(),
-          lte: setDay(startOfToday(), 6),
-        },
-        startTime: {
-          lt: startOfToday(),
-        },
-        endTime: {
-          lt: startOfToday(),
+        status: {
+          in: [AppointmentStatus.COMPLETED],
         },
       },
       include: {

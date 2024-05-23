@@ -55,8 +55,6 @@ export function PastAppointments({ appointments }: PastAppointmentsProps) {
                 </div>
               </div>
             </div>
-
-            <AppointmentActions appointment={appointment} />
           </div>
         ))
       ) : (

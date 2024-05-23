@@ -31,11 +31,11 @@ enum NotificationType {
 }
 
 enum PrescriptionType {
-  MEDICATION
+  MEDICAL_PRESCRIPTION
   BIOLOGY_TEST
-  RADIOLOGY_TEST
-  PROCEDURE
+  IMAGINING_STUDY
   PARAMEDICAL_ACT
+  MEDICAL_CERTIFICATE
 }
 
 enum BloodType {
@@ -141,28 +141,44 @@ model TwoFactorAuthConfirmation {
 model Patient {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  allergies       String[]
-  chronicDiseases String[]
-  vaccinations    String[]
-  surgeries       String[]
-  familyHistory   String[]
-  bloodType       BloodType?
-  weight          Float?
-  height          Float?
-  bmi             Float?
-  occupation      String?
-  smoker          Boolean?
-  alcohol         Boolean?
-
   appointments  Appointment[]
   consultations Consultation[]
   documents     Document[]
   prescriptions Prescription[]
   reviews       Review[]
   conversations Conversation[]
+  records       Record[]
 
   userId String @unique @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Record {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  allergies          String[]
+  chronicDiseases    String[]
+  vaccinations       String[]
+  surgeries          String[]
+  familyHistory      String[]
+  bloodType          BloodType?
+  weight             Float?
+  height             Float?
+  bloodPressure      Float?
+  bmi                Float?
+  occupation         String?
+  smoker             Boolean?
+  alcohol            Boolean?
+  currentMedications Medication[]
+
+  patientId String  @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  healthCareProviderId String?             @db.ObjectId
+  healthCareProvider   HealthCareProvider? @relation(fields: [healthCareProviderId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model HealthCareProvider {
@@ -189,6 +205,7 @@ model HealthCareProvider {
   absences      Absence[]
   reviews       Review[]
   conversations Conversation[]
+  records       Record[]
 
   healthCareCenterId String?           @db.ObjectId
   healthCareCenter   HealthCareCenter? @relation(fields: [healthCareCenterId], references: [id], onDelete: SetNull)
@@ -266,10 +283,10 @@ model Consultation {
   appointmentId String      @unique @db.ObjectId
   appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
 
-  patientId String  @unique @db.ObjectId
+  patientId String  @db.ObjectId
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
-  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProviderId String             @db.ObjectId
   healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
 
   prescriptions Prescription[]
@@ -347,20 +364,50 @@ model Notification {
 }
 
 model Prescription {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  date        DateTime         @default(now())
-  type        PrescriptionType
-  medications String[]
-  dosage      String
-  duration    String
-  notes       String?
+  id                          String           @id @default(auto()) @map("_id") @db.ObjectId
+  date                        DateTime         @default(now())
+  type                        PrescriptionType
+  medications                 Medication[]
+  biologyTestType             String?
+  biologyTestReason           String?
+  biologyTestNotes            String?
+  imagingStudyType            String?
+  imagingStudyReason          String?
+  imagingStudyNotes           String?
+  medicalCertificateType      String?
+  medicalCertificatePurpose   String?
+  medicalCertificateStartDate DateTime?
+  medicalCertificateEndDate   DateTime?
+  medicalCertificateNotes     String?
+  paramedicalActType          String?
+  paramedicalActReason        String?
+  paramedicalActDuration      String?
+  paramedicalActNotes         String?
 
   consultationId String       @unique @db.ObjectId
   consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
 
-  patientId String  @unique @db.ObjectId
+  patientId String  @db.ObjectId
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
-  healthCareProviderId String             @unique @db.ObjectId
+  healthCareProviderId String             @db.ObjectId
   healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+}
+
+model Medication {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  dosage   String
+  duration String
+
+  prescriptionId String?       @db.ObjectId
+  prescription   Prescription? @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+
+  recordId String? @db.ObjectId
+  record   Record? @relation(fields: [recordId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([prescriptionId])
 }

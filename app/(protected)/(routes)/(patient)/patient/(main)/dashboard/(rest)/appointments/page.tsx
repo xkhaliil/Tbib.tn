@@ -1,5 +1,6 @@
 import React from "react";
 
+import Link from "next/link";
 import { getCurrentSession } from "@/actions/auth";
 import {
   getPatientPastAppointments,
@@ -37,8 +38,8 @@ export default async function PatientAppointmentsPage() {
                 <p className="text-sm text-muted-foreground">
                   Book an appointment with a doctor to get started
                 </p>
-                <Button variant="blue" className="mt-4">
-                  Book an appointment
+                <Button variant="blue" className="mt-4" asChild>
+                  <Link href="/">Book an appointment</Link>
                 </Button>
               </div>
             </div>
@@ -59,8 +60,8 @@ export default async function PatientAppointmentsPage() {
                 <p className="text-sm text-muted-foreground">
                   Book an appointment with a doctor to get started
                 </p>
-                <Button variant="blue" className="mt-4">
-                  Book an appointment
+                <Button variant="blue" className="mt-4" asChild>
+                  <Link href="/">Book an appointment</Link>
                 </Button>
               </div>
             </div>

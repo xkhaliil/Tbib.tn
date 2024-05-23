@@ -390,3 +390,26 @@ export async function getHealthcareProviderHealthcareCenter(
 
   return healthcareCenter;
 }
+
+export async function getHealthcareProviderPatients(
+  healthcareProviderId: string | undefined,
+) {
+  const patients = await db.patient.findMany({
+    where: {
+      appointments: {
+        some: {
+          healthCareProviderId: healthcareProviderId,
+        },
+      },
+    },
+    include: {
+      user: true,
+      appointments: true,
+      prescriptions: true,
+      records: true,
+      consultations: true,
+    },
+  });
+
+  return patients;
+}

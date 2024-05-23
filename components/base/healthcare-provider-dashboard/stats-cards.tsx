@@ -1,8 +1,9 @@
 import React from "react";
 
 import { getAllAppointments } from "@/actions/appointment";
+import { getAllConsultations } from "@/actions/consultation";
 import { getAllHealthcareProviderPatients } from "@/actions/healthcare-provider";
-import { getPatientsCount } from "@/actions/patient";
+import { getAllPrescriptions } from "@/actions/prescription";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { FileSpreadsheetIcon, HeartPulseIcon, UsersIcon } from "lucide-react";
 
@@ -16,6 +17,8 @@ export async function StatsCards({ healthcareProviderId }: StatsCardsProps) {
   const patientsCount =
     await getAllHealthcareProviderPatients(healthcareProviderId);
   const appointmentsCount = await getAllAppointments(healthcareProviderId);
+  const consultationsCount = await getAllConsultations(healthcareProviderId);
+  const prescriptionsCount = await getAllPrescriptions(healthcareProviderId);
   return (
     <div className="mt-8">
       <div className="grid grid-cols-1 gap-4 rounded-xl border bg-white p-6 lg:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-border">
@@ -32,13 +35,13 @@ export async function StatsCards({ healthcareProviderId }: StatsCardsProps) {
         />
         <StatsCard
           title="Total Consultations"
-          value="120"
+          value={consultationsCount?.length}
           icon={HeartPulseIcon}
           className="xl:pl-6"
         />
         <StatsCard
           title="Total Prescriptions Issued"
-          value="78"
+          value={prescriptionsCount?.length}
           icon={FileSpreadsheetIcon}
           className="xl:pl-6"
         />

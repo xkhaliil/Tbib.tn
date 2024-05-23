@@ -43,13 +43,13 @@ export async function ChatSidebarItem({ conversation }: ChatSidebarItemProps) {
                       "font-normal text-muted-foreground",
                   )}
                 >
-                  {lastMessage.file &&
+                  {lastMessage?.file &&
                   imageFileTypes.includes(lastMessage.fileType || "")
                     ? "Sent an image"
-                    : lastMessage.file &&
-                        lastMessage.fileType === "application/pdf"
+                    : lastMessage?.file &&
+                        lastMessage?.fileType === "application/pdf"
                       ? "Sent an attachment"
-                      : lastMessage.content || "Start a conversation"}
+                      : lastMessage?.content || "Start a conversation"}
                 </p>
               </div>
               <span className="text-xs text-muted-foreground">

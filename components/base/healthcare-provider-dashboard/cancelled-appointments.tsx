@@ -57,8 +57,6 @@ export function CancelledAppointments({
                 </div>
               </div>
             </div>
-
-            <AppointmentActions appointment={appointment} />
           </div>
         ))
       ) : (

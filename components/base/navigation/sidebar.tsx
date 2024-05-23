@@ -6,9 +6,6 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { CalendarIcon, HomeIcon } from "@radix-ui/react-icons";
 import {
-  FileTextIcon,
-  HeartPulseIcon,
-  LifeBuoyIcon,
   MessagesSquareIcon,
   PillIcon,
   SettingsIcon,
@@ -49,8 +46,12 @@ export function Sidebar() {
           onClick={() => router.push("/hp/dashboard/messages")}
           isActive={pathname?.startsWith("/hp/dashboard/messages")}
         />
-        <SidebarButton label="Patients" icon={UsersIcon} />
-        <SidebarButton label="Medications" icon={PillIcon} />
+        <SidebarButton
+          label="Patients"
+          icon={UsersIcon}
+          onClick={() => router.push("/hp/dashboard/patients")}
+          isActive={pathname?.startsWith("/hp/dashboard/patients")}
+        />
 
         <Separator className="mb-4 w-10" />
 

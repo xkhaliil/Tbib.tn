@@ -14,7 +14,6 @@ export function NavigationSidebarSkeleton() {
         <div className="h-[45px] w-[45px] rounded-lg bg-gray-200"></div>
         <div className="h-[45px] w-[45px] rounded-lg bg-gray-200"></div>
         <div className="h-[45px] w-[45px] rounded-lg bg-gray-200"></div>
-        <div className="h-[45px] w-[45px] rounded-lg bg-gray-200"></div>
 
         <div className="mb-4 h-px w-10 bg-gray-200"></div>
 
