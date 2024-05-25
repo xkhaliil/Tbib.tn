@@ -10,12 +10,18 @@ import {
   RescheduleAppointmentSchemaType,
   UploadDocumentSchemaType,
 } from "@/schemas";
-import { AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus, NotificationType } from "@prisma/client";
 import { add, format, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 
-import { getCurrentSession, getPatientByUserId } from "./auth";
+import { getAppointmentById } from "./appointment";
+import {
+  getCurrentSession,
+  getPatientByUserId,
+  getUserByHealthcareProviderId,
+} from "./auth";
 
 export async function getAllPatients() {
   try {
@@ -428,6 +434,9 @@ export async function bookAppointment(
 
     const patient = await getPatientByUserId(user?.id);
 
+    const healthcareProviderUser =
+      await getUserByHealthcareProviderId(healthCareProviderId);
+
     const validatedFields = BookAppointmentSchema.safeParse(values);
 
     if (!validatedFields.success) {
@@ -474,6 +483,25 @@ export async function bookAppointment(
       },
     });
 
+    const notification = await db.notification.create({
+      data: {
+        title: "New Appointment",
+        description: `You have a new appointment with ${patient?.user.name} on ${format(
+          new Date(date),
+          "EEEE, MMMM d yyyy",
+        )} at ${format(new Date(time), "HH:mm")}`,
+        type: NotificationType.NEW_APPOINTMENT,
+        date: new Date(),
+        userId: healthcareProviderUser?.id || "",
+      },
+    });
+
+    await pusherServer.trigger(
+      `notifications-${healthCareProviderId}`,
+      "notifications:new",
+      notification,
+    );
+
     return { success: "Appointment booked successfully." };
   } catch (error) {
     console.error(error);
@@ -486,6 +514,9 @@ export async function BookAppointmentWithSpecialist(
 ) {
   try {
     const user = await getCurrentSession();
+
+    const healthcareProviderUser =
+      await getUserByHealthcareProviderId(healthCareProviderId);
 
     const patient = await getPatientByUserId(user?.id);
 
@@ -522,6 +553,25 @@ export async function BookAppointmentWithSpecialist(
       },
     });
 
+    const notification = await db.notification.create({
+      data: {
+        title: `${patient?.user.name} has booked an appointment with you`,
+        description: `You have a new appointment with ${patient?.user.name} on ${format(
+          new Date(date),
+          "EEEE, MMMM d yyyy",
+        )} at ${format(new Date(time), "HH:mm")}`,
+        type: NotificationType.NEW_APPOINTMENT,
+        date: new Date(),
+        userId: healthcareProviderUser?.id || "",
+      },
+    });
+
+    await pusherServer.trigger(
+      `notifications-${healthCareProviderId}`,
+      "notifications:new",
+      notification,
+    );
+
     return { success: "Appointment booked successfully." };
   } catch (error) {
     console.error(error);
@@ -530,6 +580,16 @@ export async function BookAppointmentWithSpecialist(
 
 export async function cancelAppointment(id: string | undefined) {
   try {
+    const existingAppointment = await getAppointmentById(id);
+
+    const healthcareProvider = await getUserByHealthcareProviderId(
+      existingAppointment?.healthCareProviderId,
+    );
+
+    const patient = await getPatientByUserId(
+      existingAppointment?.patient.userId,
+    );
+
     const appointment = await db.appointment.update({
       where: {
         id,
@@ -540,6 +600,22 @@ export async function cancelAppointment(id: string | undefined) {
     });
 
     if (appointment) {
+      const notification = await db.notification.create({
+        data: {
+          title: `${patient?.user.name} has cancelled his appointment`,
+          description: `Your appointment with ${patient?.user.name} has been cancelled.`,
+          type: NotificationType.APPOINTMENT_CANCELLED,
+          date: new Date(),
+          userId: healthcareProvider?.id || "",
+        },
+      });
+
+      await pusherServer.trigger(
+        `notifications-${existingAppointment?.healthCareProviderId}`,
+        "notifications:new",
+        notification,
+      );
+
       revalidatePath("/patient/dashboard/appointments");
       return { success: "Appointment cancelled successfully." };
     }
@@ -553,6 +629,16 @@ export async function rescheduleAppointment(
   values: RescheduleAppointmentSchemaType,
 ) {
   try {
+    const existingAppointment = await getAppointmentById(id);
+
+    const healthcareProvider = await getUserByHealthcareProviderId(
+      existingAppointment?.healthCareProviderId,
+    );
+
+    const patient = await getPatientByUserId(
+      existingAppointment?.patient.userId,
+    );
+
     const validatedFields = RescheduleAppointmentSchema.safeParse(values);
 
     if (!validatedFields.success) {
@@ -575,6 +661,25 @@ export async function rescheduleAppointment(
         )} at ${format(new Date(time), "HH:mm")}`,
       },
     });
+
+    const notification = await db.notification.create({
+      data: {
+        title: `${patient?.user.name} has rescheduled his appointment`,
+        description: `The new appointment date is on ${format(
+          new Date(date),
+          "EEEE, MMMM d yyyy",
+        )} at ${format(new Date(time), "HH:mm")}`,
+        type: NotificationType.APPOINTMENT_RESCHEDULED,
+        date: new Date(),
+        userId: healthcareProvider?.id || "",
+      },
+    });
+
+    await pusherServer.trigger(
+      `notifications-${existingAppointment?.healthCareProviderId}`,
+      "notifications:new",
+      notification,
+    );
 
     revalidatePath("/patient/dashboard/appointments");
 
@@ -769,30 +874,24 @@ export async function getTotalElderlyPatients(
 }
 
 export async function getPatientByIdForHealthcareProvider(
-  patientId: string | undefined,
+  id: string | undefined,
   healthcareProviderId: string | undefined,
 ) {
   try {
     const patient = await db.patient.findUnique({
       where: {
-        id: patientId,
+        id,
         appointments: {
           some: {
             healthCareProviderId: healthcareProviderId,
           },
         },
-        consultations: {
-          some: {
-            healthCareProviderId: healthcareProviderId,
-          },
-        },
       },
-      select: {
+      include: {
         user: true,
-        records: true,
-        prescriptions: true,
         appointments: true,
-        consultations: true,
+        prescriptions: true,
+        records: true,
       },
     });
 

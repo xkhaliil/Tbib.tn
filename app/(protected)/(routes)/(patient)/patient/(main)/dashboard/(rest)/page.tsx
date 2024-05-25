@@ -75,7 +75,7 @@ export default async function PatientDashboardPage() {
           </CardHeader>
           <CardContent>
             {medicalDocuments?.map((document) => (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4" key={document.id}>
                 <div className="flex items-center">
                   <Button
                     variant="outline"

@@ -48,6 +48,7 @@ export async function getAllTodayAppointments(healthCareProviderId?: string) {
     const appointments = await db.appointment.findMany({
       where: {
         healthCareProviderId,
+        date: new Date(),
         startTime: {
           gte: new Date(),
         },
