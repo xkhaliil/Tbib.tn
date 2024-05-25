@@ -19,6 +19,7 @@
     "@headlessui/react": "^1.7.19",
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.4",
+    "@knocklabs/react": "^0.2.22",
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.17",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",

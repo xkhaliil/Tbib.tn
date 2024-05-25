@@ -248,13 +248,23 @@ export function RescheduleAppointmentDialog({
             {currentStep === 0 && (
               <div className="flex flex-col rounded-xl border bg-card text-card-foreground">
                 <div className="mb-6 flex items-center justify-between border-b bg-muted/40 p-7">
-                  <Button variant="outline" size="icon" onClick={previousMonth}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={previousMonth}
+                  >
                     <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
                   </Button>
                   <h2 className="font-medium text-foreground">
                     {format(firstDayCurrentMonth, "MMMM yyyy")}
                   </h2>
-                  <Button variant="outline" size="icon" onClick={nextMonth}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={nextMonth}
+                  >
                     <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </div>

@@ -23,11 +23,12 @@ enum AppointmentStatus {
 }
 
 enum NotificationType {
-  APPOINTMENT
+  NEW_APPOINTMENT
+  APPOINTMENT_CANCELLED
+  APPOINTMENT_RESCHEDULED
   MESSAGE
   REVIEW
   DOCUMENT
-  ABSENCE
 }
 
 enum PrescriptionType {
@@ -358,8 +359,10 @@ model Notification {
   description String?
   type        NotificationType
   date        DateTime         @default(now())
+  read        Boolean          @default(false)
+  archived    Boolean          @default(false)
 
-  userId String @unique @db.ObjectId
+  userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

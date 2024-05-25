@@ -11,7 +11,6 @@ import {
   getPatientRecord,
 } from "@/actions/patient";
 import { AppointmentStatus, BloodType } from "@prisma/client";
-import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, formatDistance } from "date-fns";
 import {
   AtSignIcon,
@@ -24,12 +23,6 @@ import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 
 import { cn } from "@/lib/utils";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,6 +54,8 @@ export default async function HealthcareProviderPatientDetailsPage({
     params.patientId,
     healthcareProvider?.id,
   );
+
+  console.log("[PATIENT] page.tsx", patient);
 
   const record = await getPatientRecord(
     params.patientId,
@@ -201,7 +196,7 @@ export default async function HealthcareProviderPatientDetailsPage({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ol className="relative border-s">
+                <ol className="relative border-s border-dashed">
                   {patient?.appointments.some((appointment) => {
                     return (
                       appointment.healthCareProviderId ===
@@ -236,6 +231,18 @@ export default async function HealthcareProviderPatientDetailsPage({
                                       appointment.status ===
                                         AppointmentStatus.COMPLETED &&
                                         "bg-sky-300",
+                                      appointment.status ===
+                                        AppointmentStatus.PENDING &&
+                                        "bg-[#FFE097]",
+                                      appointment.status ===
+                                        AppointmentStatus.UPCOMING &&
+                                        "bg-teal-300",
+                                      appointment.status ===
+                                        AppointmentStatus.CANCELLED &&
+                                        "bg-red-400",
+                                      appointment.status ===
+                                        AppointmentStatus.EXPIRED &&
+                                        "bg-rose-500/35",
                                     )}
                                   />
                                   <p className="text-sm font-normal text-muted-foreground">
@@ -479,7 +486,9 @@ export default async function HealthcareProviderPatientDetailsPage({
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-muted-foreground">No medications</p>
+                    <p className="text-center text-sm text-muted-foreground">
+                      No medications
+                    </p>
                   )}
                 </div>
               </CardContent>
@@ -499,7 +508,7 @@ export default async function HealthcareProviderPatientDetailsPage({
                       <CardTitle>Weight</CardTitle>
                     </CardHeader>
                     <h1 className="text-2xl font-bold tracking-tight">
-                      {record?.weight}{" "}
+                      {record?.weight || "N/A"}{" "}
                       <span className="text-sm text-muted-foreground">kg</span>
                     </h1>
                   </Card>
@@ -509,7 +518,7 @@ export default async function HealthcareProviderPatientDetailsPage({
                       <CardTitle>Height</CardTitle>
                     </CardHeader>
                     <h1 className="text-2xl font-bold tracking-tight">
-                      {record?.height}{" "}
+                      {record?.height || "N/A"}{" "}
                       <span className="text-sm text-muted-foreground">cm</span>
                     </h1>
                   </Card>
@@ -519,7 +528,7 @@ export default async function HealthcareProviderPatientDetailsPage({
                       <CardTitle>Blood Pressure</CardTitle>
                     </CardHeader>
                     <h1 className="text-2xl font-bold tracking-tight">
-                      {record?.bloodPressure}{" "}
+                      {record?.bloodPressure || "N/A"}{" "}
                       <span className="text-sm text-muted-foreground">
                         mmHg
                       </span>
@@ -531,7 +540,7 @@ export default async function HealthcareProviderPatientDetailsPage({
                       <CardTitle>BMI</CardTitle>
                     </CardHeader>
                     <h1 className="text-2xl font-bold tracking-tight">
-                      {record?.bmi}{" "}
+                      {record?.bmi || "N/A"}{" "}
                       <span className="text-sm text-muted-foreground">
                         kg/m²
                       </span>

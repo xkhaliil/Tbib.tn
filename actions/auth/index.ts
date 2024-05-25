@@ -68,6 +68,30 @@ export async function getUserAccountById(userId: string) {
 }
 
 /**
+ * This function is used to get the user by the healthcare provider id.
+ * @param healthcareProviderId
+ * @returns
+ */
+export async function getUserByHealthcareProviderId(
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const user = await db.user.findFirst({
+      where: {
+        healthCareProvider: {
+          id: healthcareProviderId,
+        },
+      },
+    });
+
+    return user;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
  * This function is used to get the healthcare provider by the user id.
  * @param userId
  * @returns
