@@ -8,7 +8,7 @@ import {
   EditAppointmentSchemaType,
 } from "@/schemas";
 import { AppointmentStatus, NotificationType } from "@prisma/client";
-import { addHours, setDay, startOfToday } from "date-fns";
+import { addHours, format, setDay, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
@@ -264,7 +264,10 @@ export async function cancelAppointment(
     const notification = await db.notification.create({
       data: {
         title: "Appointment Cancelled",
-        description: `Your appointment with ${healthcareProvider?.user.name} on ${existingAppointment?.date} has been canceled.`,
+        description: `Your appointment with ${healthcareProvider?.user.name} on ${format(
+          existingAppointment?.date || new Date(),
+          "dd/MM/yyyy",
+        )} has been cancelled.`,
         type: NotificationType.APPOINTMENT_CANCELLED,
         date: new Date(),
         userId: patient?.user.id || "",
@@ -273,13 +276,13 @@ export async function cancelAppointment(
 
     await pusherServer.trigger(
       `patient-notifications-${patientId}`,
-      "notifications:new",
+      "patient-notifications:new",
       notification,
     );
 
     revalidatePath("/calendar");
 
-    return { success: "Appointment canceled successfully." };
+    return { success: "Appointment cancelled successfully." };
   } catch (error) {
     console.error(error);
   }

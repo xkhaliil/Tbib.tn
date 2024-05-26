@@ -57,11 +57,11 @@ export function NotificationsFeed({
       });
     };
 
-    pusherClient.bind("notifications:new", notificationHandler);
+    pusherClient.bind("patient-notifications:new", notificationHandler);
 
     return () => {
       pusherClient.unsubscribe(`patient-notifications-${patientId}`);
-      pusherClient.unbind("notifications:new");
+      pusherClient.unbind("patient-notifications:new");
     };
   }, [patientId]);
 

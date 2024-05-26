@@ -394,6 +394,7 @@ function AppointmentPopover({
                     appointment?.patientId,
                   )
                 }
+                disabled={isPending}
               >
                 Cancel Appointment
               </Button>
