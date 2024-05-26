@@ -46,22 +46,19 @@ export function NotificationsFeed({
   );
 
   React.useEffect(() => {
-    pusherClient.subscribe(`patient-notifications-${patientId}`);
+    const channel = pusherClient.subscribe(
+      `private-notifications-${patientId}`,
+    );
 
-    const notificationHandler = (notification: Notification) => {
-      setNotifications((currentNotifications) => {
-        if (currentNotifications.some((n) => n.id === notification.id)) {
-          return currentNotifications;
-        }
-        return [...currentNotifications, notification];
-      });
-    };
-
-    pusherClient.bind("patient:new", notificationHandler);
+    channel.bind("notification-created", (notification: Notification) => {
+      setNotifications((currentNotifications) => [
+        notification,
+        ...currentNotifications,
+      ]);
+    });
 
     return () => {
-      pusherClient.unsubscribe(`patient-notifications-${patientId}`);
-      pusherClient.unbind("patient:new");
+      pusherClient.unsubscribe(`private-notifications-${patientId}`);
     };
   }, [patientId]);
 

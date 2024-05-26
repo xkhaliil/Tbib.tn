@@ -275,8 +275,8 @@ export async function cancelAppointment(
     });
 
     await pusherServer.trigger(
-      `patient-notifications-${patientId}`,
-      "patient:new",
+      `private-notifications-${patient?.id}`,
+      "notification-created",
       notification,
     );
 
