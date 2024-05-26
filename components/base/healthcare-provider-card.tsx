@@ -80,14 +80,20 @@ export function HealthcareProviderCard({
 
   for (let i = 0; i <= getIndexesOfClosedDays()?.length! ?? 0; i++) {
     const array = [
-      getIndexesOfClosedDays()?.[i] ?? 0,
-      (getIndexesOfClosedDays()?.[i] ?? 0) + 7,
-      (getIndexesOfClosedDays()?.[i] ?? 0) + 14,
-      (getIndexesOfClosedDays()?.[i] ?? 0) + 21,
-      (getIndexesOfClosedDays()?.[i] ?? 0) + 28,
-      (getIndexesOfClosedDays()?.[i] ?? 0) + 35,
+      getIndexesOfClosedDays()?.[i],
+      //@ts-ignore
+      getIndexesOfClosedDays()?.[i] + 7,
+      //@ts-ignore
+      getIndexesOfClosedDays()?.[i] + 14,
+      //@ts-ignore
+      getIndexesOfClosedDays()?.[i] + 21,
+      //@ts-ignore
+      getIndexesOfClosedDays()?.[i] + 28,
+      //@ts-ignore
+      getIndexesOfClosedDays()?.[i] + 35,
     ];
 
+    //@ts-ignore
     closedDays.push(...array);
   }
 

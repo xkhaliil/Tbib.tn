@@ -48,7 +48,12 @@ export function AppointmentActions({ appointment }: AppointmentActionsProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
-          <DropdownMenuItem className="text-xs">View details</DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-xs"
+            onClick={() => router.push("/hp/dashboard/calendar")}
+          >
+            View details
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="text-xs"
             onClick={handleStartConsultation}
