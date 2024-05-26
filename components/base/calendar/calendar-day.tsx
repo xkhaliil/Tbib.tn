@@ -3,6 +3,7 @@
 import React from "react";
 
 import { createAbsence, deleteAbsence } from "@/actions/absence";
+import { cancelAppointment } from "@/actions/appointment";
 import { CreateAbsenceSchemaType } from "@/schemas";
 import { AppointmentWithPatient } from "@/types";
 import { Absence, AppointmentStatus, OpeningHours } from "@prisma/client";
@@ -25,6 +26,7 @@ import {
   isToday,
   startOfToday,
 } from "date-fns";
+import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 
@@ -290,8 +292,24 @@ function AppointmentPopover({
   children,
   absences,
 }: AppointmentPopoverProps) {
+  const [isPending, startTransition] = React.useTransition();
   const [editAppointmentDialogOpen, setEditAppointmentDialogOpen] =
     React.useState<boolean>(false);
+
+  const handleCancelAppointment = (
+    appointmentId: string | undefined,
+    patientId: string | undefined,
+  ) => {
+    startTransition(() => {
+      cancelAppointment(appointmentId, patientId)
+        .then(() => {
+          toast.success("Appointment cancelled successfully.");
+        })
+        .catch(() => {
+          toast.error("Failed to cancel appointment.");
+        });
+    });
+  };
   return (
     <>
       <Popover>
@@ -366,7 +384,17 @@ function AppointmentPopover({
               >
                 Resechedule Appointment
               </Button>
-              <Button variant="destructive" size="sm" className="mt-2 w-full">
+              <Button
+                variant="destructive"
+                size="sm"
+                className="mt-2 w-full"
+                onClick={() =>
+                  handleCancelAppointment(
+                    appointment?.id,
+                    appointment?.patientId,
+                  )
+                }
+              >
                 Cancel Appointment
               </Button>
             </div>

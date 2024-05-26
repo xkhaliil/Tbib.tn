@@ -7,12 +7,14 @@ import {
   EditAppointmentSchema,
   EditAppointmentSchemaType,
 } from "@/schemas";
-import { AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus, NotificationType } from "@prisma/client";
 import { addHours, setDay, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 
 import { getCurrentSession } from "./auth";
+import { getPatientById } from "./patient";
 
 export async function getAllAppointments(healthCareProviderId?: string) {
   try {
@@ -232,8 +234,24 @@ export async function getAllAppointmentsByDate(date: Date) {
   }
 }
 
-export async function cancelAppointment(id: string | undefined) {
+export async function cancelAppointment(
+  id: string | undefined,
+  patientId: string | undefined,
+) {
   try {
+    const existingAppointment = await getAppointmentById(id);
+
+    const patient = await getPatientById(patientId);
+
+    const healthcareProvider = await db.healthCareProvider.findFirst({
+      where: {
+        id: existingAppointment?.healthCareProviderId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
     await db.appointment.update({
       where: {
         id,
@@ -242,6 +260,22 @@ export async function cancelAppointment(id: string | undefined) {
         status: AppointmentStatus.CANCELLED,
       },
     });
+
+    const notification = await db.notification.create({
+      data: {
+        title: "Appointment Cancelled",
+        description: `Your appointment with ${healthcareProvider?.user.name} on ${existingAppointment?.date} has been canceled.`,
+        type: NotificationType.APPOINTMENT_CANCELLED,
+        date: new Date(),
+        userId: patient?.user.id || "",
+      },
+    });
+
+    await pusherServer.trigger(
+      `patient-notifications-${patientId}`,
+      "notifications:new",
+      notification,
+    );
 
     revalidatePath("/calendar");
 

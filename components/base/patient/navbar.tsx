@@ -4,6 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Notification } from "@prisma/client";
 import { Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -13,7 +14,14 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserButton } from "@/components/auth/user-button";
 import { Logo } from "@/components/marketing/logo";
 
-export function Navbar() {
+import { NotificationsFeed } from "./notifications-feed";
+
+interface NavbarProps {
+  notifications: Notification[] | undefined;
+  patientId: string | undefined;
+}
+
+export function Navbar({ notifications, patientId }: NavbarProps) {
   const pathname = usePathname();
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background">
@@ -49,15 +57,19 @@ export function Navbar() {
           </NavbarLink>
           <NavbarLink
             href="/patient/dashboard/settings"
-            isActive={pathname.startsWith("/patient/dashboard/settings")}
+            isActive={pathname?.startsWith("/patient/dashboard/settings")}
           >
             Settings
           </NavbarLink>
         </nav>
         <MobileMenu />
-        <div className="flex flex-1 items-center justify-between md:justify-end">
+        <div className="flex flex-1 items-center justify-between gap-3 md:justify-end">
           <SearchButton />
           <UserButton side="bottom" align="end" />
+          <NotificationsFeed
+            notifications={notifications}
+            patientId={patientId}
+          />
         </div>
       </div>
     </header>
@@ -66,7 +78,7 @@ export function Navbar() {
 
 interface NavbarLinkProps {
   href: string;
-  isActive: boolean;
+  isActive: boolean | undefined;
   children: React.ReactNode;
 }
 

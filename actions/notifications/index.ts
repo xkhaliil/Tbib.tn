@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 
 import { getUserByHealthcareProviderId } from "../auth";
+import { getPatientById } from "../patient";
 
 export async function getHealthcareProviderNotifications(
   healthcareProviderId: string | undefined,
@@ -14,6 +15,25 @@ export async function getHealthcareProviderNotifications(
     const notifications = await db.notification.findMany({
       where: {
         userId: healthcareProvider?.id,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    return notifications;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPatientNotifications(patientId: string | undefined) {
+  try {
+    const patient = await getPatientById(patientId);
+
+    const notifications = await db.notification.findMany({
+      where: {
+        userId: patient?.user.id,
       },
       orderBy: {
         date: "desc",
