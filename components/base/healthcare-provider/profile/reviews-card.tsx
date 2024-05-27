@@ -4,16 +4,30 @@ import React from "react";
 
 import { getPatientByUserId } from "@/actions/auth";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
+import { deleteReview } from "@/actions/review";
 import Rating from "@mui/material/Rating";
 import { format } from "date-fns";
-import { PencilIcon, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 
 import { AddReview } from "./add-review";
+import { UpdateReview } from "./update-review";
 
 type ReviewscardProps = {
   healthcareProvider: Awaited<
@@ -39,7 +53,7 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
   const getPercentageByRating = (rating: number) => {
     const total = healthcareProvider?.reviews?.length || 1;
     const ratingCount = healthcareProvider?.reviews?.filter(
-      (review) => review.rating === rating,
+      (review) => Math.floor(review.rating) === rating,
     ).length;
     return ((ratingCount || 0) / total) * 100;
   };
@@ -191,12 +205,45 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
               <div className="min-w-0 flex-1 space-y-4 sm:mt-0">
                 {patient?.id === review.patientId && (
                   <div className="flex items-center justify-end gap-2">
-                    <Button variant="blue" size="icon">
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
-                    <Button variant="destructive" size="icon">
-                      <Trash2Icon className="h-4 w-4" />
-                    </Button>
+                    {" "}
+                    <UpdateReview
+                      healthcareProvider={healthcareProvider}
+                      review={review}
+                    />
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="icon">
+                          <Trash2Icon className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your review.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="mt-2"
+                            onClick={() => {
+                              deleteReview(
+                                review.id,
+                                healthcareProvider.id,
+                              ).then(() => {
+                                toast.success("Your review has been deleted");
+                              });
+                            }}
+                          >
+                            Yes, delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 )}
                 <p className="text-base font-normal text-muted-foreground">

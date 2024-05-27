@@ -1,6 +1,10 @@
 import React from "react";
 
-import { addNewReview } from "@/actions/review";
+import {
+  getHealthCareProviderById,
+  getHealthCareProviderUserAndOpeningHoursAndAbsencesById,
+} from "@/actions/healthcare-provider";
+import { addNewReview, updateReview } from "@/actions/review";
 import { AddNewReviewSchema, AddNewReviewSchemaType } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import StarIcon from "@mui/icons-material/Star";
@@ -9,8 +13,10 @@ import {
   Absence,
   HealthCareProvider,
   OpeningHours,
+  Review,
   User,
 } from "@prisma/client";
+import { PencilIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -53,34 +59,34 @@ function getLabelText(value: number) {
   return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
 }
 
-type AddReviewProps = {
-  healthcareProvider:
-    | (HealthCareProvider & {
-        user: User;
-      } & {
-        openingHours: OpeningHours[];
-      } & {
-        absences: Absence[];
-      })
-    | null;
-};
-export function AddReview({ healthcareProvider }: AddReviewProps) {
+interface UpdateReviewProps {
+  healthcareProvider: Awaited<
+    ReturnType<typeof getHealthCareProviderUserAndOpeningHoursAndAbsencesById>
+  >;
+  review: Review;
+}
+export function UpdateReview({
+  healthcareProvider,
+  review,
+}: UpdateReviewProps) {
   const [isPending, startTransition] = React.useTransition();
   const [hover, setHover] = React.useState(-1);
 
-  const addNewReviewForm = useForm<AddNewReviewSchemaType>({
+  const updateNewReviewForm = useForm<AddNewReviewSchemaType>({
     resolver: zodResolver(AddNewReviewSchema),
     defaultValues: {
-      comment: "",
-      rating: 3,
+      comment: review.comment || "",
+      rating: review.rating,
     },
   });
 
   const onSubmit = async (data: AddNewReviewSchemaType) => {
+    console.log(data);
     startTransition(() => {
-      addNewReview(healthcareProvider?.id || "", data).then(() => {
-        addNewReviewForm.reset();
-        toast.success("Review added successfully!");
+      updateReview(review.id, data).then((review) => {
+        if (review) {
+          toast.success("Review updated successfully!");
+        }
       });
     });
   };
@@ -89,36 +95,36 @@ export function AddReview({ healthcareProvider }: AddReviewProps) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="blue" className="mt-3">
-            Add review
+          <Button variant="blue" size="icon">
+            <PencilIcon className="h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent className="w-full max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              Add a review to Dr {healthcareProvider?.user.name}
+              update your review of Dr {healthcareProvider?.user.name}
             </DialogTitle>
             <DialogDescription>
               Your feedback helps others learn about your experience with the
               current healthcare provider.
             </DialogDescription>
           </DialogHeader>
-          <Form {...addNewReviewForm}>
+          <Form {...updateNewReviewForm}>
             <form
               className="grid gap-4 py-4"
-              onSubmit={addNewReviewForm.handleSubmit(onSubmit)}
-              id="add-review-form"
+              onSubmit={updateNewReviewForm.handleSubmit(onSubmit)}
+              id="update-review-form"
             >
               <div className="grid gap-2">
                 <Label htmlFor="rating">Rating</Label>
                 <div className="flex items-center gap-2">
                   <Rating
                     name="hover-feedback"
-                    value={addNewReviewForm.watch("rating")}
+                    value={updateNewReviewForm.watch("rating")}
                     precision={0.5}
                     getLabelText={getLabelText}
                     onChange={(event, newValue) => {
-                      addNewReviewForm.setValue("rating", newValue ?? 0);
+                      updateNewReviewForm.setValue("rating", newValue ?? 0);
                     }}
                     onChangeActive={(event, newHover) => {
                       setHover(newHover);
@@ -127,13 +133,13 @@ export function AddReview({ healthcareProvider }: AddReviewProps) {
                       <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
                     }
                   />
-                  {addNewReviewForm.watch("rating") !== null && (
+                  {updateNewReviewForm.watch("rating") !== null && (
                     <Label>
                       {
                         labels[
                           hover !== -1
                             ? hover
-                            : addNewReviewForm.watch("rating")
+                            : updateNewReviewForm.watch("rating")
                         ]
                       }
                     </Label>
@@ -141,13 +147,13 @@ export function AddReview({ healthcareProvider }: AddReviewProps) {
                 </div>
               </div>
               <FormField
-                control={addNewReviewForm.control}
+                control={updateNewReviewForm.control}
                 name="comment"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Comment</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Leave a comment..." {...field} />
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -158,11 +164,11 @@ export function AddReview({ healthcareProvider }: AddReviewProps) {
           <DialogFooter>
             <Button
               type="submit"
-              form="add-review-form"
+              form="update-review-form"
               variant="blue"
-              disabled={isPending || !addNewReviewForm.formState.isDirty}
+              disabled={isPending || !updateNewReviewForm.formState.isDirty}
             >
-              Add review
+              Update review
             </Button>
           </DialogFooter>
         </DialogContent>

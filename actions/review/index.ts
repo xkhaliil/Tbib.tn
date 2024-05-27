@@ -65,3 +65,49 @@ export async function addNewReview(
     console.error(error);
   }
 }
+export async function deleteReview(reviewId: string, hp: string) {
+  try {
+    const review = await db.review.delete({
+      where: {
+        id: reviewId,
+      },
+    });
+    revalidatePath("/hp/profile/" + hp);
+    return review;
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function updateReview(
+  reviewId: string,
+  values: AddNewReviewSchemaType,
+) {
+  try {
+    const validatedFields = AddNewReviewSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" };
+    }
+
+    const { comment, rating } = validatedFields.data;
+
+    const currentUser = await getCurrentSession();
+    const patient = await getPatientByUserId(currentUser?.id);
+    const review = await db.review.update({
+      where: {
+        id: reviewId,
+        patientId: patient?.id,
+      },
+      data: {
+        comment,
+        rating,
+      },
+    });
+
+    revalidatePath("/hp/profile/" + review.healthCareProviderId);
+
+    return review;
+  } catch (error) {
+    console.error(error);
+  }
+}
