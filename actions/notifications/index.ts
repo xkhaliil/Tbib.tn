@@ -80,3 +80,41 @@ export async function markNotificationAsRead(notificationId: string) {
     console.error(error);
   }
 }
+
+export async function markAllNotificationsAsRead(userId: string | undefined) {
+  try {
+    await db.notification.updateMany({
+      where: {
+        userId,
+      },
+      data: {
+        read: true,
+      },
+    });
+
+    const updatedNotifications = await db.notification.findMany({
+      where: {
+        userId,
+        read: true,
+      },
+    });
+
+    return updatedNotifications;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getNotificationById(notificationId: string) {
+  try {
+    const notification = await db.notification.findUnique({
+      where: {
+        id: notificationId,
+      },
+    });
+
+    return notification;
+  } catch (error) {
+    console.error(error);
+  }
+}

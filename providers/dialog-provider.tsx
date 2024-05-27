@@ -2,6 +2,7 @@ import React from "react";
 
 import { getAllAbsences } from "@/actions/absence";
 import { getCurrentSession, getPatientByUserId } from "@/actions/auth";
+import { getAllHealthcareProvidersWithoutHealthcareCenter } from "@/actions/healthcare-center";
 import { getAllPatients } from "@/actions/patient";
 import { SessionProvider } from "next-auth/react";
 
@@ -16,12 +17,16 @@ export async function DialogProvider() {
   const currentPatient = await getPatientByUserId(currentUser?.id);
   const absences = await getAllAbsences();
   const patients = await getAllPatients();
+  const healthcareProviders =
+    await getAllHealthcareProvidersWithoutHealthcareCenter();
   return (
     <>
       <SessionProvider>
         <ManageAccountDialog />
         <CreateAppointmentDialog absences={absences} patients={patients} />
-        <InviteHealthcareProviderDialog />
+        <InviteHealthcareProviderDialog
+          healthcareProviders={healthcareProviders}
+        />
         <UploadDocumentDialog patientId={currentPatient?.id} />
         <SignInDialog />
       </SessionProvider>
