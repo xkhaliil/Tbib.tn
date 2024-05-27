@@ -9,7 +9,7 @@ export function FormSuccess({ message }: FormSuccessProps) {
 
   return (
     <div
-      className="flex flex-col rounded-lg border border-green-200 bg-green-100 p-4"
+      className="flex w-full flex-col rounded-lg border border-green-200 bg-green-100 p-4"
       role="alert"
     >
       <div className="flex items-center space-x-2.5">

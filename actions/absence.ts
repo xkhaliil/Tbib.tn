@@ -40,7 +40,6 @@ export async function createAbsence(values: CreateAbsenceSchemaType) {
         for (const appointment of appointments) {
           if (
             appointment.status === AppointmentStatus.PENDING ||
-            appointment.status === AppointmentStatus.CONFIRMED ||
             appointment.status === AppointmentStatus.UPCOMING
           ) {
             return {

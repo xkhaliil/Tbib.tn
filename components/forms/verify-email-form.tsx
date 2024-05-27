@@ -18,7 +18,8 @@ import {
 import { Dots } from "@/components/ui/dots";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { Logo } from "@/components/logo";
+
+import { Logo } from "../marketing/logo";
 
 interface VerifyEmailFormProps {
   backButtonLabel: string;
@@ -33,7 +34,7 @@ export function VerifyEmailForm({
   const [error, setError] = React.useState<string | undefined>("");
 
   const searchParams = useSearchParams();
-  const verificationToken = searchParams.get("token");
+  const verificationToken = searchParams?.get("token");
 
   const onSubmit = React.useCallback(() => {
     if (success || error) return;
@@ -59,12 +60,17 @@ export function VerifyEmailForm({
 
   return (
     <div className="flex w-full max-w-[450px] flex-col space-y-6">
-      <Logo />
+      <div className="flex items-center justify-center">
+        <Logo className="h-8 w-8" />
+        <span className="ml-2 text-3xl font-bold tracking-tighter text-blue-600">
+          Oladoc
+        </span>
+      </div>
       <Card>
         <CardHeader>
-          <CardTitle>Verify your email</CardTitle>
+          <CardTitle>Verifying your email</CardTitle>
           <CardDescription>
-            Please click the button below to verify your email.
+            We are verifying your email address. Please wait a moment.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -75,7 +81,7 @@ export function VerifyEmailForm({
           </div>
         </CardContent>
         <CardFooter>
-          <Button asChild variant="secondary" className="w-full">
+          <Button asChild variant="outline" className="w-full">
             <Link href={backButtonHref}>{backButtonLabel}</Link>
           </Button>
         </CardFooter>

@@ -2,9 +2,13 @@
 
 import React from "react";
 
-import { specialties } from "@/constants";
-import { faker } from "@faker-js/faker";
+import {
+  getAllHealthcareProvidersWithoutHealthcareCenter,
+  inviteHealthcareProvider,
+} from "@/actions/healthcare-center";
+import { HealthCareProvider } from "@/types";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
 
 import { useInviteHealthcareProviderDialog } from "@/hooks/use-invite-healthcare-provider-dialog";
 
@@ -26,20 +30,32 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 
-const healthcareProviders = Array.from({ length: 5 }, () => ({
-  id: faker.string.uuid(),
-  name: faker.person.fullName(),
-  email: faker.internet.email(),
-  speciality: faker.helpers.arrayElement(
-    specialties.flatMap((s) => s.specialties),
-  ),
-}));
+interface InviteHealthcareProviderDialogProps {
+  healthcareProviders: Awaited<
+    ReturnType<typeof getAllHealthcareProvidersWithoutHealthcareCenter>
+  >;
+}
 
-export function InviteHealthcareProviderDialog() {
+export function InviteHealthcareProviderDialog({
+  healthcareProviders,
+}: InviteHealthcareProviderDialogProps) {
+  const [isPending, startTransition] = React.useTransition();
   const inviteHealthcareProviderDialog = useInviteHealthcareProviderDialog();
-  const [selectedHealthcareProviders, setSelectedHealthcareProviders] =
-    React.useState<(typeof healthcareProviders)[number][]>([]);
+  const [selectedHealthcareProvider, setSelectedHealthcareProvider] =
+    React.useState<HealthCareProvider | null>(null);
+
+  const handleInviteHealthcareProvider = async () => {
+    startTransition(() => {
+      inviteHealthcareProvider(selectedHealthcareProvider?.id || "").then(
+        () => {
+          toast.success("Healthcare provider invited successfully");
+          inviteHealthcareProviderDialog.setOpen(false);
+        },
+      );
+    });
+  };
 
   return (
     <Dialog
@@ -62,46 +78,31 @@ export function InviteHealthcareProviderDialog() {
               No healthcare providers found. Try searching for another provider.
             </CommandEmpty>
             <CommandGroup className="p-2">
-              {healthcareProviders.map((healthcareProvider) => (
+              {healthcareProviders?.map((healthcareProvider) => (
                 <CommandItem
                   key={healthcareProvider.id}
                   className="flex items-center px-2.5"
                   onSelect={() => {
-                    if (
-                      selectedHealthcareProviders.includes(healthcareProvider)
-                    ) {
-                      return setSelectedHealthcareProviders(
-                        selectedHealthcareProviders.filter(
-                          (hp) => hp !== healthcareProvider,
-                        ),
-                      );
-                    }
-
-                    return setSelectedHealthcareProviders(
-                      [...healthcareProviders].filter((u) =>
-                        [
-                          ...selectedHealthcareProviders,
-                          healthcareProvider,
-                        ].includes(u),
-                      ),
-                    );
+                    setSelectedHealthcareProvider(healthcareProvider);
                   }}
                 >
                   <Avatar>
-                    <AvatarImage src="/placeholder.svg" alt="Image" />
+                    <AvatarImage
+                      src={healthcareProvider.user.image || "/placeholder.svg"}
+                    />
                     <AvatarFallback>
-                      {healthcareProvider.name[0]}
+                      {healthcareProvider.user.name[0]}
                     </AvatarFallback>
                   </Avatar>
                   <div className="ml-2.5">
                     <p className="text-sm font-medium leading-none">
-                      {healthcareProvider.name}
+                      {healthcareProvider.user.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {healthcareProvider.email}
+                      {healthcareProvider.user.email}
                     </p>
                   </div>
-                  {selectedHealthcareProviders.includes(healthcareProvider) ? (
+                  {selectedHealthcareProvider?.id === healthcareProvider.id ? (
                     <CheckIcon className="ml-auto flex h-5 w-5 text-blue-600" />
                   ) : null}
                 </CommandItem>
@@ -109,29 +110,14 @@ export function InviteHealthcareProviderDialog() {
             </CommandGroup>
           </CommandList>
         </Command>
-        <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
-          {selectedHealthcareProviders.length > 0 ? (
-            <div className="flex -space-x-2 overflow-hidden">
-              {selectedHealthcareProviders.map((user) => (
-                <Avatar
-                  key={user.email}
-                  className="inline-block border-2 border-background"
-                >
-                  <AvatarImage src="/placeholder.svg" alt="Image" />
-                  <AvatarFallback>{user.name[0]}</AvatarFallback>
-                </Avatar>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Select healthcare providers to invite.
-            </p>
-          )}
+        <DialogFooter className="flex items-center justify-end border-t p-4">
           <Button
             variant="blue"
-            disabled={selectedHealthcareProviders.length < 1}
+            onClick={handleInviteHealthcareProvider}
+            disabled={!selectedHealthcareProvider || isPending}
           >
-            Invite
+            {isPending && <Spinner className="mr-2" />}
+            Invite Healthcare Provider
           </Button>
         </DialogFooter>
       </DialogContent>

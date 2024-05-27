@@ -26,9 +26,9 @@ enum NotificationType {
   NEW_APPOINTMENT
   APPOINTMENT_CANCELLED
   APPOINTMENT_RESCHEDULED
-  MESSAGE
   REVIEW
   DOCUMENT
+  INVITATION
 }
 
 enum PrescriptionType {
@@ -361,6 +361,7 @@ model Notification {
   date        DateTime         @default(now())
   read        Boolean          @default(false)
   archived    Boolean          @default(false)
+  healthCareCenterId String?
 
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

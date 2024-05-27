@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/marketing/logo";
 
 export function ForgotPasswordForm() {
   const [success, setSuccess] = React.useState<string | undefined>("");
@@ -63,7 +63,12 @@ export function ForgotPasswordForm() {
   };
   return (
     <div className="flex w-full max-w-[450px] flex-col space-y-6">
-      <Logo />
+      <div className="flex items-center justify-center">
+        <Logo className="h-8 w-8" />
+        <span className="ml-2 text-3xl font-bold tracking-tighter text-blue-600">
+          Oladoc
+        </span>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>Forgot Password</CardTitle>
@@ -101,6 +106,7 @@ export function ForgotPasswordForm() {
                 <FormSuccess message={success} />
                 <Button
                   type="submit"
+                  variant="blue"
                   className="w-full"
                   onClick={forgotPasswordForm.handleSubmit(onSubmit)}
                   disabled={isLoading}

@@ -1,7 +1,9 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { months } from "@/constants";
 import { ManageHealthcareProviderProfileSchemaType } from "@/schemas";
+import { Notification } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { unstable_update } from "@/lib/auth";
@@ -412,4 +414,52 @@ export async function getHealthcareProviderPatients(
   });
 
   return patients;
+}
+
+export async function acceptHealthcareCenterInvitation(
+  healthcareProviderId: string | undefined,
+  notification: Notification,
+) {
+  try {
+    await db.healthCareProvider.update({
+      where: {
+        id: healthcareProviderId,
+      },
+      data: {
+        healthCareCenterId: notification.healthCareCenterId,
+      },
+    });
+
+    await db.notification.update({
+      where: {
+        id: notification.id,
+      },
+      data: {
+        read: true,
+      },
+    });
+
+    return { success: "Invitation accepted!" };
+  } catch (error) {
+    console.error("[500] acceptHealthcareCenterInvitation", error);
+  }
+}
+
+export async function leaveHealthcareCenter(healthcareProviderId: string) {
+  try {
+    await db.healthCareProvider.update({
+      where: {
+        id: healthcareProviderId,
+      },
+      data: {
+        healthCareCenterId: null,
+      },
+    });
+
+    revalidatePath("/hp/dashboard/settings/organization");
+
+    return { success: "Left healthcare center!" };
+  } catch (error) {
+    console.error("[500] leaveHealthcareCenter", error);
+  }
 }

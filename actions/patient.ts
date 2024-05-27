@@ -617,6 +617,7 @@ export async function cancelAppointment(id: string | undefined) {
       );
 
       revalidatePath("/patient/dashboard/appointments");
+
       return { success: "Appointment cancelled successfully." };
     }
   } catch (error) {

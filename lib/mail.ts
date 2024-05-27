@@ -1,4 +1,5 @@
 import { User } from "@prisma/client";
+import { render } from "@react-email/components";
 import * as handlebars from "handlebars";
 import nodemailer from "nodemailer";
 import { Resend } from "resend";
@@ -15,48 +16,78 @@ import { welcomeTemplate } from "./template/welcome";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendVerificationEmail(user: User, token: string) {
-  await resend.emails.send({
-    from: "Auth Toolkit <onboarding@resend.dev>",
-    to: user.email as string,
-    subject: `Welcome to Auth Toolkit, ${user.name}!. Please verify your email.`,
-    react: VerifyEmailTemplate({ user, verificationToken: token }),
-    tags: [
-      {
-        name: "category",
-        value: "confirm_email",
-      },
-    ],
+  const { SMTP_PASSWORD, SMTP_EMAIL } = process.env;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: SMTP_EMAIL,
+      pass: SMTP_PASSWORD,
+    },
   });
+
+  const template = render(
+    VerifyEmailTemplate({ user, verificationToken: token }),
+  );
+
+  await transporter.sendMail({
+    from: SMTP_EMAIL,
+    to: user.email as string,
+    subject: `Verify your email address`,
+    html: template,
+  });
+
+  transporter.close();
 }
 
 export async function sendPasswordResetEmail(user: User, token: string) {
-  await resend.emails.send({
-    from: "Auth Toolkit <onboarding@resend.dev>",
-    to: user.email as string,
-    subject: `Password Reset Request`,
-    react: ResetPasswordTemplate({ user, verificationToken: token }),
-    tags: [
-      {
-        name: "category",
-        value: "password_reset",
-      },
-    ],
+  const { SMTP_PASSWORD, SMTP_EMAIL } = process.env;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: SMTP_EMAIL,
+      pass: SMTP_PASSWORD,
+    },
   });
+
+  const template = render(
+    ResetPasswordTemplate({ user, verificationToken: token }),
+  );
+
+  await transporter.sendMail({
+    from: SMTP_EMAIL,
+    to: user.email as string,
+    subject: `Reset Password`,
+    html: template,
+  });
+
+  transporter.close();
 }
 
 export async function sendTwoFactorAuthEmail(user: User, token: string) {
-  await resend.emails.send({
-    from: "Auth Toolkit <onboarding@resend.dev>",
+  const { SMTP_PASSWORD, SMTP_EMAIL } = process.env;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: SMTP_EMAIL,
+      pass: SMTP_PASSWORD,
+    },
+  });
+
+  const template = render(
+    TwoFactorAuthTemplate({ user, verificationCode: token }),
+  );
+
+  await transporter.sendMail({
+    from: SMTP_EMAIL,
     to: user.email as string,
     subject: `Two Factor Authentication Code`,
-    react: TwoFactorAuthTemplate({ user, verificationCode: token }),
-    tags: [
-      {
-        name: "category",
-        value: "two_factor_auth",
-      },
-    ],
+    html: template,
   });
+
+  transporter.close();
 }
 export async function sendVerifiedUserEmail({
   to,
