@@ -901,3 +901,30 @@ export async function getPatientByIdForHealthcareProvider(
     console.error(error);
   }
 }
+
+export async function getPatientConsultationsWithHealthcareProvider(
+  patientId: string | undefined,
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const consultations = await db.consultation.findMany({
+      where: {
+        patientId,
+        healthCareProviderId: healthcareProviderId,
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        prescriptions: true,
+        appointment: true,
+      },
+    });
+
+    return consultations;
+  } catch (error) {
+    console.error(error);
+  }
+}
