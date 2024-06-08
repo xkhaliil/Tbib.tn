@@ -671,6 +671,7 @@ export type ManageOpeningHoursSchemaType = z.infer<
 export type UploadDocumentSchemaType = z.infer<typeof UploadDocumentSchema>;
 export type SendNewMessageSchemaType = z.infer<typeof SendNewMessageSchema>;
 export type AddNewReviewSchemaType = z.infer<typeof AddNewReviewSchema>;
+
 export type RescheduleAppointmentSchemaType = z.infer<
   typeof RescheduleAppointmentSchema
 >;
