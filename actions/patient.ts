@@ -617,6 +617,7 @@ export async function cancelAppointment(id: string | undefined) {
       );
 
       revalidatePath("/patient/dashboard/appointments");
+
       return { success: "Appointment cancelled successfully." };
     }
   } catch (error) {
@@ -900,6 +901,7 @@ export async function getPatientByIdForHealthcareProvider(
     console.error(error);
   }
 }
+
 export async function DoesPatientHaveAtLease1ConsultationWithHealthcareProvider(
   patientId: string | undefined,
   healthcareProviderId: string | undefined,
@@ -917,4 +919,31 @@ export async function DoesPatientHaveAtLease1ConsultationWithHealthcareProvider(
     haveConsultation = true;
   }
   return haveConsultation;
+}
+
+export async function getPatientConsultationsWithHealthcareProvider(
+  patientId: string | undefined,
+  healthcareProviderId: string | undefined,
+) {
+  try {
+    const consultations = await db.consultation.findMany({
+      where: {
+        patientId,
+        healthCareProviderId: healthcareProviderId,
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        prescriptions: true,
+        appointment: true,
+      },
+    });
+
+    return consultations;
+  } catch (error) {
+    console.error(error);
+  }
 }

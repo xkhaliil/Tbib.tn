@@ -9,7 +9,7 @@ export function FormError({ message }: FormErrorProps) {
 
   return (
     <div
-      className="flex flex-col rounded-lg bg-destructive/15 p-4"
+      className="flex w-full flex-col rounded-lg bg-destructive/15 p-4"
       role="alert"
     >
       <div className="flex items-center space-x-2.5">

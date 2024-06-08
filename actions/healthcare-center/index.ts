@@ -1,6 +1,16 @@
 "use server";
 
+import { NotificationType } from "@prisma/client";
+
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
+
+import {
+  getCurrentSession,
+  getHealthcareCenterByUserId,
+  getHealthcareProviderById,
+  getUserByHealthcareProviderId,
+} from "../auth";
 
 export async function getHealthcareCenterById(id: string) {
   try {
@@ -12,10 +22,6 @@ export async function getHealthcareCenterById(id: string) {
         user: true,
       },
     });
-
-    if (!healthcareCenter) {
-      return { error: "Healthcare center not found" };
-    }
 
     return healthcareCenter;
   } catch (error) {
@@ -234,6 +240,60 @@ export async function getHealthcareCenterAppointments(
   } catch (error) {
     console.error(
       "[500] getHealthcareCenterAppointmentsByHealthcareProvidersIds",
+      error,
+    );
+  }
+}
+
+export async function inviteHealthcareProvider(healthcareProviderId: string) {
+  try {
+    const currentUser = await getCurrentSession();
+
+    const healthcareCenter = await getHealthcareCenterByUserId(currentUser?.id);
+
+    const healthcareProviderUser =
+      await getUserByHealthcareProviderId(healthcareProviderId);
+
+    const notification = await db.notification.create({
+      data: {
+        title: "You have been invited to join a healthcare center",
+        description: `You have been invited to join ${healthcareCenter?.user.name} healthcare center`,
+        type: NotificationType.INVITATION,
+        date: new Date(),
+        userId: healthcareProviderUser?.id || "",
+        healthCareCenterId: healthcareCenter?.id || "",
+      },
+    });
+
+    await pusherServer.trigger(
+      `notifications-${healthcareProviderId}`,
+      "notifications:new",
+      notification,
+    );
+
+    return { success: "Healthcare provider invited successfully" };
+  } catch (error) {
+    console.error("[500] inviteHealthcareProvider", error);
+  }
+}
+
+export async function getAllHealthcareProvidersWithoutHealthcareCenter() {
+  try {
+    const healthcareProviders = await db.healthCareProvider.findMany({
+      where: {
+        healthCareCenter: {
+          is: null,
+        },
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return healthcareProviders;
+  } catch (error) {
+    console.error(
+      "[500] getAllHealthcareProvidersWithoutHealthcareCenter",
       error,
     );
   }

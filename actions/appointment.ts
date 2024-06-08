@@ -263,10 +263,10 @@ export async function cancelAppointment(
 
     const notification = await db.notification.create({
       data: {
-        title: "Appointment Cancelled",
-        description: `Your appointment with ${healthcareProvider?.user.name} on ${format(
+        title: `Appointment Cancelled`,
+        description: `Your appointment with Dr. ${healthcareProvider?.user?.name} on ${format(
           existingAppointment?.date || new Date(),
-          "dd/MM/yyyy",
+          "EEEE, MMMM do, yyyy",
         )} has been cancelled.`,
         type: NotificationType.APPOINTMENT_CANCELLED,
         date: new Date(),
@@ -275,8 +275,8 @@ export async function cancelAppointment(
     });
 
     await pusherServer.trigger(
-      `private-notifications-${patient?.id}`,
-      "notification-created",
+      `notifications-patient-${patient?.id}`,
+      "new-notification",
       notification,
     );
 

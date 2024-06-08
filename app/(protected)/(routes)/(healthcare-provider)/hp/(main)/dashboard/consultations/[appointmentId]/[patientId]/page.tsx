@@ -59,19 +59,31 @@ export default async function ConsultationsPage({
       <Sidebar />
       <PatientRecordSidebar patient={patient} record={record} />
       <ScrollArea className="col-start-3 bg-secondary p-8">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/hp/dashboard">Dashboard</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Patient Record</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <div className="flex items-center justify-between">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/hp/dashboard">Dashboard</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Patient Record</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          {patientHasCompleteRecord(record) && (
+            <Button variant="blue" size="sm" asChild>
+              <Link
+                href={`/hp/dashboard/consultations/new-consultation/${params.appointmentId}/${record?.id}/${params.patientId}`}
+              >
+                Save and Continue to Consultation
+              </Link>
+            </Button>
+          )}
+        </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-3 lg:gap-8">
@@ -91,7 +103,7 @@ export default async function ConsultationsPage({
             </Card>
           </div>
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            <CurrentMedicationsForm />
+            <CurrentMedicationsForm record={record} />
           </div>
           <div className="grid auto-rows-max gap-4 lg:gap-8">
             <Card>
@@ -110,18 +122,6 @@ export default async function ConsultationsPage({
             </Card>
           </div>
         </div>
-
-        {patientHasCompleteRecord(record) && (
-          <div className="mt-8 flex justify-end">
-            <Button variant="blue" asChild>
-              <Link
-                href={`/hp/dashboard/consultations/new-consultation/${params.appointmentId}/${record?.id}/${params.patientId}`}
-              >
-                Save and Continue to Consultation
-              </Link>
-            </Button>
-          </div>
-        )}
       </ScrollArea>
     </div>
   );

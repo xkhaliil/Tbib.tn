@@ -2,21 +2,24 @@
 
 import React from "react";
 
+import { acceptHealthcareCenterInvitation } from "@/actions/healthcare-provider";
 import {
   archiveNotification,
   markNotificationAsRead,
 } from "@/actions/notifications";
 import { Notification, NotificationType } from "@prisma/client";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, CheckIcon } from "@radix-ui/react-icons";
 import { format, formatDistance } from "date-fns";
 import {
   ArchiveIcon,
   BellIcon,
   CheckCheckIcon,
   ClockIcon,
+  MailboxIcon,
   StarIcon,
   XIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { pusherClient } from "@/lib/pusher";
 import { cn } from "@/lib/utils";
@@ -61,8 +64,8 @@ export function NotificationsFeed({
     pusherClient.bind("notifications:new", notificationHandler);
 
     return () => {
-      pusherClient.unsubscribe(`notifications-${healthcareProviderId}`);
       pusherClient.unbind("notifications:new");
+      pusherClient.unsubscribe(`notifications-${healthcareProviderId}`);
     };
   }, [healthcareProviderId]);
 
@@ -93,6 +96,24 @@ export function NotificationsFeed({
           ),
         );
       });
+    });
+  };
+
+  const handleAcceptHealthcareCenterInvitation = async (
+    healthcareProviderId: string | undefined,
+    notification: Notification,
+  ) => {
+    startTransition(() => {
+      acceptHealthcareCenterInvitation(healthcareProviderId, notification).then(
+        () => {
+          toast.success("Invitation accepted successfully");
+          setNotifications((currentNotifications) =>
+            currentNotifications.map((n) =>
+              n.id === notification.id ? { ...notification, read: true } : n,
+            ),
+          );
+        },
+      );
     });
   };
 
@@ -139,7 +160,7 @@ export function NotificationsFeed({
             </div>
           )}
           {newNotifications.map((notification, index) => (
-            <div className="p-4" key={index}>
+            <div className="border-b p-4" key={index}>
               <div className="flex items-center justify-between">
                 <div className="flex gap-3">
                   <div
@@ -155,6 +176,8 @@ export function NotificationsFeed({
                         "bg-warning",
                       notification.type === NotificationType.REVIEW &&
                         "bg-yellow-500",
+                      notification.type === NotificationType.INVITATION &&
+                        "bg-teal-600",
                     )}
                   >
                     {notification.type === NotificationType.NEW_APPOINTMENT && (
@@ -170,6 +193,9 @@ export function NotificationsFeed({
                     )}
                     {notification.type === NotificationType.REVIEW && (
                       <StarIcon className="h-4 w-4 text-white" />
+                    )}
+                    {notification.type === NotificationType.INVITATION && (
+                      <MailboxIcon className="h-4 w-4 text-white" />
                     )}
                   </div>
                   <div className="flex flex-col">
@@ -190,14 +216,6 @@ export function NotificationsFeed({
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleArchiveNotification(notification.id)}
-                    disabled={isPending}
-                  >
-                    <ArchiveIcon className="h-4 w-4" />
-                  </Button>
                   {!notification.read && (
                     <Button
                       variant="outline"
@@ -208,6 +226,21 @@ export function NotificationsFeed({
                       disabled={isPending}
                     >
                       <CheckCheckIcon className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {notification.type === NotificationType.INVITATION && (
+                    <Button
+                      variant="green"
+                      size="icon"
+                      onClick={() =>
+                        handleAcceptHealthcareCenterInvitation(
+                          healthcareProviderId,
+                          notification,
+                        )
+                      }
+                      disabled={isPending}
+                    >
+                      <CheckIcon className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
@@ -236,6 +269,8 @@ export function NotificationsFeed({
                         "bg-warning",
                       notification.type === NotificationType.REVIEW &&
                         "bg-yellow-500",
+                      notification.type === NotificationType.INVITATION &&
+                        "bg-teal-600",
                     )}
                   >
                     {notification.type === NotificationType.NEW_APPOINTMENT && (
@@ -251,6 +286,9 @@ export function NotificationsFeed({
                     )}
                     {notification.type === NotificationType.REVIEW && (
                       <StarIcon className="h-4 w-4 text-white" />
+                    )}
+                    {notification.type === NotificationType.INVITATION && (
+                      <MailboxIcon className="h-4 w-4 text-white" />
                     )}
                   </div>
                   <div className="flex flex-col">
@@ -282,6 +320,21 @@ export function NotificationsFeed({
                   >
                     <ArchiveIcon className="h-4 w-4" />
                   </Button>
+                  {!notification.healthCareCenterId && (
+                    <Button
+                      variant="green"
+                      size="icon"
+                      onClick={() =>
+                        handleAcceptHealthcareCenterInvitation(
+                          healthcareProviderId,
+                          notification,
+                        )
+                      }
+                      disabled={isPending}
+                    >
+                      <CheckIcon className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -304,6 +357,8 @@ export function NotificationsFeed({
                         "bg-warning",
                       notification.type === NotificationType.REVIEW &&
                         "bg-yellow-500",
+                      notification.type === NotificationType.INVITATION &&
+                        "bg-teal-600",
                     )}
                   >
                     {notification.type === NotificationType.NEW_APPOINTMENT && (
@@ -319,6 +374,9 @@ export function NotificationsFeed({
                     )}
                     {notification.type === NotificationType.REVIEW && (
                       <StarIcon className="h-4 w-4 text-white" />
+                    )}
+                    {notification.type === NotificationType.INVITATION && (
+                      <MailboxIcon className="h-4 w-4 text-white" />
                     )}
                   </div>
                   <div className="flex flex-col">

@@ -4,6 +4,7 @@ import React from "react";
 
 import {
   archiveNotification,
+  markAllNotificationsAsRead,
   markNotificationAsRead,
 } from "@/actions/notifications";
 import { Notification, NotificationType } from "@prisma/client";
@@ -20,6 +21,8 @@ import {
 
 import { pusherClient } from "@/lib/pusher";
 import { cn } from "@/lib/utils";
+
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -40,6 +43,7 @@ export function NotificationsFeed({
   notifications: intitialNotifications,
   patientId,
 }: NotificationsFeedProps) {
+  const currentUser = useCurrentUser();
   const [isPending, startTransition] = React.useTransition();
   const [notifications, setNotifications] = React.useState<Notification[]>(
     intitialNotifications || [],
@@ -47,18 +51,21 @@ export function NotificationsFeed({
 
   React.useEffect(() => {
     const channel = pusherClient.subscribe(
-      `private-notifications-${patientId}`,
+      `notifications-patient-${patientId}`,
     );
 
-    channel.bind("notification-created", (notification: Notification) => {
-      setNotifications((currentNotifications) => [
+    const notificationHandler = (notification: Notification) => {
+      setNotifications((prevNotifications) => [
         notification,
-        ...currentNotifications,
+        ...prevNotifications,
       ]);
-    });
+    };
+
+    channel.bind("new-notification", notificationHandler);
 
     return () => {
-      pusherClient.unsubscribe(`private-notifications-${patientId}`);
+      channel.unbind("new-notification", notificationHandler);
+      pusherClient.unsubscribe(`notifications-patient-${patientId}`);
     };
   }, [patientId]);
 
@@ -86,6 +93,18 @@ export function NotificationsFeed({
         setNotifications((currentNotifications) =>
           currentNotifications.map((n) =>
             n.id === readNotification?.id ? readNotification : n,
+          ),
+        );
+      });
+    });
+  };
+
+  const handleMarkAllAsRead = async () => {
+    startTransition(() => {
+      markAllNotificationsAsRead(currentUser?.id).then((readNotifications) => {
+        setNotifications((currentNotifications) =>
+          currentNotifications.map(
+            (n) => readNotifications?.find((rn) => rn.id === n.id) || n,
           ),
         );
       });
@@ -120,7 +139,12 @@ export function NotificationsFeed({
             </div>
           </div>
           {notifications.length > 0 && (
-            <Button variant="link" size="sm" className="p-0">
+            <Button
+              variant="link"
+              size="sm"
+              className="p-0"
+              onClick={handleMarkAllAsRead}
+            >
               Mark all as read
             </Button>
           )}
@@ -135,7 +159,7 @@ export function NotificationsFeed({
             </div>
           )}
           {newNotifications.map((notification, index) => (
-            <div className="p-4" key={index}>
+            <div className="border-b p-4" key={index}>
               <div className="flex items-center justify-between">
                 <div className="flex gap-3">
                   <div

@@ -48,27 +48,16 @@ export default function HealthcareCenterTeamPage() {
         <HealthcareCenterButton />
       </Header>
       <main className="grid flex-1 items-start gap-4 p-4 sm:ml-14 sm:px-6 sm:py-0 md:gap-8">
-        <Tabs defaultValue="members">
-          <div className="flex items-center">
-            <TabsList>
-              <TabsTrigger value="members">Members</TabsTrigger>
-              <TabsTrigger value="requested">Requested</TabsTrigger>
-            </TabsList>
-            <div className="ml-auto flex items-center gap-2">
-              <Button size="sm" variant="outline" className="h-7 gap-1">
-                <FileIcon className="h-3.5 w-3.5" />
-                <span className="sm:whitespace-nowrap">Export</span>
-              </Button>
-              <InviteHealthcareProviderButton />
-            </div>
+        <div className="flex items-center">
+          <div className="ml-auto flex items-center gap-2">
+            <Button size="sm" variant="outline" className="h-7 gap-1">
+              <FileIcon className="h-3.5 w-3.5" />
+              <span className="sm:whitespace-nowrap">Export</span>
+            </Button>
+            <InviteHealthcareProviderButton />
           </div>
-          <TabsContent value="members">
-            <TeamMembersDataTable />
-          </TabsContent>
-          <TabsContent value="requested">
-            <RequestedTeamMembersDataTable />
-          </TabsContent>
-        </Tabs>
+        </div>
+        <TeamMembersDataTable />
       </main>
     </div>
   );

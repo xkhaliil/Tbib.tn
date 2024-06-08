@@ -30,12 +30,12 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/marketing/logo";
 
 export function ResetPasswordForm() {
   const searchParams = useSearchParams();
 
-  const token = searchParams.get("token");
+  const token = searchParams?.get("token");
 
   const [success, setSuccess] = React.useState<string | undefined>("");
   const [error, setError] = React.useState<string | undefined>("");
@@ -72,7 +72,12 @@ export function ResetPasswordForm() {
   };
   return (
     <div className="flex w-full max-w-[450px] flex-col space-y-6">
-      <Logo />
+      <div className="flex items-center justify-center">
+        <Logo className="h-8 w-8" />
+        <span className="ml-2 text-3xl font-bold tracking-tighter text-blue-600">
+          Oladoc
+        </span>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>Reset Password</CardTitle>

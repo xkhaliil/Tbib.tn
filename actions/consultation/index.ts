@@ -13,7 +13,6 @@ import { startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
 
-import { getAppointmentById } from "../appointment";
 import { getCurrentSession, getHealthcareProviderByUserId } from "../auth";
 
 export async function startConsultation(patientId: string | undefined) {

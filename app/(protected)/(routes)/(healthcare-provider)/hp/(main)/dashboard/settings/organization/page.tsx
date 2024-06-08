@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LeaveHealthcareCenterButton } from "@/components/base/healthcare-provider/leave-healthcare-center-button";
 
 export default async function TeamSettingsPage() {
   const authenticatedUser = await getCurrentSession();
@@ -69,14 +70,10 @@ export default async function TeamSettingsPage() {
               Organization
             </h3>
             <p className="text-muted-foreground">
-              You haven't joined an organization yet. You can request to join a
-              team to collaborate with your colleagues.
+              You haven't joined an organization yet. Join an organization to
+              collaborate with other healthcare providers.
             </p>
           </div>
-
-          <Button variant="outline" size="sm" className="relative z-20 mt-4">
-            Request to join an organization
-          </Button>
 
           <Image
             src="/empty-state-background-pattern.svg"
@@ -97,9 +94,9 @@ export default async function TeamSettingsPage() {
               </CardTitle>
               <CardDescription>{team.user.email}</CardDescription>
             </div>
-            <Button variant="destructive" size="sm">
-              Leave organization
-            </Button>
+            <LeaveHealthcareCenterButton
+              healthcareProviderId={healthcareProvider?.id}
+            />
           </div>
           <CardContent className="p-0">
             <div className="mt-4 grid grid-cols-1 gap-4">
