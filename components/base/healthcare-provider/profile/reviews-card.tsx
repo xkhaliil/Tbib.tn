@@ -34,9 +34,14 @@ type ReviewscardProps = {
     ReturnType<typeof getHealthCareProviderUserAndOpeningHoursAndAbsencesById>
   >;
   patient: Awaited<ReturnType<typeof getPatientByUserId>>;
+  HaveConsultation: boolean;
 };
 
-export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
+export function Reviewscard({
+  healthcareProvider,
+  patient,
+  HaveConsultation,
+}: ReviewscardProps) {
   const calculateAverageRating = () => {
     if (healthcareProvider?.reviews) {
       const total = healthcareProvider.reviews.length || 1;
@@ -49,7 +54,6 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
     }
     return 0;
   };
-
   const getPercentageByRating = (rating: number) => {
     const total = healthcareProvider?.reviews?.length || 1;
     const ratingCount = healthcareProvider?.reviews?.filter(
@@ -76,7 +80,11 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
               <div className="mt-2 text-sm font-light">
                 {healthcareProvider?.reviews.length} reviews
               </div>
-              <AddReview healthcareProvider={healthcareProvider} />
+              <AddReview
+                healthcareProvider={healthcareProvider}
+                HaveConsultation={HaveConsultation}
+                Patient={patient}
+              />
             </div>
             <Separator orientation="vertical" className="mx-10 h-40" />
             <div className="flex w-full flex-1 flex-col">
@@ -203,7 +211,7 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
               </div>
 
               <div className="min-w-0 flex-1 space-y-4 sm:mt-0">
-                {patient?.id === review.patientId && (
+                {patient?.id === review.patientId ? (
                   <div className="flex items-center justify-end gap-2">
                     {" "}
                     <UpdateReview
@@ -245,7 +253,7 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-                )}
+                ) : null}
                 <p className="text-base font-normal text-muted-foreground">
                   {review.comment}
                 </p>

@@ -900,3 +900,21 @@ export async function getPatientByIdForHealthcareProvider(
     console.error(error);
   }
 }
+export async function DoesPatientHaveAtLease1ConsultationWithHealthcareProvider(
+  patientId: string | undefined,
+  healthcareProviderId: string | undefined,
+) {
+  var haveConsultation = false;
+
+  const Appointment = await db.appointment.count({
+    where: {
+      patientId: patientId,
+      healthCareProviderId: healthcareProviderId,
+      status: AppointmentStatus.COMPLETED,
+    },
+  });
+  if (Appointment > 0) {
+    haveConsultation = true;
+  }
+  return haveConsultation;
+}

@@ -193,16 +193,20 @@ export async function getHealthcareCenterById(id: string | undefined) {
  */
 export async function getPatientByUserId(userId: string | undefined) {
   try {
-    const patient = await db.patient.findFirst({
-      where: {
-        userId,
-      },
-      include: {
-        user: true,
-      },
-    });
+    if (!userId) {
+      return null;
+    } else {
+      const patient = await db.patient.findFirst({
+        where: {
+          userId,
+        },
+        include: {
+          user: true,
+        },
+      });
 
-    return patient;
+      return patient;
+    }
   } catch (error) {
     console.error(error);
     return null;
