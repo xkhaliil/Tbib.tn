@@ -27,7 +27,7 @@ type ReviewscardProps = {
   patient: Awaited<ReturnType<typeof getPatientByUserId>>;
 };
 
-export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
+export function ReviewsCard({ healthcareProvider, patient }: ReviewscardProps) {
   const [isPending, startTransition] = React.useTransition();
   const authenticatedUser = useCurrentUser();
 
