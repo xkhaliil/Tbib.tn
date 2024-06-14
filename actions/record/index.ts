@@ -96,18 +96,13 @@ export async function manageFollowUpInfo(
       healthcareProvider?.id,
     );
 
-    const parsedWeight = parseFloat(weight);
-    const parsedHeight = parseFloat(height);
-    const parsedBloodPressure = parseFloat(bloodPressure);
-    const parsedBMI = parseFloat(bmi);
-
     await db.record.update({
       where: { id: existingRecord?.id },
       data: {
-        weight: parsedWeight,
-        height: parsedHeight,
-        bloodPressure: parsedBloodPressure,
-        bmi: parsedBMI,
+        weight: weight,
+        height: height,
+        bloodPressure: bloodPressure,
+        bmi: bmi,
       },
     });
 
