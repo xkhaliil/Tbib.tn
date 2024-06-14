@@ -17,11 +17,6 @@ export async function Chat({ conversationId }: ChatProps) {
   const conversation = await getConversationById(conversationId);
   const currentUser = await getCurrentSession();
 
-  if ("error" in conversation!) {
-    // Handle the error here
-    return <div>Error: {conversation.error}</div>;
-  }
-
   return (
     <div className="col-start-2 col-end-4 flex h-screen w-full flex-col justify-between bg-muted/40 lg:col-start-3">
       <ChatTopbar selectedUser={conversation?.patient.user as User} />
