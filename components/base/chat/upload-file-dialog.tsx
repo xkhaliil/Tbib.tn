@@ -63,6 +63,9 @@ export function UploadFileDialog({
           {({ getRootProps, getInputProps, acceptedFiles }) => (
             <div
               {...getRootProps()}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               className="mt-4 h-64 rounded-lg border border-dashed border-gray-300"
             >
               <div className="flex h-full w-full items-center justify-center">

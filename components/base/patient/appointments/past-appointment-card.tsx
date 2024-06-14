@@ -1,27 +1,20 @@
 import React from "react";
 
-import {
-  Appointment,
-  AppointmentStatus,
-  HealthCareProvider,
-  User,
-} from "@prisma/client";
+import { getHealthCareProviderById } from "@/actions/healthcare-provider";
+import { Appointment, AppointmentStatus } from "@prisma/client";
 import { ClockIcon } from "@radix-ui/react-icons";
 import { format, getDay } from "date-fns";
 
 import { cn } from "@/lib/utils";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { AppointmentDetailsDialog } from "./dialogs/appointment-details-dialog";
 
 interface PastAppointmentCardProps {
   appointment: Appointment & {
-    healthCareProvider: HealthCareProvider & {
-      user: User;
-    };
+    healthCareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
   };
 }
 
@@ -50,19 +43,19 @@ export function PastAppointmentCard({ appointment }: PastAppointmentCardProps) {
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src={appointment.healthCareProvider.user.image || ""}
-              alt={appointment.healthCareProvider.user.name}
+              src={appointment.healthCareProvider?.user.image || ""}
+              alt={appointment.healthCareProvider?.user.name}
             />
             <AvatarFallback>
-              {appointment.healthCareProvider.user.name[0]}
+              {appointment.healthCareProvider?.user.name[0]}
             </AvatarFallback>
           </Avatar>
           <div className="text-sm">
             <p className="font-semibold">
-              {appointment.healthCareProvider.user.name}
+              {appointment.healthCareProvider?.user.name}
             </p>
             <p className="text-muted-foreground">
-              {appointment.healthCareProvider.speciality}
+              {appointment.healthCareProvider?.speciality}
             </p>
           </div>
         </div>
