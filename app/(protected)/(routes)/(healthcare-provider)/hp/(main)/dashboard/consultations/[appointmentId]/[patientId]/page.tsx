@@ -91,7 +91,8 @@ export default async function ConsultationsPage({
               <CardHeader>
                 <CardTitle>Patient Background Information</CardTitle>
                 <CardDescription>
-                  This section contains the patient's background information.
+                  This section contains the patient&apos;s background
+                  information.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -110,7 +111,8 @@ export default async function ConsultationsPage({
               <CardHeader>
                 <CardTitle>Follow Up Information</CardTitle>
                 <CardDescription>
-                  This section contains the patient's follow up information.
+                  This section contains the patient&apos;s follow up
+                  information.
                 </CardDescription>
               </CardHeader>
               <CardContent>

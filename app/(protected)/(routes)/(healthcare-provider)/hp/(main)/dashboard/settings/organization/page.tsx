@@ -70,8 +70,8 @@ export default async function TeamSettingsPage() {
               Organization
             </h3>
             <p className="text-muted-foreground">
-              You haven't joined an organization yet. Join an organization to
-              collaborate with other healthcare providers.
+              You haven&apos;t joined an organization yet. Join an organization
+              to collaborate with other healthcare providers.
             </p>
           </div>
 

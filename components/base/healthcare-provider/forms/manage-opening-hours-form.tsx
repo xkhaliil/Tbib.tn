@@ -71,10 +71,6 @@ export function ManageOpeningHoursForm({
   const [success, setSuccess] = React.useState<string | undefined>("");
   const [error, setError] = React.useState<string | undefined>("");
 
-  if (!openingHours) {
-    return <Spinner />;
-  }
-
   const manageOpeningHoursForm = useForm<ManageOpeningHoursSchemaType>({
     resolver: zodResolver(ManageOpeningHoursSchema),
     defaultValues: {
@@ -82,55 +78,66 @@ export function ManageOpeningHoursForm({
         {
           dayOfWeek: 0,
           startTime:
-            openingHours[0]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[0]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[0]?.isClosed || false,
+            openingHours?.[0]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[0]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[0]?.isClosed || false,
         },
         {
           dayOfWeek: 1,
           startTime:
-            openingHours[1]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[1]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[1]?.isClosed || false,
+            openingHours?.[1]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[1]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[1]?.isClosed || false,
         },
         {
           dayOfWeek: 2,
           startTime:
-            openingHours[2]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[2]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[2]?.isClosed || false,
+            openingHours?.[2]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[2]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[2]?.isClosed || false,
         },
         {
           dayOfWeek: 3,
           startTime:
-            openingHours[3]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[3]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[3]?.isClosed || false,
+            openingHours?.[3]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[3]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[3]?.isClosed || false,
         },
         {
           dayOfWeek: 4,
           startTime:
-            openingHours[4]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[4]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[4]?.isClosed || false,
+            openingHours?.[4]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[4]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[4]?.isClosed || false,
         },
         {
           dayOfWeek: 5,
           startTime:
-            openingHours[5]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[5]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[5]?.isClosed || false,
+            openingHours?.[5]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[5]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[5]?.isClosed || false,
         },
         {
           dayOfWeek: 6,
           startTime:
-            openingHours[6]?.startTime || new Date("2024-03-18T08:00:00"),
-          endTime: openingHours[6]?.endTime || new Date("2024-03-18T17:00:00"),
-          isClosed: openingHours[6]?.isClosed || false,
+            openingHours?.[6]?.startTime || new Date("2024-03-18T08:00:00"),
+          endTime:
+            openingHours?.[6]?.endTime || new Date("2024-03-18T17:00:00"),
+          isClosed: openingHours?.[6]?.isClosed || false,
         },
       ],
     },
   });
+
+  if (!openingHours) {
+    return <Spinner />;
+  }
 
   const getDayStringByIndex = (index: number) => {
     switch (index) {

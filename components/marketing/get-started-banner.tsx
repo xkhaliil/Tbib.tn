@@ -16,7 +16,7 @@ export function GetStartedBanner() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-lg text-center">
           <h2 className="font-heading text-3xl tracking-tight text-white sm:text-4xl">
-            Let's start your consultation today with Oladoc
+            Let&apos;s start your consultation today with Oladoc
           </h2>
           <p className="mt-4 text-lg tracking-tight text-white">
             Create an account and book your first appointment today with our

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getAllPatients } from "@/actions/patient";
 import { HealthcareCenter, HealthCareProvider, Patient } from "@/types";
 
 import { cn } from "@/lib/utils";
@@ -10,7 +11,11 @@ interface StatsCardProps {
   icon: React.ElementType;
   title: string;
   value: string | number | undefined;
-  data: Patient[] | HealthCareProvider[] | HealthcareCenter[] | undefined;
+  data:
+    | Awaited<ReturnType<typeof getAllPatients>>
+    | HealthCareProvider[]
+    | HealthcareCenter[]
+    | undefined;
   className?: string;
 }
 

@@ -1,14 +1,6 @@
 import React from "react";
 
-import {
-  getAllDoctors,
-  getBestRatedDoctor,
-  getbestRatedDoctorThisMonth,
-  getbestRatedDoctorThisWeek,
-  getbestRatedDoctorThisYear,
-  getDoctorsCount,
-  getTop5RateScoreDoctor,
-} from "@/actions/doctors";
+import { getAllDoctors, getDoctorsCount } from "@/actions/doctors";
 import {
   getAllHealthcareCenters,
   getHealthcareCentersCount,
@@ -26,9 +18,6 @@ import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
 import { TotalUsersChart } from "@/components/base/admin-dashboard/charts/total-users-chart";
-import { MostRatedCarousel } from "@/components/base/admin-dashboard/general-stats/most-rated-carousel";
-import { MostRatedDoctor } from "@/components/base/admin-dashboard/general-stats/most-rated-doctor";
-import { Top5DoctorsCarousel } from "@/components/base/admin-dashboard/general-stats/top-5-doctors";
 
 export default async function AdminDashboard() {
   const patientsCount = await getPatientsCount();
@@ -38,11 +27,6 @@ export default async function AdminDashboard() {
   const patients = await getAllPatients();
   const healthcareProviders = await getAllDoctors();
   const healthcareCenters = await getAllHealthcareCenters();
-  const top5doctors = await getTop5RateScoreDoctor();
-  const bestDoctor = await getBestRatedDoctor();
-  const mostRatedDoctorByTimePeriodWeek = await getbestRatedDoctorThisWeek();
-  const mostRatedDoctorByTimePeriodMonth = await getbestRatedDoctorThisMonth();
-  const mostRatedDoctorByTimePeriodYear = await getbestRatedDoctorThisYear();
   return (
     <div className="grid h-screen md:grid-cols-[220px_1fr] md:grid-rows-[56px_1fr] lg:grid-cols-[280px_1fr]">
       <AdminNavbar />
@@ -88,39 +72,10 @@ export default async function AdminDashboard() {
             </Card>
             <Card className="col-span-2">
               <CardHeader>
-                <CardTitle>General stats </CardTitle>
+                <CardTitle>General stats</CardTitle>
                 <Separator orientation="horizontal" className="w-44 " />
               </CardHeader>
-              <CardContent className="p-4">
-                <h1 className="mb-3 ml-5 font-semibold">
-                  Top 5 healthcare Providers
-                </h1>
-                <div className="flex flex-col items-center justify-center">
-                  <Top5DoctorsCarousel doctors={top5doctors} />
-                  <Separator orientation="horizontal" className="mt-3" />
-                </div>
-                <h1 className="mb-3 ml-5 mt-5 font-semibold">
-                  Most Rated Doctor
-                </h1>
-                <div>
-                  <div className="flex flex-col ">
-                    <MostRatedDoctor doctor={bestDoctor} />
-                    <Separator orientation="horizontal" className="mt-3" />
-                  </div>
-                </div>
-                <h1 className="mb-3 ml-5 mt-5 font-semibold">
-                  Most Rated by Time Period{" "}
-                </h1>
-                <div className=" flex flex-col items-center justify-center">
-                  <div>
-                    <MostRatedCarousel
-                      week={mostRatedDoctorByTimePeriodWeek}
-                      month={mostRatedDoctorByTimePeriodMonth}
-                      year={mostRatedDoctorByTimePeriodYear}
-                    />
-                  </div>
-                </div>
-              </CardContent>
+              <CardContent></CardContent>
             </Card>
           </div>
         </main>

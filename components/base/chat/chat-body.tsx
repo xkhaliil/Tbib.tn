@@ -26,11 +26,6 @@ export function ChatBody({
   currentUser,
   initialMessages,
 }: ChatBodyProps) {
-  if ("error" in conversation!) {
-    // Handle the error here
-    return <div>Error: {conversation.error}</div>;
-  }
-
   const [messages, setMessages] =
     React.useState<MessageType[]>(initialMessages);
   const bottomRef = React.useRef<HTMLDivElement>(null);
@@ -58,13 +53,13 @@ export function ChatBody({
     };
   }, [conversation?.id]);
 
-  const handleSeen = async () => {
+  const handleSeen = React.useCallback(async () => {
     await markMessageAsSeen(conversation?.id);
-  };
+  }, [conversation?.id]);
 
   React.useEffect(() => {
     handleSeen();
-  }, [conversation?.id]);
+  }, [conversation?.id, handleSeen]);
 
   return (
     <div className="flex h-full w-full flex-col gap-6 overflow-y-auto overflow-x-hidden p-4">

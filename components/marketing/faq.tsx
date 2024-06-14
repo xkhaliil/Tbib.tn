@@ -118,8 +118,8 @@ export function FAQ() {
                   I forgot my password. How can I reset it?
                 </h3>
                 <p className="mt-4 text-sm text-muted-foreground">
-                  You can reset your password by clicking on the "Forgot
-                  password" link on the sign-in page and following the
+                  You can reset your password by clicking on the &apos;Forgot
+                  password&apos; link on the sign-in page and following the
                   instructions.
                 </p>
               </li>

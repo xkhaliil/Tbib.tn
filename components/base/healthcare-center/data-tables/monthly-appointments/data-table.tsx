@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
   return (
     <Card className="mt-2">
       <CardHeader className="px-7">
-        <CardTitle>This Month's Appointments</CardTitle>
+        <CardTitle>This Month&apos;s Appointments</CardTitle>
         <CardDescription>
           View all the appointments scheduled for this month.
         </CardDescription>
