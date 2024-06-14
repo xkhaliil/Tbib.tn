@@ -84,7 +84,7 @@ export function Calendar({
   const start = setHours(setMinutes(startOfDay(new Date()), 30), 7);
   const end = setHours(setMinutes(startOfDay(addDays(new Date(), 1)), 0), 7);
 
-  let times = [];
+  let times: string[] = [];
   let currentTime = start;
 
   while (!isAfter(currentTime, end)) {
