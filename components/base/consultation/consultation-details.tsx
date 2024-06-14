@@ -68,7 +68,7 @@ export function ConsultationDetails({
               Follow Up Information
             </h1>
             <p className="text-sm text-muted-foreground">
-              This section contains the patient's follow up information.
+              This section contains the patient&apos;s follow up information.
             </p>
           </div>
 

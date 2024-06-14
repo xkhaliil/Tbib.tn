@@ -51,7 +51,7 @@ export function PatientHistorySheet({
         <SheetHeader className="text-left">
           <SheetTitle>Patient History</SheetTitle>
           <SheetDescription>
-            View the patient's history and medical records.
+            View the patient&apos;s history and medical records.
           </SheetDescription>
         </SheetHeader>
 

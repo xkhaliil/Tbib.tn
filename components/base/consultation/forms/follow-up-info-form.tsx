@@ -48,19 +48,22 @@ export function FollowUpInfoForm({
     },
   });
 
-  const calculateBMI = (weight: number, height: number) => {
-    const bmi = (Number(weight) / (Number(height) * Number(height))) * 10000;
-    if (isNaN(bmi)) return "";
-    return followUpInfoForm.setValue("bmi", Number(bmi.toFixed(2)));
-  };
+  const calculateBMI = React.useCallback(
+    (weight: number | undefined, height: number | undefined) => {
+      const bmi = (Number(weight) / (Number(height) * Number(height))) * 10000;
+      if (isNaN(bmi)) return "";
+      return followUpInfoForm.setValue("bmi", Number(bmi.toFixed(2)));
+    },
+    [followUpInfoForm],
+  );
 
   React.useEffect(() => {
-    followUpInfoForm.watch(["weight", "height"]);
-    calculateBMI(
-      followUpInfoForm.watch("weight"),
-      followUpInfoForm.watch("height"),
-    );
-  }, [followUpInfoForm.watch("weight"), followUpInfoForm.watch("height")]);
+    const subscription = followUpInfoForm.watch(({ weight, height }) => {
+      calculateBMI(weight, height);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [calculateBMI, followUpInfoForm]);
 
   const onSubmit = async (data: ManageFollowUpDataSchemaType) => {
     startTransition(() => {

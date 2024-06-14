@@ -37,8 +37,8 @@ export function AccountDeletedTemplate({ user }: AccountDeletedTemplateProps) {
             </Heading>
             <Text className="mt-4 text-base text-muted-foreground">
               Hi <strong>{user.name}</strong>, Your account has been deleted. It
-              seems like you've been rejected by our system. If you think this
-              is a mistake, please contact support.
+              seems like you&apos;ve been rejected by our system. If you think
+              this is a mistake, please contact support.
             </Text>
             <Hr className="mx-0 my-[26px] w-full border" />
             <Button

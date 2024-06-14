@@ -26,11 +26,11 @@ export default async function HealthcareCenterDetailsPage({
         <AdminSidebar />
         <div className="flex flex-col">
           <AdminNavbar />
-          <div className="grid h-screen w-full ">
+          <div className="grid h-screen w-full">
             <div className="flex flex-col">
               <header className=" top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
                 <h1 className="text-xl font-semibold">
-                  {selectedHealthcareCenter?.user.name}'s details
+                  {selectedHealthcareCenter?.user.name}&apos;s Details
                 </h1>
               </header>
               <main className="grid flex-1 gap-4 overflow-auto p-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

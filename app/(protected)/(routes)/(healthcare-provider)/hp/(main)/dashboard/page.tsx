@@ -87,8 +87,8 @@ export default async function DashboardPage() {
                 Good Morning, Dr. {user?.name}
               </h1>
               <p className="text-sm text-muted-foreground">
-                Hello there! Here's what's happening with your practice. How can
-                we assist you today?
+                Hello there! Here&apos;s what&apos;s happening with your
+                practice. How can we assist you today?
               </p>
             </div>
 

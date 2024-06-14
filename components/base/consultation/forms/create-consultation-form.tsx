@@ -590,7 +590,7 @@ export function CreateConsultationForm({
         <CardHeader>
           <CardTitle>Medical Observation</CardTitle>
           <CardDescription>
-            Enter your observations about the patient's medical condition.
+            Enter your observations about the patient&apos;s medical condition.
           </CardDescription>
         </CardHeader>
 
@@ -611,7 +611,7 @@ export function CreateConsultationForm({
                     <FormLabel>
                       Diagnosis{" "}
                       <span className="text-muted-foreground">
-                        (What is the patient's medical condition?)
+                        (What is the patient&apos;s medical condition?)
                       </span>
                     </FormLabel>
                     <FormControl>
@@ -630,7 +630,7 @@ export function CreateConsultationForm({
                     <FormLabel>
                       Follow Up{" "}
                       <span className="text-muted-foreground">
-                        (What is the patient's follow up plan?)
+                        (What is the patient&apos;s follow up plan?)
                       </span>
                     </FormLabel>
                     <FormControl>
@@ -649,7 +649,8 @@ export function CreateConsultationForm({
                     <FormLabel>
                       Additional Notes{" "}
                       <span className="text-muted-foreground">
-                        (Any additional notes about the patient's condition?)
+                        (Any additional notes about the patient&apos;s
+                        condition?)
                       </span>
                     </FormLabel>
                     <FormControl>
@@ -668,7 +669,7 @@ export function CreateConsultationForm({
                 Follow Up Information
               </h1>
               <p className="text-sm text-muted-foreground">
-                This section contains the patient's follow up information.
+                This section contains the patient&apos;s follow up information.
               </p>
             </div>
 

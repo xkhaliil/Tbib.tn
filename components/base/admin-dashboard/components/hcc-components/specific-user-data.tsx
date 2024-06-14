@@ -8,12 +8,13 @@ type hcc = Awaited<ReturnType<typeof getSelectedHealthcareCenter>>;
 interface HealthcareCenterDetailsPageParams {
   hcc: hcc;
 }
+
 export function SpecificUserData({ hcc }: HealthcareCenterDetailsPageParams) {
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">
         <legend className="-ml-1 px-1 text-sm font-medium">
-          Healthcare-center's data
+          Healthcare Center&apos;s data
         </legend>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-3">

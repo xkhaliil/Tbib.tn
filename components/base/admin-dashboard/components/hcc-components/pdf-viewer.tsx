@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/accordion";
 
 type hcc = Awaited<ReturnType<typeof getSelectedHealthcareCenter>>;
+
 interface HealthcareCenterDetailsPageParams {
   hcc: hcc;
 }
+
 export default function PdfViewer({ hcc }: HealthcareCenterDetailsPageParams) {
   return (
     <form className="grid w-full items-start gap-6">
@@ -35,7 +37,10 @@ export default function PdfViewer({ hcc }: HealthcareCenterDetailsPageParams) {
                 </AccordionTrigger>
                 <AccordionContent>
                   {hcc?.verificationDocuments.map((doc, i) => (
-                    <div className="font-mono flex items-center justify-between rounded-md border px-4 py-3 text-sm">
+                    <div
+                      className="font-mono flex items-center justify-between rounded-md border px-4 py-3 text-sm"
+                      key={i}
+                    >
                       <div>Document n°{i + 1}</div>
                       <div className="flex items-center space-x-3">
                         <FaEye onClick={() => window.open(doc, "_blank")} />

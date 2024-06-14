@@ -147,8 +147,8 @@ export function ProfileAndAccountForm() {
                 side="bottom"
                 className="w-64 border border-yellow-500 bg-yellow-50 text-yellow-500"
               >
-                You haven't completed your profile yet. Please complete your
-                profile in order to book an appointment.
+                You haven&apos;t completed your profile yet. Please complete
+                your profile in order to book an appointment.
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

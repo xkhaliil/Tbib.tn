@@ -18,7 +18,7 @@ export function SpecificUserData({
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">
         <legend className="-ml-1 px-1 text-sm font-medium">
-          Healthcare-provider's data
+          Healthcare Provider&apos;s data
         </legend>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-3">

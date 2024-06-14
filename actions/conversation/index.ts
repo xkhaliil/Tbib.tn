@@ -107,10 +107,6 @@ export async function getConversationById(conversationId: string) {
       },
     });
 
-    if (!conversation) {
-      return { error: "No conversation found" };
-    }
-
     return conversation;
   } catch (error) {
     console.error(error);

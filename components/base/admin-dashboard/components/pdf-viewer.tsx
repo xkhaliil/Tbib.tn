@@ -39,7 +39,10 @@ export default function PdfViewer({
                 </AccordionTrigger>
                 <AccordionContent>
                   {doctor?.verificationDocuments.map((doc, i) => (
-                    <div className="font-mono flex items-center justify-between rounded-md border px-4 py-3 text-sm">
+                    <div
+                      className="font-mono flex items-center justify-between rounded-md border px-4 py-3 text-sm"
+                      key={i}
+                    >
                       <div>Document n°{i + 1}</div>
                       <div className="flex items-center space-x-3">
                         <FaEye onClick={() => window.open(doc, "_blank")} />
