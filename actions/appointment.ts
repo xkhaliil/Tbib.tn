@@ -299,7 +299,9 @@ export async function cancelAppointment(id: string | undefined) {
 
 export async function cancelAllAppointments(ids: (string | undefined)[]) {
   try {
-    const validIds = ids.filter((id) => id !== undefined);
+    const validIds: string[] = ids.filter(
+      (id): id is string => id !== undefined,
+    );
 
     const existingAppointments = await db.appointment.findMany({
       where: {
