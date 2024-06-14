@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { getCurrentSession, getPatientByUserId } from "@/actions/auth";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
+import { DoesPatientHaveAtLease1ConsultationWithHealthcareProvider } from "@/actions/patient";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Container } from "@/components/container";
@@ -24,7 +25,15 @@ interface ProfileProps {
 
 export async function Profile({ healthcareProvider }: ProfileProps) {
   const currentUser = await getCurrentSession();
+  console.log("currentUser", currentUser?.id); 
   const patient = await getPatientByUserId(currentUser?.id);
+  console.log("patient", patient?.id);
+
+  var HaveConsultation =
+    await DoesPatientHaveAtLease1ConsultationWithHealthcareProvider(
+      patient?.id,
+      healthcareProvider?.id,
+    );
   return (
     <div className="flex w-full flex-col">
       <div className="flex h-52 w-full flex-col justify-center border-b bg-muted">
@@ -150,6 +159,7 @@ export async function Profile({ healthcareProvider }: ProfileProps) {
               <Reviewscard
                 healthcareProvider={healthcareProvider}
                 patient={patient}
+                HaveConsultation={HaveConsultation}
               />
             </TabsContent>
 
