@@ -2,7 +2,7 @@ import React from "react";
 
 import { getAllPatients } from "@/actions/patient";
 
-import { columns, Patient } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export async function AdminPatientTable() {

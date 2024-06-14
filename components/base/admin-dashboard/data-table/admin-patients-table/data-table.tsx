@@ -7,7 +7,6 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -17,7 +16,6 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { FileIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,12 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -44,7 +36,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { DataTableFacetedFilter } from "../healthcare-centers-table/data-table-faceted-filter";
 import { PatientType } from "./columns";
 
 interface DataTableProps<TData, TValue> {

@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { getAllPatients } from "@/actions/patient";
 import { Patient, User } from "@prisma/client";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
