@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 import {
   deleteHealthcareProvider,
@@ -90,13 +89,7 @@ export default function ApproveCard({
 
   const handleDelete = (id: string) => {
     startTransition(() => {
-      deleteHealthcareProvider(
-        id,
-        healthcareProviderEmail,
-        "oladoc-customer-service",
-        "Your Oladoc pro account has been deleted!",
-        healthcareProviderName,
-      ).then((data) => {
+      deleteHealthcareProvider(id).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
