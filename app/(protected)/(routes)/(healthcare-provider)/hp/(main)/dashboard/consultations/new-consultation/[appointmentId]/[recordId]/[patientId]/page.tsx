@@ -1,7 +1,6 @@
 import React from "react";
 
 import Link from "next/link";
-import { getAppointmentById } from "@/actions/appointment";
 import {
   getCurrentSession,
   getHealthcareProviderByUserId,
@@ -51,7 +50,6 @@ export default async function NewConsultationPage({
     params.patientId,
     healthcareProvider?.id,
   );
-  const appointment = await getAppointmentById(params.appointmentId);
   const patientConsultations =
     await getPatientConsultationsWithHealthcareProvider(
       params.patientId,
@@ -76,10 +74,7 @@ export default async function NewConsultationPage({
               <BreadcrumbItem>
                 <BreadcrumbPage>
                   Consultation with {patient?.user.name} at{" "}
-                  {format(
-                    new Date(appointment?.date || new Date()),
-                    "dd/MM/yyyy",
-                  )}
+                  {format(new Date(), "dd/MM/yyyy")}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

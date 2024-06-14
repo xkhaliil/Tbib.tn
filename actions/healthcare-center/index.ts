@@ -3,12 +3,12 @@
 import { NotificationType } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { sendTeamInvitationEmail } from "@/lib/mail";
 import { pusherServer } from "@/lib/pusher";
 
 import {
   getCurrentSession,
   getHealthcareCenterByUserId,
-  getHealthcareProviderById,
   getUserByHealthcareProviderId,
 } from "../auth";
 
@@ -270,6 +270,10 @@ export async function inviteHealthcareProvider(healthcareProviderId: string) {
       "notifications:new",
       notification,
     );
+
+    if (healthcareProviderUser?.receiveEmailNotifications) {
+      await sendTeamInvitationEmail(healthcareCenter, healthcareProviderUser);
+    }
 
     return { success: "Healthcare provider invited successfully" };
   } catch (error) {

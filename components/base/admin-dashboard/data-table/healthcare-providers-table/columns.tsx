@@ -47,7 +47,7 @@ export const columns = [
     id: "speciality",
     header: "Speciality",
   }),
-  columnHelper.accessor("accountVerified", {
+  columnHelper.accessor("user.emailVerified", {
     id: "accountVerified",
     header: "Account Status",
     cell: ({ row }) => {
@@ -55,17 +55,17 @@ export const columns = [
         <span
           className={cn(
             "rounded-sm px-2.5 py-1 text-xs font-medium",
-            row.original.accountVerified
+            row.original.user.emailVerified
               ? "bg-green-100 text-green-600"
               : "bg-rose-100 text-rose-600",
           )}
         >
-          {row.original.accountVerified ? "Verified" : "Not Verified"}
+          {row.original.user.emailVerified ? "Verified" : "Not Verified"}
         </span>
       );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      return value.includes(Boolean(row.getValue(id)));
     },
   }),
   columnHelper.accessor("verificationDocuments", {

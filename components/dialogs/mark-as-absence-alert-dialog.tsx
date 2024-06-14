@@ -69,7 +69,6 @@ export function MarkAsAbsenceAlertDialog({
                 ?.filter(
                   (appointment) =>
                     appointment?.status === AppointmentStatus.PENDING ||
-                    appointment?.status === AppointmentStatus.CONFIRMED ||
                     appointment?.status === AppointmentStatus.UPCOMING,
                 )
                 .map((appointment) => (
@@ -82,25 +81,18 @@ export function MarkAsAbsenceAlertDialog({
                         className={cn(
                           "flex h-8 w-8 items-center justify-center rounded",
                           appointment?.status === AppointmentStatus.PENDING &&
-                            "bg-warning",
+                            "border-[#A78025] bg-[#FFE097]",
                           appointment?.status === AppointmentStatus.UPCOMING &&
-                            "bg-success",
+                            "border-teal-600 bg-teal-300",
                           appointment?.status === AppointmentStatus.COMPLETED &&
-                            "bg-info",
-                          appointment?.status === AppointmentStatus.CANCELLED &&
-                            "bg-destructive",
-                          appointment?.status === AppointmentStatus.CONFIRMED &&
-                            "bg-primary",
+                            "border-sky-600 bg-sky-300",
                         )}
                       >
                         <span
                           className={cn(
                             "font-medium",
-                            (appointment?.status ===
-                              AppointmentStatus.CONFIRMED ||
-                              appointment?.status ===
-                                AppointmentStatus.CANCELLED) &&
-                              "text-white",
+                            appointment?.status ===
+                              AppointmentStatus.CANCELLED && "text-white",
                           )}
                         >
                           {appointment?.title.charAt(0).toUpperCase()}
@@ -118,16 +110,13 @@ export function MarkAsAbsenceAlertDialog({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-x-2.5">
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleCancelAppointment(appointment?.id)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button size="sm">Reschedule</Button>
-                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleCancelAppointment(appointment?.id)}
+                    >
+                      Cancel
+                    </Button>
                   </li>
                 ))}
             </ol>

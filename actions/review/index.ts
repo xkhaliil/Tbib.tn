@@ -65,19 +65,23 @@ export async function addNewReview(
     console.error(error);
   }
 }
-export async function deleteReview(reviewId: string, hp: string) {
+
+export async function deleteReview(reviewId: string) {
   try {
     const review = await db.review.delete({
       where: {
         id: reviewId,
       },
     });
-    revalidatePath("/hp/profile/" + hp);
+
+    revalidatePath(`/hp/profile/${review.healthCareProviderId}`);
+
     return review;
   } catch (error) {
     console.error(error);
   }
 }
+
 export async function updateReview(
   reviewId: string,
   values: AddNewReviewSchemaType,
@@ -92,7 +96,9 @@ export async function updateReview(
     const { comment, rating } = validatedFields.data;
 
     const currentUser = await getCurrentSession();
+    
     const patient = await getPatientByUserId(currentUser?.id);
+    
     const review = await db.review.update({
       where: {
         id: reviewId,

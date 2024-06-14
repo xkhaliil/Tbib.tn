@@ -10,14 +10,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HealthcareCenterButton } from "@/components/auth/healthcare-center-button";
 import { Header } from "@/components/base/healthcare-center/dashboard/header";
@@ -26,6 +18,7 @@ import {
   MobileSidebar,
   Sidebar,
 } from "@/components/base/healthcare-center/dashboard/sidebar";
+import { NotificationsForm } from "@/components/base/healthcare-center/forms/notifications-form";
 
 export default function NotificationsHcPage() {
   return (
@@ -72,56 +65,7 @@ export default function NotificationsHcPage() {
               </Link>
             </nav>
             <div className="grid gap-6">
-              <Card>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardHeader>
-                      <CardTitle>Notifications</CardTitle>
-                      <CardDescription>
-                        Manage your notification settings.
-                      </CardDescription>
-                    </CardHeader>
-                  </div>
-                </div>
-                <CardContent className="border p-7">
-                  <form className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between pr-5">
-                      <div className="items-top flex space-x-2">
-                        <div className="grid gap-1.5 leading-none">
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Email notifications
-                          </label>
-                          <p className="text-sm text-muted-foreground">
-                            Get notified by email when something happens.
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <Checkbox />
-                      </div>
-                    </div>
-                  </form>
-                </CardContent>
-                <CardContent className="border p-7">
-                  <form className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between pr-5">
-                      <div className="items-top flex space-x-2">
-                        <div className="grid gap-1.5 leading-none">
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            In app notifications
-                          </label>
-                          <p className="text-sm text-muted-foreground">
-                            Add an extra layer of security to your account.
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <Checkbox checked />
-                      </div>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
+              <NotificationsForm />
             </div>
           </div>
         </main>

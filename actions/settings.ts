@@ -56,6 +56,8 @@ export const settings = async (values: ManageAccountSchemaType) => {
       image: updatedUser.image || "",
       bio: updatedUser.bio || "",
       isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
+      receiveEmailNotifications: updatedUser.receiveEmailNotifications,
+      receiveSmsNotifications: updatedUser.receiveSmsNotifications,
     },
   });
 

@@ -42,14 +42,18 @@ export function ServicesCard({ healthcareProvider }: ServicesCardProps) {
         </div>
       </CardHeader>
       <CardContent className="p-6">
-        <div className="flex flex-row items-center gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           {healthcareProvider?.services.length === 0 && (
             <p className="text-sm">No services available</p>
           )}
           {healthcareProvider?.services.map(
             (service, idx) =>
               service && (
-                <Badge key={idx} variant="info" className="px-5 py-2.5">
+                <Badge
+                  key={idx}
+                  variant="info"
+                  className="truncate px-5 py-2.5"
+                >
                   {service}
                 </Badge>
               ),

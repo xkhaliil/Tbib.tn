@@ -61,6 +61,9 @@ function CustomUploadDropzone({ value, onChange }: CustomUploadDropzoneProps) {
       {({ getRootProps, getInputProps, acceptedFiles }) => (
         <div
           {...getRootProps()}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
           className="mx-4 mt-6 h-64 rounded-lg border border-dashed border-gray-300"
         >
           <div className="flex h-full w-full items-center justify-center">

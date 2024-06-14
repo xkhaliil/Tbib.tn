@@ -2,7 +2,6 @@ import React from "react";
 
 import Link from "next/link";
 import { getCurrentSession, getHealthcareCenterByUserId } from "@/actions/auth";
-import { FileIcon } from "lucide-react";
 
 import {
   Breadcrumb,
@@ -58,8 +57,8 @@ export default async function HealthcareCenterDashboardPage() {
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             <TeamCard />
-            <WeeklyAppointmentsCard />
-            <TodayAppointmentsCard />
+            <WeeklyAppointmentsCard healthCareCenterId={healthcareCenter?.id} />
+            <TodayAppointmentsCard healthCareCenterId={healthcareCenter?.id} />
           </div>
 
           <Tabs defaultValue="today">
@@ -81,13 +80,19 @@ export default async function HealthcareCenterDashboardPage() {
               </div>
             </div>
             <TabsContent value="today">
-              <TodayAppointmentsDataTable />
+              <TodayAppointmentsDataTable
+                healthCareCenterId={healthcareCenter?.id}
+              />
             </TabsContent>
             <TabsContent value="week">
-              <WeeklyAppointmentsDataTable />
+              <WeeklyAppointmentsDataTable
+                healthCareCenterId={healthcareCenter?.id}
+              />
             </TabsContent>
             <TabsContent value="month">
-              <MonthlyAppointmentsDataTable />
+              <MonthlyAppointmentsDataTable
+                healthCareCenterId={healthcareCenter?.id}
+              />
             </TabsContent>
           </Tabs>
         </div>

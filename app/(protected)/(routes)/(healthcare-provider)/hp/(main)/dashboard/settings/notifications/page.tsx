@@ -10,7 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+import { NotificationsForm } from "@/components/base/healthcare-provider/forms/notifications-form";
 
 export default function NotificationsSettingsPage() {
   return (
@@ -34,6 +34,8 @@ export default function NotificationsSettingsPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      <NotificationsForm />
     </div>
   );
 }

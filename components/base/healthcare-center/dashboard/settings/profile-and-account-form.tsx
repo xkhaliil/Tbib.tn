@@ -5,18 +5,13 @@ import React from "react";
 import { settings } from "@/actions/settings";
 import { ManageAccountSchema, ManageAccountSchemaType } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, parseISO, startOfToday } from "date-fns";
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-
-import { cn } from "@/lib/utils";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -35,23 +30,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { GenderCard } from "@/components/base/patient/settings/gender-card";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { UploadButton } from "@/components/upload-button";
 
-enum GENDERS {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
-}
 export default function ProfileAndAccountFormHc() {
   const user = useCurrentUser();
 
@@ -156,7 +140,7 @@ export default function ProfileAndAccountFormHc() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
               <FormField
                 control={manageAccountAndProfileForm.control}
                 name="name"
@@ -201,9 +185,7 @@ export default function ProfileAndAccountFormHc() {
                   </FormItem>
                 )}
               />
-            </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
               <FormField
                 control={manageAccountAndProfileForm.control}
                 name="phone"

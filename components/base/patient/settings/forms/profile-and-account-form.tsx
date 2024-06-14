@@ -121,7 +121,7 @@ export function ProfileAndAccountForm() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <div>
+        <div className="space-y-1.5">
           <CardTitle>Profile & Account</CardTitle>
           <CardDescription>
             Manage your profile and account settings.
@@ -270,7 +270,7 @@ export function ProfileAndAccountForm() {
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[315px] p-0" align="start">
+                      <PopoverContent className="w-[435px] p-0" align="start">
                         <Calendar
                           selectedDay={field.value as Date}
                           setSelectedDay={field.onChange}

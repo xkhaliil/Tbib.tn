@@ -4,25 +4,20 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
 import {
-  compileRejectedUserEmailTemplate,
   compileRequestCustomEmailTemplate,
-  compileVerifiedUserEmailTemplate,
+  sendAccountVerifiedEmail,
   sendCustomEmail,
-  sendRejectedUserEmail,
-  sendVerifiedUserEmail,
+  sendDeletedAccountEmail,
 } from "@/lib/mail";
 
-export async function verifyHealthcareProvider(
-  id: string | undefined,
-  to: string,
-  name: string,
-  subject: string,
-  sendname: string,
-) {
+export async function verifyHealthcareProvider(id: string | undefined) {
   try {
     const healthCareProvider = await db.healthCareProvider.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        user: true,
       },
     });
 
@@ -35,16 +30,21 @@ export async function verifyHealthcareProvider(
         id: id,
       },
       data: {
-        accountVerified: true,
+        user: {
+          update: {
+            emailVerified: new Date(),
+          },
+        },
       },
     });
 
     revalidatePath("/admin/healthcare-providers");
-    const body = await compileVerifiedUserEmailTemplate(sendname);
-    await sendVerifiedUserEmail({ to, name, subject, body });
+
+    await sendAccountVerifiedEmail(healthCareProvider.user);
+
     return {
       success:
-        "Healthcare provider verified successfully and a confirmation mail has been send",
+        "Healthcare provider verified successfully and a confirmation mail has been sent",
     };
   } catch (error) {
     console.error(error);
@@ -66,17 +66,14 @@ export async function sendCustom(
   }
 }
 
-export async function deleteHealthcareProvider(
-  id: string | undefined,
-  to: string,
-  name: string,
-  subject: string,
-  sendname: string,
-) {
+export async function deleteHealthcareProvider(id: string | undefined) {
   try {
     const healthCareProvider = await db.healthCareProvider.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        user: true,
       },
     });
 
@@ -91,25 +88,23 @@ export async function deleteHealthcareProvider(
     });
 
     revalidatePath("/admin/healthcare-providers");
-    const body = await compileRejectedUserEmailTemplate(sendname);
-    await sendVerifiedUserEmail({ to, name, subject, body });
+
+    await sendDeletedAccountEmail(healthCareProvider.user);
+
     return { success: "Healthcare provider deleted successfully" };
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function verifyHealthcareCenter(
-  id: string | undefined,
-  to: string,
-  name: string,
-  subject: string,
-  sendname: string,
-) {
+export async function verifyHealthcareCenter(id: string | undefined) {
   try {
     const healthCareCenter = await db.healthCareCenter.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        user: true,
       },
     });
 
@@ -122,29 +117,35 @@ export async function verifyHealthcareCenter(
         id: id,
       },
       data: {
-        accountVerified: true,
+        user: {
+          update: {
+            emailVerified: new Date(),
+          },
+        },
       },
     });
 
     revalidatePath("/admin/healthcare-centers");
-    const body = await compileVerifiedUserEmailTemplate(sendname);
-    await sendVerifiedUserEmail({ to, name, subject, body });
-    return { success: "Healthcare center verified successfully" };
+
+    await sendAccountVerifiedEmail(healthCareCenter.user);
+
+    return {
+      success:
+        "Healthcare center verified successfully and a confirmation mail has been sent",
+    };
   } catch (error) {
     console.error(error);
   }
 }
-export async function deleteHealthcareCenter(
-  id: string | undefined,
-  to: string,
-  name: string,
-  subject: string,
-  sendname: string,
-) {
+
+export async function deleteHealthcareCenter(id: string | undefined) {
   try {
     const healthCareCenter = await db.healthCareCenter.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        user: true,
       },
     });
 
@@ -159,13 +160,15 @@ export async function deleteHealthcareCenter(
     });
 
     revalidatePath("/admin/healthcare-centers");
-    const body = await compileRejectedUserEmailTemplate(sendname);
-    await sendRejectedUserEmail({ to, name, subject, body });
+
+    await sendDeletedAccountEmail(healthCareCenter.user);
+
     return { success: "Healthcare center deleted successfully" };
   } catch (error) {
     console.error(error);
   }
 }
+
 export async function getSelectedHealthcareCenter(id: string) {
   try {
     const healthCareCenter = await db.healthCareCenter.findUnique({

@@ -70,6 +70,8 @@ export const settings = async (
           city: values.city,
           postalCode: values.postalCode,
           isTwoFactorEnabled: values.isTwoFactorEnabled,
+          receiveEmailNotifications: values.receiveEmailNotifications,
+          receiveSmsNotifications: values.receiveSmsNotifications,
         },
       },
       speciality: values.speciality,
@@ -78,6 +80,9 @@ export const settings = async (
       officeAddress: values.officeAddress,
       officeLatitude: values.officeLatitude,
       officeLongitude: values.officeLongitude,
+      insurances: values.insurances,
+      services: values.services,
+      paymentMethods: values.paymentMethods,
     },
     include: {
       user: true,
@@ -101,6 +106,13 @@ export const settings = async (
       officeAddress: updatedHealthCareProvider.officeAddress || "",
       officeLatitude: updatedHealthCareProvider.officeLatitude || 0,
       officeLongitude: updatedHealthCareProvider.officeLongitude || 0,
+      insurances: updatedHealthCareProvider.insurances || [],
+      services: updatedHealthCareProvider.services || [],
+      paymentMethods: updatedHealthCareProvider.paymentMethods || [],
+      receiveEmailNotifications:
+        updatedHealthCareProvider.user.receiveEmailNotifications,
+      receiveSmsNotifications:
+        updatedHealthCareProvider.user.receiveSmsNotifications,
     },
   });
 
@@ -295,6 +307,11 @@ export async function getHealthCareProviderUserAndOpeningHoursAndAbsencesById(
       openingHours: true,
       absences: true,
       reviews: {
+        include: {
+          patient: { include: { user: true } },
+        },
+      },
+      consultations: {
         include: {
           patient: { include: { user: true } },
         },

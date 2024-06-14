@@ -65,6 +65,9 @@ export const {
         session.user.officeAddress = token.officeAddress as string;
         session.user.officeLatitude = token.officeLatitude as number;
         session.user.officeLongitude = token.officeLongitude as number;
+        session.user.insurances = token.insurances as string[];
+        session.user.services = token.services as string[];
+        session.user.paymentMethods = token.paymentMethods as string[];
       }
 
       if (session.user) {
@@ -77,6 +80,10 @@ export const {
         session.user.city = token.city as string;
         session.user.state = token.state as string;
         session.user.postalCode = token.postalCode as string;
+        session.user.receiveEmailNotifications =
+          token.receiveEmailNotifications as boolean;
+        session.user.receiveSmsNotifications =
+          token.receiveSmsNotifications as boolean;
       }
 
       return session;
@@ -98,6 +105,9 @@ export const {
         token.officeAddress = existingHealthcareProvider.officeAddress;
         token.officeLatitude = existingHealthcareProvider.officeLatitude;
         token.officeLongitude = existingHealthcareProvider.officeLongitude;
+        token.insurances = existingHealthcareProvider.insurances;
+        token.services = existingHealthcareProvider.services;
+        token.paymentMethods = existingHealthcareProvider.paymentMethods;
       }
 
       if (!existingUser) return token;
@@ -114,6 +124,8 @@ export const {
       token.image = existingUser.image;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+      token.receiveEmailNotifications = existingUser.receiveEmailNotifications;
+      token.receiveSmsNotifications = existingUser.receiveSmsNotifications;
 
       if (trigger === "update") {
         return { ...token, ...session.user };

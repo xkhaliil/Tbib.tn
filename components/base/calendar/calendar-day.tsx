@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import Link from "next/link";
 import { createAbsence, deleteAbsence } from "@/actions/absence";
 import { cancelAppointment } from "@/actions/appointment";
 import { CreateAbsenceSchemaType } from "@/schemas";
@@ -16,6 +17,7 @@ import {
   StopwatchIcon,
 } from "@radix-ui/react-icons";
 import {
+  addHours,
   format,
   getDay,
   getWeeksInMonth,
@@ -147,11 +149,7 @@ export function CalendarDay({
         <DropdownMenu>
           <DropdownMenuTrigger
             asChild
-            disabled={
-              isBefore(day, startOfToday()) ||
-              isClosed() ||
-              absences?.some((absence) => isSameDay(absence.date, day))
-            }
+            disabled={isBefore(day, startOfToday()) || isClosed()}
           >
             <button
               type="button"
@@ -168,7 +166,7 @@ export function CalendarDay({
                   "text-muted-foreground",
                 isEqual(day, selectedDay) &&
                   isToday(day) &&
-                  "border-none bg-primary data-[state=open]:bg-primary",
+                  "border-none bg-blue-600 data-[state=open]:bg-blue-600",
                 !isEqual(day, selectedDay) &&
                   !isToday(day) &&
                   "data-[state=open]:bg-muted",
@@ -203,11 +201,6 @@ export function CalendarDay({
                   onClick={() => handleMarkAsAbsence({ date: day })}
                 >
                   Mark as absence
-                </DropdownMenuItem>
-              )}
-              {!absences?.some((absence) => isSameDay(absence.date, day)) && (
-                <DropdownMenuItem className="text-xs">
-                  Add Appointment
                 </DropdownMenuItem>
               )}
             </DropdownMenuGroup>
@@ -301,7 +294,7 @@ function AppointmentPopover({
     patientId: string | undefined,
   ) => {
     startTransition(() => {
-      cancelAppointment(appointmentId, patientId)
+      cancelAppointment(appointmentId)
         .then(() => {
           toast.success("Appointment cancelled successfully.");
         })
@@ -360,7 +353,7 @@ function AppointmentPopover({
             <div className="flex items-center gap-x-2">
               <CalendarIcon className="h-4 w-4 text-muted-foreground" />
               <p className="text-xs text-muted-foreground">
-                {format(appointment?.date!, "EE, MMMM dd,")} from{" "}
+                {format(appointment?.date!, "EEEE, MMMM dd,")} from{" "}
                 {format(appointment?.startTime!, "HH:mm")} to{" "}
                 {format(appointment?.endTime!, "HH:mm")}
               </p>
@@ -425,8 +418,12 @@ function AppointmentPopover({
               </div>
             </div>
 
-            <Button variant="outline" size="smallIcon">
-              <ArrowRightIcon className="h-4 w-4 text-muted-foreground" />
+            <Button variant="outline" size="smallIcon" asChild>
+              <Link
+                href={`/hp/dashboard/patients/patient/${appointment?.patientId}`}
+              >
+                <ArrowRightIcon className="h-4 w-4 text-muted-foreground" />
+              </Link>
             </Button>
           </div>
         </PopoverContent>

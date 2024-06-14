@@ -76,13 +76,7 @@ export default function ApproveCard({
 
   const handleVerify = (id: string) => {
     startTransition(() => {
-      verifyHealthcareProvider(
-        id,
-        healthcareProviderEmail,
-        "oladoc-customer-service",
-        "Your Oladoc pro account is now verified!",
-        healthcareProviderName,
-      ).then(async (data) => {
+      verifyHealthcareProvider(id).then(async (data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -114,7 +108,7 @@ export default function ApproveCard({
       });
     });
   };
-  
+
   return (
     <form className="grid w-full items-start gap-6">
       <fieldset className="grid gap-6 rounded-lg border p-4">

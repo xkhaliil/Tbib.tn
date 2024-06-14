@@ -106,7 +106,9 @@ export async function Profile({ healthcareProvider }: ProfileProps) {
             <TabsContent value="overview">
               <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-4 lg:gap-8">
                 <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                  <PricingAndRefundsCard />
+                  <PricingAndRefundsCard
+                    healthcareProvider={healthcareProvider}
+                  />
                 </div>
 
                 <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
@@ -147,7 +149,9 @@ export async function Profile({ healthcareProvider }: ProfileProps) {
             </TabsContent>
             <TabsContent value="pricing">
               <div className="flex flex-col gap-4">
-                <PricingAndRefundsCard />
+                <PricingAndRefundsCard
+                  healthcareProvider={healthcareProvider}
+                />
                 <PaymentsMethodsCard healthcareProvider={healthcareProvider} />
               </div>
             </TabsContent>

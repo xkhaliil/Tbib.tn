@@ -5,8 +5,14 @@ import { fetchTodayAppointments } from "@/actions/appointment";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
-export async function TodayAppointmentsDataTable() {
-  const todayAppointments = await fetchTodayAppointments();
+interface TodayAppointmentsDataTableProps {
+  healthCareCenterId?: string;
+}
+
+export async function TodayAppointmentsDataTable({
+  healthCareCenterId,
+}: TodayAppointmentsDataTableProps) {
+  const todayAppointments = await fetchTodayAppointments(healthCareCenterId);
 
   console.log(todayAppointments);
 

@@ -10,8 +10,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export async function TodayAppointmentsCard() {
-  const todayAppointments = await fetchTodayAppointments();
+interface TodayAppointmentsCardProps {
+  healthCareCenterId?: string;
+}
+
+export async function TodayAppointmentsCard({
+  healthCareCenterId,
+}: TodayAppointmentsCardProps) {
+  const todayAppointments = await fetchTodayAppointments(healthCareCenterId);
   return (
     <Card>
       <CardHeader className="pb-2">

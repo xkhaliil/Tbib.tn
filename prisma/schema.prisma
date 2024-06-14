@@ -66,9 +66,11 @@ model User {
   password      String?
   role          Role
 
-  accounts              Account[]
-  isTwoFactorEnabled    Boolean                    @default(false)
-  twoFactorConfirmation TwoFactorAuthConfirmation?
+  accounts                  Account[]
+  isTwoFactorEnabled        Boolean                    @default(false)
+  receiveEmailNotifications Boolean                    @default(true)
+  receiveSmsNotifications   Boolean                    @default(false)
+  twoFactorConfirmation     TwoFactorAuthConfirmation?
 
   patient            Patient?
   healthCareProvider HealthCareProvider?
@@ -354,13 +356,13 @@ model Message {
 }
 
 model Notification {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String?
-  type        NotificationType
-  date        DateTime         @default(now())
-  read        Boolean          @default(false)
-  archived    Boolean          @default(false)
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  description        String?
+  type               NotificationType
+  date               DateTime         @default(now())
+  read               Boolean          @default(false)
+  archived           Boolean          @default(false)
   healthCareCenterId String?
 
   userId String @db.ObjectId

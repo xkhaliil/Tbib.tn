@@ -7,41 +7,30 @@ import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actio
 import { deleteReview } from "@/actions/review";
 import Rating from "@mui/material/Rating";
 import { format } from "date-fns";
-import { Trash2Icon } from "lucide-react";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 
 import { AddReview } from "./add-review";
-import { UpdateReview } from "./update-review";
 
 type ReviewscardProps = {
   healthcareProvider: Awaited<
     ReturnType<typeof getHealthCareProviderUserAndOpeningHoursAndAbsencesById>
   >;
   patient: Awaited<ReturnType<typeof getPatientByUserId>>;
-  HaveConsultation: boolean;
 };
 
-export function Reviewscard({
-  healthcareProvider,
-  patient,
-  HaveConsultation,
-}: ReviewscardProps) {
+export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
+  const [isPending, startTransition] = React.useTransition();
+  const authenticatedUser = useCurrentUser();
+
   const calculateAverageRating = () => {
     if (healthcareProvider?.reviews) {
       const total = healthcareProvider.reviews.length || 1;
@@ -54,12 +43,25 @@ export function Reviewscard({
     }
     return 0;
   };
+
   const getPercentageByRating = (rating: number) => {
     const total = healthcareProvider?.reviews?.length || 1;
     const ratingCount = healthcareProvider?.reviews?.filter(
-      (review) => Math.floor(review.rating) === rating,
+      (review) => review.rating === rating,
     ).length;
     return ((ratingCount || 0) / total) * 100;
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    startTransition(() => {
+      deleteReview(reviewId)
+        .then(() => {
+          toast.success("Review deleted successfully");
+        })
+        .catch(() => {
+          toast.error("Failed to delete review");
+        });
+    });
   };
   return (
     <>
@@ -82,8 +84,7 @@ export function Reviewscard({
               </div>
               <AddReview
                 healthcareProvider={healthcareProvider}
-                HaveConsultation={HaveConsultation}
-                Patient={patient}
+                patient={patient}
               />
             </div>
             <Separator orientation="vertical" className="mx-10 h-40" />
@@ -211,49 +212,27 @@ export function Reviewscard({
               </div>
 
               <div className="min-w-0 flex-1 space-y-4 sm:mt-0">
-                {patient?.id === review.patientId ? (
-                  <div className="flex items-center justify-end gap-2">
-                    {" "}
-                    <UpdateReview
-                      healthcareProvider={healthcareProvider}
-                      review={review}
-                    />
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="icon">
+                {authenticatedUser &&
+                  authenticatedUser?.id === review.patient.userId && (
+                    <div className="flex items-center justify-end gap-2">
+                      <Button variant="blue" size="icon">
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleDeleteReview(review.id)}
+                        disabled={isPending}
+                      >
+                        {isPending ? (
+                          <Spinner />
+                        ) : (
                           <Trash2Icon className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your review.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="mt-2"
-                            onClick={() => {
-                              deleteReview(
-                                review.id,
-                                healthcareProvider.id,
-                              ).then(() => {
-                                toast.success("Your review has been deleted");
-                              });
-                            }}
-                          >
-                            Yes, delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                ) : null}
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
                 <p className="text-base font-normal text-muted-foreground">
                   {review.comment}
                 </p>
