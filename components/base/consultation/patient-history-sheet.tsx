@@ -2,6 +2,8 @@
 
 import React from "react";
 
+import Image from "next/image";
+import Link from "next/link";
 import {
   getPatientConsultationsWithHealthcareProvider,
   getPatientDocuments,
@@ -25,12 +27,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface PatientHistorySheetProps {
   consultations: Awaited<
@@ -60,6 +56,26 @@ export function PatientHistorySheet({
         </SheetHeader>
 
         <div className="mt-8 grid gap-4">
+          {consultations?.length === 0 && medicalDocuments?.length === 0 && (
+            <div className="flex flex-col rounded-xl border bg-muted/40 p-8 pt-0">
+              <Image
+                src="/empty-folder.svg"
+                alt="Empty"
+                width="1000"
+                height="1000"
+                className="mx-auto h-48 w-48"
+              />
+              <div className="flex flex-col">
+                <h1 className="text-center text-lg font-semibold tracking-tight">
+                  No history or medical records found
+                </h1>
+                <p className="text-center text-sm text-muted-foreground">
+                  The patient has no consultations or medical documents.
+                </p>
+              </div>
+            </div>
+          )}
+
           {consultations?.map((consultation) => (
             <div key={consultation.id} className="space-y-2.5">
               <h1 className="text-sm font-semibold tracking-tight text-muted-foreground">
@@ -75,8 +91,12 @@ export function PatientHistorySheet({
                       Consultation
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    View Details
+                  <Button variant="outline" size="sm" asChild>
+                    <Link
+                      href={`/hp/dashboard/consultations/existing-consultation/${consultation.id}`}
+                    >
+                      View Details
+                    </Link>
                   </Button>
                 </div>
 
@@ -92,7 +112,8 @@ export function PatientHistorySheet({
             </div>
           ))}
 
-          <Separator />
+          {(medicalDocuments?.length ?? 0) > 0 &&
+            (consultations?.length ?? 0) > 0 && <Separator />}
 
           {medicalDocuments?.map((document) => (
             <div key={document.id} className="space-y-2.5">
@@ -110,24 +131,15 @@ export function PatientHistorySheet({
                     </p>
                   </div>
 
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => {
-                            window.open(document.url, "_blank");
-                          }}
-                        >
-                          <DownloadIcon className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" align="center">
-                        <span>Download</span>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      window.open(document.url, "_blank");
+                    }}
+                  >
+                    <DownloadIcon className="h-4 w-4" />
+                  </Button>
                 </div>
 
                 <div className="mt-2">

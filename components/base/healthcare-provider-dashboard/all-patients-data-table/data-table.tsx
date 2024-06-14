@@ -18,6 +18,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { StethoscopeIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -107,6 +108,16 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {table.getRowModel().rows.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  className="p-6 text-center text-muted-foreground"
+                >
+                  No patients found.
+                </TableCell>
+              </TableRow>
+            )}
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.original?.id}>
                 <TableCell className="hidden sm:table-cell">
@@ -135,6 +146,16 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps) {
                 <TableCell className="hidden md:table-cell">
                   {row.original?.user.city}, {row.original?.user.state}{" "}
                   {row.original?.user.postalCode}
+                </TableCell>
+                <TableCell>
+                  <Button variant="info" size="sm" asChild>
+                    <Link
+                      href={`/hp/dashboard/consultations/patient/${row.original?.id}`}
+                    >
+                      <StethoscopeIcon className="mr-2 h-4 w-4" />
+                      View Consultations
+                    </Link>
+                  </Button>
                 </TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" asChild>

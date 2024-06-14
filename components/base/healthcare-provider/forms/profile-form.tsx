@@ -3,7 +3,13 @@
 import React from "react";
 
 import { settings } from "@/actions/healthcare-provider";
-import { languages, specialties } from "@/constants";
+import {
+  healthcareServices,
+  insuranceCompanies,
+  languages,
+  paymentMethods,
+  specialties,
+} from "@/constants";
 import {
   ManageHealthcareProviderProfileSchema,
   ManageHealthcareProviderProfileSchemaType,
@@ -72,6 +78,9 @@ export function ProfileForm() {
       state: user?.state || "",
       city: user?.city || "",
       postalCode: user?.postalCode || "",
+      insurances: user?.insurances || [],
+      services: user?.services || [],
+      paymentMethods: user?.paymentMethods || [],
     },
   });
 
@@ -94,6 +103,9 @@ export function ProfileForm() {
         state: manageProfileForm.getValues("state"),
         city: manageProfileForm.getValues("city"),
         postalCode: manageProfileForm.getValues("postalCode"),
+        insurances: manageProfileForm.getValues("insurances"),
+        services: manageProfileForm.getValues("services"),
+        paymentMethods: manageProfileForm.getValues("paymentMethods"),
       },
     });
   }
@@ -414,7 +426,7 @@ export function ProfileForm() {
             />
           </div>
 
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-3">
             <FormField
               control={manageProfileForm.control}
               name="spokenLanguages"
@@ -435,7 +447,71 @@ export function ProfileForm() {
             />
           </div>
 
-          <div className="sm:col-span-4">
+          <div className="sm:col-span-3">
+            <FormField
+              control={manageProfileForm.control}
+              name="insurances"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Insurances</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      selected={field.value!}
+                      options={insuranceCompanies}
+                      {...field}
+                      placeholder="Select insurances"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="sm:col-span-3">
+            <FormField
+              control={manageProfileForm.control}
+              name="services"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Services</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      selected={field.value!}
+                      options={healthcareServices}
+                      {...field}
+                      placeholder="Select services"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="sm:col-span-3">
+            <FormField
+              control={manageProfileForm.control}
+              name="paymentMethods"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Payment Methods</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      selected={field.value!}
+                      options={paymentMethods}
+                      {...field}
+                      placeholder="Select payment methods"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="space-y-2 sm:col-span-6">
+            <FormLabel>Office Location</FormLabel>
             <MapClient
               center={[
                 user?.officeLatitude || 36.4,

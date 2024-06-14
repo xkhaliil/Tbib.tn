@@ -5,8 +5,15 @@ import { fetchMonthlyAppointments } from "@/actions/appointment";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
-export async function MonthlyAppointmentsDataTable() {
-  const monthlyAppointments = await fetchMonthlyAppointments();
+interface MonthlyAppointmentsDataTableProps {
+  healthCareCenterId?: string;
+}
+
+export async function MonthlyAppointmentsDataTable({
+  healthCareCenterId,
+}: MonthlyAppointmentsDataTableProps) {
+  const monthlyAppointments =
+    await fetchMonthlyAppointments(healthCareCenterId);
 
   if (!monthlyAppointments) {
     return null;

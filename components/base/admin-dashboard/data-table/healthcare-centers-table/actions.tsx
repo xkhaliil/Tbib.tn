@@ -47,13 +47,7 @@ export function HealthcareCentersDataTableActions({
 
   const handleVerify = (id: string) => {
     startTransition(() => {
-      verifyHealthcareCenter(
-        id,
-        healthcareCenterEmail,
-        "oladoc-customer-service",
-        "From Oladoc customer service team!",
-        healthcareCenterName,
-      ).then((data) => {
+      verifyHealthcareCenter(id).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -67,13 +61,7 @@ export function HealthcareCentersDataTableActions({
 
   const handleDelete = (id: string) => {
     startTransition(() => {
-      deleteHealthcareCenter(
-        id,
-        healthcareCenterEmail,
-        "oladoc-customer-service",
-        "From Oladoc customer service team!",
-        healthcareCenterName,
-      ).then((data) => {
+      deleteHealthcareCenter(id).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -103,7 +91,7 @@ export function HealthcareCentersDataTableActions({
         variant="green"
         className="gap-1"
         onClick={() => handleVerify(healthcareCenter.id)}
-        disabled={isPending || healthcareCenter.accountVerified}
+        disabled={isPending || !!healthcareCenter.user.emailVerified}
       >
         {isPending ? <Spinner /> : <CheckIcon className="h-4 w-4" />}
         <span>Verify</span>

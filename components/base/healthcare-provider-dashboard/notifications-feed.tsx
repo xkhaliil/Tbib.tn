@@ -15,6 +15,7 @@ import {
   BellIcon,
   CheckCheckIcon,
   ClockIcon,
+  EyeIcon,
   MailboxIcon,
   StarIcon,
   XIcon,
@@ -225,7 +226,7 @@ export function NotificationsFeed({
                       }
                       disabled={isPending}
                     >
-                      <CheckCheckIcon className="h-4 w-4" />
+                      <EyeIcon className="h-4 w-4" />
                     </Button>
                   )}
                   {notification.type === NotificationType.INVITATION && (
@@ -320,7 +321,7 @@ export function NotificationsFeed({
                   >
                     <ArchiveIcon className="h-4 w-4" />
                   </Button>
-                  {!notification.healthCareCenterId && (
+                  {notification.healthCareCenterId && (
                     <Button
                       variant="green"
                       size="icon"

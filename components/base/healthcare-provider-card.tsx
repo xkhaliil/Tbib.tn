@@ -189,7 +189,7 @@ export function HealthcareProviderCard({
           </p>
         </div>
 
-        <div className="mt-6 flex flex-col space-y-2.5">
+        <div className="mt-auto flex flex-col space-y-2.5">
           <Button size="lg" variant="outline" asChild>
             <Link href={`/hp/profile/${healthcareProvider.id}`}>
               View Profile
@@ -253,7 +253,7 @@ export function HealthcareProviderCard({
                   ) &&
                     "cursor-not-allowed bg-[url('/images/pattern.png')] bg-cover",
                   isClosed(dayIdx) &&
-                    "cursor-not-allowed bg-rose-400 text-white hover:bg-rose-400",
+                    "cursor-not-allowed bg-rose-200 text-white hover:bg-rose-200",
                   isBefore(day, startOfToday()) &&
                     "cursor-not-allowed opacity-50",
                   "mx-auto flex h-10 w-10 items-center justify-center rounded",

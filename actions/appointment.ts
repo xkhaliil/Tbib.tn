@@ -11,6 +11,10 @@ import { AppointmentStatus, NotificationType } from "@prisma/client";
 import { addHours, format, setDay, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
+import {
+  sendCancelledAppointmentToPatientEmail,
+  sendCancelledAppointmentToPatientsEmails,
+} from "@/lib/mail";
 import { pusherServer } from "@/lib/pusher";
 
 import { getCurrentSession } from "./auth";
@@ -234,14 +238,11 @@ export async function getAllAppointmentsByDate(date: Date) {
   }
 }
 
-export async function cancelAppointment(
-  id: string | undefined,
-  patientId: string | undefined,
-) {
+export async function cancelAppointment(id: string | undefined) {
   try {
     const existingAppointment = await getAppointmentById(id);
 
-    const patient = await getPatientById(patientId);
+    const patient = await getPatientById(existingAppointment?.patientId);
 
     const healthcareProvider = await db.healthCareProvider.findFirst({
       where: {
@@ -280,6 +281,14 @@ export async function cancelAppointment(
       notification,
     );
 
+    if (patient?.user.receiveEmailNotifications) {
+      await sendCancelledAppointmentToPatientEmail(
+        patient,
+        healthcareProvider,
+        existingAppointment,
+      );
+    }
+
     revalidatePath("/calendar");
 
     return { success: "Appointment cancelled successfully." };
@@ -290,26 +299,96 @@ export async function cancelAppointment(
 
 export async function cancelAllAppointments(ids: (string | undefined)[]) {
   try {
-    for (const id of ids || []) {
-      await db.appointment.update({
-        where: {
-          id,
+    const validIds = ids.filter((id) => id !== undefined);
+
+    const existingAppointments = await db.appointment.findMany({
+      where: {
+        id: { in: validIds },
+      },
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
         },
-        data: {
-          status: AppointmentStatus.CANCELLED,
+      },
+    });
+
+    await db.appointment.updateMany({
+      where: {
+        id: { in: validIds },
+      },
+      data: {
+        status: AppointmentStatus.CANCELLED,
+      },
+    });
+
+    if (existingAppointments.length === 0) {
+      return { error: "No appointments found to cancel." };
+    }
+
+    const healthcareProvider = await db.healthCareProvider.findFirst({
+      where: {
+        id: existingAppointments[0]?.healthCareProviderId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    const notificationsData = existingAppointments.map((appointment) => ({
+      title: `Appointment Cancelled`,
+      description: `Your appointment with Dr. ${healthcareProvider?.user?.name} on ${format(
+        appointment.date || new Date(),
+        "EEEE, MMMM do, yyyy",
+      )} has been cancelled.`,
+      type: NotificationType.APPOINTMENT_CANCELLED,
+      date: new Date(),
+      userId: appointment.patient?.userId || "",
+    }));
+
+    await db.notification.createMany({
+      data: notificationsData,
+    });
+
+    const patients = existingAppointments.map(
+      (appointment) => appointment.patient,
+    );
+
+    for (const patient of patients) {
+      await pusherServer.trigger(
+        `notifications-patient-${patient.id}`,
+        "new-notification",
+        {
+          title: "Appointment Cancelled",
+          description: `Your appointment with Dr. ${healthcareProvider?.user?.name} on ${format(
+            existingAppointments[0].date || new Date(),
+            "EEEE, MMMM do, yyyy",
+          )} has been cancelled.`,
         },
-      });
+      );
+
+      if (patient.user.receiveEmailNotifications) {
+        await sendCancelledAppointmentToPatientsEmails(
+          [patient],
+          healthcareProvider,
+          existingAppointments,
+        );
+      }
     }
 
     revalidatePath("/calendar");
 
     return { success: "Appointments canceled successfully." };
   } catch (error) {
-    console.error(error);
+    console.error("Error canceling appointments:", error);
+    return { error: "An error occurred while canceling appointments." };
   }
 }
 
-export async function fetchTodayAppointments() {
+export async function fetchTodayAppointments(
+  healthCareCenterId: string | undefined,
+) {
   try {
     const appointments = await db.appointment.findMany({
       where: {
@@ -317,6 +396,9 @@ export async function fetchTodayAppointments() {
         status: {
           notIn: [AppointmentStatus.EXPIRED],
         },
+        healthCareProvider: {
+          healthCareCenterId: healthCareCenterId,
+        },
       },
       include: {
         healthCareProvider: {
@@ -338,39 +420,20 @@ export async function fetchTodayAppointments() {
   }
 }
 
-export async function fetchWeeklyAppointments() {
+export async function fetchWeeklyAppointments(
+  healthCareCenterId: string | undefined,
+) {
   try {
     const appointments = await db.appointment.findMany({
-      include: {
-        healthCareProvider: {
-          include: {
-            user: true,
-          },
-        },
-        patient: {
-          include: {
-            user: true,
-          },
-        },
-      },
-
       where: {
         date: {
-          gte: addHours(startOfToday(), 1),
+          gte: setDay(startOfToday(), 0),
           lte: setDay(startOfToday(), 6),
         },
+        healthCareProvider: {
+          healthCareCenterId,
+        },
       },
-    });
-
-    return appointments;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function fetchMonthlyAppointments() {
-  try {
-    const appointments = await db.appointment.findMany({
       include: {
         healthCareProvider: {
           include: {
@@ -383,11 +446,38 @@ export async function fetchMonthlyAppointments() {
           },
         },
       },
+    });
 
+    return appointments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function fetchMonthlyAppointments(
+  healthCareCenterId: string | undefined,
+) {
+  try {
+    const appointments = await db.appointment.findMany({
       where: {
         date: {
           gte: addHours(startOfToday(), 1),
           lte: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+        },
+        healthCareProvider: {
+          healthCareCenterId,
+        },
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        patient: {
+          include: {
+            user: true,
+          },
         },
       },
     });

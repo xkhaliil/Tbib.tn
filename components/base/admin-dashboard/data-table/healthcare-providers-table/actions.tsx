@@ -42,17 +42,10 @@ export function HealthcareProvidersDataTableActions({
 }: HealthcareProvidersDataTableActionsProps) {
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
-  const healthcareProviderEmail = healthcareProvider!.user.email;
-  const healthcareProviderName = healthcareProvider!.user.name;
+
   const handleVerify = (id: string) => {
     startTransition(() => {
-      verifyHealthcareProvider(
-        id,
-        healthcareProviderEmail,
-        "oladoc-customer-service",
-        "Your oladoc pro account is now verified!",
-        healthcareProviderName,
-      ).then(async (data) => {
+      verifyHealthcareProvider(id).then(async (data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -66,13 +59,7 @@ export function HealthcareProvidersDataTableActions({
 
   const handleDelete = (id: string) => {
     startTransition(() => {
-      deleteHealthcareProvider(
-        id,
-        healthcareProviderEmail,
-        "oladoc-customer-service",
-        "Your oladoc pro account has been deleted!",
-        healthcareProviderName,
-      ).then((data) => {
+      deleteHealthcareProvider(id).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -102,7 +89,7 @@ export function HealthcareProvidersDataTableActions({
         variant="green"
         className="gap-1"
         onClick={() => handleVerify(healthcareProvider.id)}
-        disabled={isPending || healthcareProvider.accountVerified}
+        disabled={isPending || !!healthcareProvider.user.emailVerified}
       >
         {isPending ? <Spinner /> : <CheckIcon className="h-4 w-4" />}
         <span>Verify</span>

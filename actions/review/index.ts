@@ -65,3 +65,19 @@ export async function addNewReview(
     console.error(error);
   }
 }
+
+export async function deleteReview(reviewId: string) {
+  try {
+    const review = await db.review.delete({
+      where: {
+        id: reviewId,
+      },
+    });
+
+    revalidatePath(`/hp/profile/${review.healthCareProviderId}`);
+
+    return review;
+  } catch (error) {
+    console.error(error);
+  }
+}

@@ -371,7 +371,7 @@ export function BackgroundInfoForm({
 
         <Card className="flex flex-col gap-2 p-6 shadow-none">
           <div className="flex flex-col pb-3">
-            <h1 className="font-semibold">Allegeries</h1>
+            <h1 className="font-semibold">Allergies</h1>
             <p className="text-sm text-muted-foreground">
               List all the allergies the patient has.
             </p>

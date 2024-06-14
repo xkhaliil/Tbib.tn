@@ -192,3 +192,34 @@ export async function saveConsultation(
     return { error: "An error occurred while saving the consultation" };
   }
 }
+
+export async function getConsultationById(consultationId: string) {
+  try {
+    const consultation = await db.consultation.findUnique({
+      where: {
+        id: consultationId,
+      },
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+        prescriptions: {
+          include: {
+            medications: true,
+          },
+        },
+      },
+    });
+
+    return consultation;
+  } catch (error) {
+    console.error(error);
+  }
+}

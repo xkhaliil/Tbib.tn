@@ -11,11 +11,7 @@ import {
 } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PrescriptionType } from "@prisma/client";
-import {
-  CalendarIcon,
-  DotsHorizontalIcon,
-  PlusCircledIcon,
-} from "@radix-ui/react-icons";
+import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, isBefore, startOfToday } from "date-fns";
 import {
   BoneIcon,
@@ -39,18 +35,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -100,7 +86,7 @@ export function CreateConsultationForm({
 
   let treatmentPlanFormContent = null;
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "prescription.medications",
     control: createConsultationForm.control,
   });
@@ -167,6 +153,18 @@ export function CreateConsultationForm({
                           disabled={isPending}
                         >
                           Add Medication
+                        </Button>
+                      )}
+
+                      {index !== fields.length - 1 && (
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => remove(index)}
+                          className="col-span-1 text-xs"
+                          disabled={isPending}
+                        >
+                          Remove
                         </Button>
                       )}
                     </div>
@@ -774,33 +772,13 @@ export function CreateConsultationForm({
               }
             />
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="flex cursor-pointer items-center justify-center rounded-lg border p-3.5 transition-all duration-300 ease-in-out hover:bg-muted">
-                  <div className="flex flex-col items-center gap-2">
-                    <DotsHorizontalIcon className="h-5 w-5 text-muted-foreground" />
-                    <p className="text-center text-xs font-semibold">More</p>
-                  </div>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs">
-                    Treatment Plans
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="flex items-center gap-2"
-                    onClick={() => {
-                      setPrescriptionType(PrescriptionType.PARAMEDICAL_ACT);
-                    }}
-                  >
-                    <FaBandage className="h-5 w-5 text-muted-foreground" />
-                    Paramedical Prescription
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <PrescriptionTypeButton
+              prescriptionType={PrescriptionType.PARAMEDICAL_ACT}
+              setPrescriptionType={setPrescriptionType}
+              icon={FaBandage}
+              title="Paramedical Act"
+              selected={prescriptionType === PrescriptionType.PARAMEDICAL_ACT}
+            />
           </div>
 
           <Form {...createConsultationForm}>

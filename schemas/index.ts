@@ -208,6 +208,8 @@ export const ManageAccountSchema = z
         .min(6, { message: "New password must be at least 6 characters long" }),
     ),
     isTwoFactorEnabled: z.optional(z.boolean()),
+    receiveEmailNotifications: z.optional(z.boolean()),
+    receiveSmsNotifications: z.optional(z.boolean()),
   })
   .refine(
     (data) => {
@@ -407,6 +409,11 @@ export const ManageHealthcareProviderProfileSchema = z
     state: z.optional(z.string()),
     city: z.optional(z.string()),
     postalCode: z.optional(z.string()),
+    insurances: z.optional(z.array(z.string())),
+    services: z.optional(z.array(z.string())),
+    paymentMethods: z.optional(z.array(z.string())),
+    receiveEmailNotifications: z.optional(z.boolean()),
+    receiveSmsNotifications: z.optional(z.boolean()),
   })
   .refine(
     (data) => {

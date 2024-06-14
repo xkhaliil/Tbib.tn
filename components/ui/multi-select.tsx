@@ -58,32 +58,64 @@ function MultiSelect({
           onClick={() => setOpen(!open)}
         >
           <div className="flex flex-wrap gap-1">
-            {selected.map((item) => (
-              <Badge
-                variant="secondary"
-                key={item}
-                className="mr-1"
-                onClick={() => handleUnselect(item)}
-              >
-                {item}
-                <button
-                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleUnselect(item);
-                    }
-                  }}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
+            {selected.length > 2 ? (
+              <>
+                {selected.slice(0, 2).map((item) => (
+                  <Badge
+                    variant="secondary"
+                    key={item}
+                    className="mr-1"
+                    onClick={() => handleUnselect(item)}
+                  >
+                    {item}
+                    <button
+                      className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleUnselect(item);
+                        }
+                      }}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onClick={() => handleUnselect(item)}
+                    >
+                      <Cross2Icon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                    </button>
+                  </Badge>
+                ))}
+                <Badge className="flex items-center gap-1" variant="secondary">
+                  <span>+{selected.length - 2} more</span>
+                </Badge>
+              </>
+            ) : (
+              selected.map((item) => (
+                <Badge
+                  variant="secondary"
+                  key={item}
+                  className="mr-1"
                   onClick={() => handleUnselect(item)}
                 >
-                  <Cross2Icon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                </button>
-              </Badge>
-            ))}
-
+                  {item}
+                  <button
+                    className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleUnselect(item);
+                      }
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onClick={() => handleUnselect(item)}
+                  >
+                    <Cross2Icon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                  </button>
+                </Badge>
+              ))
+            )}
             {selected.length === 0 && (
               <span className="text-muted-foreground">
                 {placeholder || "Select"}
@@ -93,7 +125,7 @@ function MultiSelect({
           <CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+      <PopoverContent className="z-[9999] w-[--radix-popover-trigger-width] p-0">
         <Command className={className}>
           <CommandInput placeholder="Search ..." />
           <CommandEmpty>No item found.</CommandEmpty>

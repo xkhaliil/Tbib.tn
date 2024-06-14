@@ -1,5 +1,7 @@
 import React from "react";
 
+import { getPatientByUserId } from "@/actions/auth";
+import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
 import { addNewReview } from "@/actions/review";
 import { AddNewReviewSchema, AddNewReviewSchemaType } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +15,8 @@ import {
 } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -53,17 +57,14 @@ function getLabelText(value: number) {
 }
 
 type AddReviewProps = {
-  healthcareProvider:
-    | (HealthCareProvider & {
-        user: User;
-      } & {
-        openingHours: OpeningHours[];
-      } & {
-        absences: Absence[];
-      })
-    | null;
+  healthcareProvider: Awaited<
+    ReturnType<typeof getHealthCareProviderUserAndOpeningHoursAndAbsencesById>
+  >;
+  patient: Awaited<ReturnType<typeof getPatientByUserId>>;
 };
-export function AddReview({ healthcareProvider }: AddReviewProps) {
+
+export function AddReview({ healthcareProvider, patient }: AddReviewProps) {
+  const [open, setOpen] = React.useState<boolean>(false);
   const [isPending, startTransition] = React.useTransition();
   const [hover, setHover] = React.useState(-1);
 
@@ -79,14 +80,25 @@ export function AddReview({ healthcareProvider }: AddReviewProps) {
     startTransition(() => {
       addNewReview(healthcareProvider?.id || "", data).then(() => {
         addNewReviewForm.reset();
+        setOpen(false);
         toast.success("Review added successfully!");
       });
     });
   };
 
+  const patientHasAtLeastOneConsultationWithHealthcareProvider =
+    healthcareProvider?.consultations?.some(
+      (consultation) => consultation.patientId === patient?.id,
+    );
+
   return (
-    <div>
-      <Dialog>
+    <div
+      className={cn(
+        !patientHasAtLeastOneConsultationWithHealthcareProvider &&
+          "hidden opacity-0",
+      )}
+    >
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="blue" className="mt-3">
             Add review

@@ -53,7 +53,11 @@ export function CurrentMedicationsForm({
               </div>
             ))
           ) : (
-            <p className="text-muted-foreground">No medications</p>
+            <div className="w-full rounded-xl border p-4">
+              <p className="text-center text-sm text-muted-foreground">
+                No medications
+              </p>
+            </div>
           )}
         </div>
       </CardContent>

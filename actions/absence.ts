@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { CreateAbsenceSchema, CreateAbsenceSchemaType } from "@/schemas";
 import { AppointmentStatus } from "@prisma/client";
+import { addHours } from "date-fns";
 
 import { db } from "@/lib/db";
 
@@ -33,7 +34,9 @@ export async function createAbsence(values: CreateAbsenceSchemaType) {
       },
     });
 
-    const appointments = await getAllAppointmentsByDate(values.date);
+    const parsedDate = addHours(values.date, 1);
+
+    const appointments = await getAllAppointmentsByDate(parsedDate);
 
     if (appointments) {
       if (appointments.length > 0) {
@@ -59,11 +62,9 @@ export async function createAbsence(values: CreateAbsenceSchemaType) {
       return { error: "Invalid fields!" };
     }
 
-    const { date } = validatedFields.data;
-
     await db.absence.create({
       data: {
-        date,
+        date: parsedDate,
         healthCareProvider: {
           connect: {
             id: healthCareProvider?.id,
@@ -82,9 +83,11 @@ export async function createAbsence(values: CreateAbsenceSchemaType) {
 
 export async function deleteAbsence(date: Date) {
   try {
+    const parsedDate = addHours(date, 1);
+
     await db.absence.delete({
       where: {
-        date,
+        date: parsedDate,
       },
     });
 

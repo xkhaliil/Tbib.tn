@@ -48,7 +48,10 @@ export function DocumentsUploadDropzone({
       {({ getRootProps, getInputProps, acceptedFiles }) => (
         <div
           {...getRootProps()}
-          className="h-48 rounded-lg border border-dashed border-gray-300"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className="h-64 rounded-lg border border-dashed border-gray-300"
         >
           <div className="flex h-full w-full items-center justify-center">
             <label

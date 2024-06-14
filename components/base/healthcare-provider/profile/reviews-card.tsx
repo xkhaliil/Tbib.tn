@@ -4,14 +4,19 @@ import React from "react";
 
 import { getPatientByUserId } from "@/actions/auth";
 import { getHealthCareProviderUserAndOpeningHoursAndAbsencesById } from "@/actions/healthcare-provider";
+import { deleteReview } from "@/actions/review";
 import Rating from "@mui/material/Rating";
 import { format } from "date-fns";
 import { PencilIcon, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
+
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 
 import { AddReview } from "./add-review";
 
@@ -23,6 +28,9 @@ type ReviewscardProps = {
 };
 
 export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
+  const [isPending, startTransition] = React.useTransition();
+  const authenticatedUser = useCurrentUser();
+
   const calculateAverageRating = () => {
     if (healthcareProvider?.reviews) {
       const total = healthcareProvider.reviews.length || 1;
@@ -43,6 +51,18 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
     ).length;
     return ((ratingCount || 0) / total) * 100;
   };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    startTransition(() => {
+      deleteReview(reviewId)
+        .then(() => {
+          toast.success("Review deleted successfully");
+        })
+        .catch(() => {
+          toast.error("Failed to delete review");
+        });
+    });
+  };
   return (
     <>
       <section>
@@ -62,7 +82,10 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
               <div className="mt-2 text-sm font-light">
                 {healthcareProvider?.reviews.length} reviews
               </div>
-              <AddReview healthcareProvider={healthcareProvider} />
+              <AddReview
+                healthcareProvider={healthcareProvider}
+                patient={patient}
+              />
             </div>
             <Separator orientation="vertical" className="mx-10 h-40" />
             <div className="flex w-full flex-1 flex-col">
@@ -189,16 +212,27 @@ export function Reviewscard({ healthcareProvider, patient }: ReviewscardProps) {
               </div>
 
               <div className="min-w-0 flex-1 space-y-4 sm:mt-0">
-                {patient?.id === review.patientId && (
-                  <div className="flex items-center justify-end gap-2">
-                    <Button variant="blue" size="icon">
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
-                    <Button variant="destructive" size="icon">
-                      <Trash2Icon className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                {authenticatedUser &&
+                  authenticatedUser?.id === review.patient.userId && (
+                    <div className="flex items-center justify-end gap-2">
+                      <Button variant="blue" size="icon">
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleDeleteReview(review.id)}
+                        disabled={isPending}
+                      >
+                        {isPending ? (
+                          <Spinner />
+                        ) : (
+                          <Trash2Icon className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
                 <p className="text-base font-normal text-muted-foreground">
                   {review.comment}
                 </p>

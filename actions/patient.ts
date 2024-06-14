@@ -14,6 +14,10 @@ import { AppointmentStatus, NotificationType } from "@prisma/client";
 import { add, format, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
+import {
+  sendCancelledAppointmentToHPEmail,
+  sendNewAppointmentEmail,
+} from "@/lib/mail";
 import { pusherServer } from "@/lib/pusher";
 
 import { getAppointmentById } from "./appointment";
@@ -123,7 +127,6 @@ export async function getPatientsWithAtLeastOneAppointment(
         user: true,
         appointments: true,
       },
-      take: 4,
     });
 
     return patientsWithAtLeastOneAppointment;
@@ -274,9 +277,16 @@ export async function getPatientPastAppointments(id: string | undefined) {
     const pastAppointments = await db.appointment.findMany({
       where: {
         patientId: currentPatient?.id,
-        date: {
-          lt: new Date(),
-        },
+        OR: [
+          {
+            date: {
+              lt: new Date(),
+            },
+          },
+          {
+            status: AppointmentStatus.COMPLETED,
+          },
+        ],
       },
       include: {
         healthCareProvider: {
@@ -310,8 +320,9 @@ export async function getPatientUpcomingAppointments(id: string | undefined) {
     const upcomingAppointments = await db.appointment.findMany({
       where: {
         patientId: currentPatient?.id,
+        consultation: null,
         date: {
-          gte: startOfToday(),
+          gt: new Date(),
         },
       },
       include: {
@@ -502,6 +513,10 @@ export async function bookAppointment(
       notification,
     );
 
+    if (healthcareProviderUser?.receiveEmailNotifications) {
+      await sendNewAppointmentEmail(healthcareProviderUser, patient);
+    }
+
     return { success: "Appointment booked successfully." };
   } catch (error) {
     console.error(error);
@@ -572,6 +587,10 @@ export async function BookAppointmentWithSpecialist(
       notification,
     );
 
+    if (healthcareProviderUser?.receiveEmailNotifications) {
+      await sendNewAppointmentEmail(healthcareProviderUser, patient);
+    }
+
     return { success: "Appointment booked successfully." };
   } catch (error) {
     console.error(error);
@@ -615,6 +634,14 @@ export async function cancelAppointment(id: string | undefined) {
         "notifications:new",
         notification,
       );
+
+      if (healthcareProvider?.receiveEmailNotifications) {
+        await sendCancelledAppointmentToHPEmail(
+          healthcareProvider,
+          patient,
+          existingAppointment,
+        );
+      }
 
       revalidatePath("/patient/dashboard/appointments");
 
@@ -918,7 +945,11 @@ export async function getPatientConsultationsWithHealthcareProvider(
             user: true,
           },
         },
-        prescriptions: true,
+        prescriptions: {
+          include: {
+            medications: true,
+          },
+        },
         appointment: true,
       },
     });

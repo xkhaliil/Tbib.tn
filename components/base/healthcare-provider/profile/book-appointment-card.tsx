@@ -104,6 +104,18 @@ export function BookAppointmentCard({
     return closedDays.includes(dayIndex);
   };
 
+  React.useEffect(() => {
+    if (
+      healthcareProvider?.absences?.some((absence) =>
+        isSameDay(absence.date, selectedDay),
+      ) ||
+      isClosed(getDay(selectedDay)) ||
+      isBefore(selectedDay, startOfToday())
+    ) {
+      setSelectedDay(add(selectedDay, { days: 1 }));
+    }
+  }, [selectedDay]);
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-start border-b bg-muted/50">

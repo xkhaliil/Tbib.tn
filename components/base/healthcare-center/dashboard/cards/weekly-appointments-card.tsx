@@ -10,8 +10,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export async function WeeklyAppointmentsCard() {
-  const weeklyAppointments = await fetchWeeklyAppointments();
+interface WeeklyAppointmentsCardProps {
+  healthCareCenterId?: string;
+}
+
+export async function WeeklyAppointmentsCard({
+  healthCareCenterId,
+}: WeeklyAppointmentsCardProps) {
+  const weeklyAppointments = await fetchWeeklyAppointments(healthCareCenterId);
   return (
     <Card>
       <CardHeader className="pb-2">

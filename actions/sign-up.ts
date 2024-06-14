@@ -6,7 +6,7 @@ import { Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { db } from "@/lib/db";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendAccountUnderReviewEmail, sendVerificationEmail } from "@/lib/mail";
 
 export async function signUp(values: SignUpSchemaType) {
   const validatedFields = SignUpSchema.safeParse(values);
@@ -86,6 +86,8 @@ export async function signUp(values: SignUpSchemaType) {
       },
     });
 
+    await sendAccountUnderReviewEmail(user);
+
     return {
       success: `All set, ${user.name}! We will review your application and get back to you soon.`,
     };
@@ -102,6 +104,8 @@ export async function signUp(values: SignUpSchemaType) {
         },
       },
     });
+
+    await sendAccountUnderReviewEmail(user);
 
     return {
       success: `All set, ${user.name}! We will review your application and get back to you soon.`,

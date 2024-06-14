@@ -163,9 +163,13 @@ export function PatientRecordSidebar({
                       Blood Type
                     </h4>
 
-                    <ul className="list-inside list-disc">
-                      <li>{getBloodType(record?.bloodType)}</li>
-                    </ul>
+                    {record?.bloodType ? (
+                      <ul className="list-inside list-disc">
+                        <li>{getBloodType(record?.bloodType)}</li>
+                      </ul>
+                    ) : (
+                      <p className="text-muted-foreground">No blood type</p>
+                    )}
                   </Card>
                   <Card className="flex flex-col space-y-3 p-3 shadow-none">
                     <h3 className="text-sm font-semibold tracking-tight text-foreground">
