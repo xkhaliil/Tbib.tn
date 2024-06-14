@@ -64,13 +64,7 @@ export default function ApproveCard({
   };
   const handleVerify = (id: string) => {
     startTransition(() => {
-      verifyHealthcareCenter(
-        id,
-        healthcareCenterEmail,
-        "oladoc-customer-service",
-        "From Oladoc customer service team!",
-        healthcareCenterName,
-      ).then((data) => {
+      verifyHealthcareCenter(id).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
@@ -84,13 +78,7 @@ export default function ApproveCard({
 
   const handleDelete = (id: string) => {
     startTransition(() => {
-      deleteHealthcareCenter(
-        id,
-        healthcareCenterEmail,
-        "oladoc-customer-service",
-        "From Oladoc customer service team!",
-        healthcareCenterName,
-      ).then((data) => {
+      deleteHealthcareCenter(id).then((data) => {
         if (data?.error) {
           toast.error(data.error);
           return;
