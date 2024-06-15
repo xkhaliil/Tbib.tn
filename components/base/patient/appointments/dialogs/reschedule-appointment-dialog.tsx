@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { getAppointmentWithHPById } from "@/actions/appointment";
 import {
   getHealthCareProviderById,
   getHealthCareProviderTimeSlots,
@@ -88,7 +89,7 @@ const steps: StepsType[] = [
 ];
 
 interface RescheduleAppointmentDialogProps {
-  appointment: Appointment;
+  appointment: Awaited<ReturnType<typeof getAppointmentWithHPById>>;
   healthcareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
 }
 
@@ -158,14 +159,14 @@ export function RescheduleAppointmentDialog({
   const rescheduleAppointmentForm = useForm<RescheduleAppointmentSchemaType>({
     resolver: zodResolver(RescheduleAppointmentSchema),
     defaultValues: {
-      date: appointment.date,
-      time: appointment.startTime.toString(),
+      date: appointment?.date,
+      time: appointment?.startTime.toString(),
     },
   });
 
   const processForm = async (values: RescheduleAppointmentSchemaType) => {
     startTransition(() => {
-      rescheduleAppointment(appointment.id, values)
+      rescheduleAppointment(appointment?.id, values)
         .then((data) => {
           if (data?.error) {
             setError(data.error);
@@ -244,7 +245,7 @@ export function RescheduleAppointmentDialog({
               Reschedule Appointment
             </h1>
             <Badge variant="white" className="uppercase">
-              # {appointment.id}
+              # {appointment?.id}
             </Badge>
           </div>
         </DialogHeader>

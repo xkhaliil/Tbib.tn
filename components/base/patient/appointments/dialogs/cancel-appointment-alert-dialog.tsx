@@ -2,9 +2,8 @@
 
 import React from "react";
 
-import { getHealthCareProviderById } from "@/actions/healthcare-provider";
+import { getAppointmentWithHPById } from "@/actions/appointment";
 import { cancelAppointment } from "@/actions/patient";
-import { Appointment } from "@prisma/client";
 import { toast } from "sonner";
 
 import {
@@ -21,9 +20,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
 interface CancelAppointmentAlertDialogProps {
-  appointment: Appointment & {
-    healthCareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
-  };
+  appointment: Awaited<ReturnType<typeof getAppointmentWithHPById>>;
 }
 
 export function CancelAppointmentAlertDialog({
@@ -34,7 +31,7 @@ export function CancelAppointmentAlertDialog({
 
   const handleCancel = () => {
     startTransition(() => {
-      cancelAppointment(appointment.id)
+      cancelAppointment(appointment?.id)
         .then(() => {
           toast.success("Appointment cancelled successfully");
           setOpen(false);

@@ -110,6 +110,27 @@ export async function getPastAppointments(healthCareProviderId?: string) {
   }
 }
 
+export async function getAppointmentWithHPById(id: string | undefined) {
+  try {
+    const appointment = await db.appointment.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return appointment;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getAppointmentById(id: string | undefined) {
   try {
     const appointment = await db.appointment.findFirst({

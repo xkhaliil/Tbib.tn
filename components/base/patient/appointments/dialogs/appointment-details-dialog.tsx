@@ -2,8 +2,7 @@
 
 import React from "react";
 
-import { getHealthCareProviderById } from "@/actions/healthcare-provider";
-import { Appointment, HealthCareProvider, User } from "@prisma/client";
+import { getAppointmentWithHPById } from "@/actions/appointment";
 import {
   CalendarIcon,
   ClockIcon,
@@ -25,9 +24,7 @@ import {
 } from "@/components/ui/dialog";
 
 interface AppointmentDetailsDialogProps {
-  appointment: Appointment & {
-    healthCareProvider: Awaited<ReturnType<typeof getHealthCareProviderById>>;
-  };
+  appointment: Awaited<ReturnType<typeof getAppointmentWithHPById>>;
 }
 
 export function AppointmentDetailsDialog({
@@ -47,7 +44,7 @@ export function AppointmentDetailsDialog({
               Appointment Details
             </h1>
             <Badge variant="white" className="uppercase">
-              # {appointment.id}
+              # {appointment?.id}
             </Badge>
           </div>
         </DialogHeader>
@@ -63,21 +60,21 @@ export function AppointmentDetailsDialog({
                 <Avatar className="h-12 w-12">
                   <AvatarImage
                     src={
-                      appointment.healthCareProvider?.user.image ||
+                      appointment?.healthCareProvider?.user.image ||
                       "/placeholder.svg"
                     }
                   />
                   <AvatarFallback>
-                    {appointment.healthCareProvider?.user.name[0]}
+                    {appointment?.healthCareProvider?.user.name[0]}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="flex flex-col">
                   <p className="text-lg font-semibold">
-                    {appointment.healthCareProvider?.user.name}
+                    {appointment?.healthCareProvider?.user.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {appointment.healthCareProvider?.speciality}
+                    {appointment?.healthCareProvider?.speciality}
                   </p>
                 </div>
               </div>
@@ -86,21 +83,21 @@ export function AppointmentDetailsDialog({
                 <div className="flex items-center gap-2">
                   <EnvelopeClosedIcon className="h-4 w-4 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    {appointment.healthCareProvider?.user.email}
+                    {appointment?.healthCareProvider?.user.email}
                   </p>
                 </div>
                 <span className="text-muted-foreground">|</span>
                 <div className="flex items-center gap-2">
                   <PhoneIcon className="h-4 w-4 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    (+216) {appointment.healthCareProvider?.user.phone}
+                    (+216) {appointment?.healthCareProvider?.user.phone}
                   </p>
                 </div>
               </div>
 
               <div className="mt-4 rounded-xl bg-muted p-4">
                 <p className="text-sm">
-                  {appointment.healthCareProvider?.user.bio}
+                  {appointment?.healthCareProvider?.user.bio}
                 </p>
               </div>
             </CardContent>
@@ -112,12 +109,12 @@ export function AppointmentDetailsDialog({
             </h1>
           </div>
 
-          {!appointment.symptoms ||
-          !appointment.symptomsType ||
-          !appointment.symptomsDuration ||
-          !appointment.symptomsLength ||
-          !appointment.symptomsSeverity ||
-          !appointment.additionalImages ? (
+          {!appointment?.symptoms ||
+          !appointment?.symptomsType ||
+          !appointment?.symptomsDuration ||
+          !appointment?.symptomsLength ||
+          !appointment?.symptomsSeverity ||
+          !appointment?.additionalImages ? (
             <Card className="shadow-none">
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
@@ -133,29 +130,29 @@ export function AppointmentDetailsDialog({
                 <div className="flex flex-col gap-1 text-sm">
                   <p className="font-semibold">Symptoms</p>
                   <p className="text-muted-foreground">
-                    {appointment.symptoms}
+                    {appointment?.symptoms}
                   </p>
                 </div>
 
                 <div className="mt-4 flex items-center gap-4">
-                  <Badge variant="white">{appointment.symptomsType}</Badge>
+                  <Badge variant="white">{appointment?.symptomsType}</Badge>
                   <Badge variant="white">
-                    {Number(appointment.symptomsDuration) > 1
-                      ? `${appointment.symptomsDuration} ${
-                          appointment.symptomsLength.charAt(0).toUpperCase() +
-                          appointment.symptomsLength.slice(1).toLowerCase()
+                    {Number(appointment?.symptomsDuration) > 1
+                      ? `${appointment?.symptomsDuration} ${
+                          appointment?.symptomsLength.charAt(0).toUpperCase() +
+                          appointment?.symptomsLength.slice(1).toLowerCase()
                         }`
-                      : `${appointment.symptomsDuration} ${
-                          appointment.symptomsLength.charAt(0).toUpperCase() +
-                          appointment.symptomsLength
+                      : `${appointment?.symptomsDuration} ${
+                          appointment?.symptomsLength.charAt(0).toUpperCase() +
+                          appointment?.symptomsLength
                             .slice(1)
                             .toLowerCase()
                             .slice(0, -1)
                         }`}
                   </Badge>
                   <Badge variant="white">
-                    {appointment.symptomsSeverity.charAt(0).toUpperCase() +
-                      appointment.symptomsSeverity.slice(1).toLowerCase()}
+                    {appointment?.symptomsSeverity.charAt(0).toUpperCase() +
+                      appointment?.symptomsSeverity.slice(1).toLowerCase()}
                   </Badge>
                 </div>
               </CardContent>
@@ -171,9 +168,11 @@ export function AppointmentDetailsDialog({
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
                   <div className="flex flex-col">
-                    <p className="text-lg font-semibold">{appointment.title}</p>
+                    <p className="text-lg font-semibold">
+                      {appointment?.title}
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      {appointment.description}
+                      {appointment?.description}
                     </p>
                   </div>
                 </div>
@@ -182,15 +181,25 @@ export function AppointmentDetailsDialog({
                   <div className="flex items-center gap-2">
                     <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(appointment.date), "EEEE, MMMM d, yyyy")}
+                      {format(
+                        new Date(appointment?.date || new Date()),
+                        "EEEE, MMMM d, yyyy",
+                      )}
                     </p>
                   </div>
                   <span className="text-muted-foreground">|</span>
                   <div className="flex items-center gap-2">
                     <ClockIcon className="h-4 w-4 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(appointment.startTime), "HH:mm")} -{" "}
-                      {format(new Date(appointment.endTime), "HH:mm")}
+                      {format(
+                        new Date(appointment?.startTime || new Date()),
+                        "HH:mm",
+                      )}{" "}
+                      -{" "}
+                      {format(
+                        new Date(appointment?.endTime || new Date()),
+                        "HH:mm",
+                      )}
                     </p>
                   </div>
                 </div>
