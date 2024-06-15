@@ -38,7 +38,7 @@ export function CancelledAppointmentHPTemplate({
         <Body className="mx-auto my-auto bg-white font-sans">
           <Container className="w-full max-w-[600px]">
             <Section className="flex items-center justify-center">
-              <Text className="ml-2 text-3xl font-bold tracking-tighter text-blue-600">
+              <Text className="text-3xl font-bold tracking-tighter text-blue-600">
                 Oladoc
               </Text>
             </Section>

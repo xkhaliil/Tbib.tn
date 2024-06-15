@@ -465,7 +465,7 @@ export async function bookAppointment(
       additionalImages,
     } = validatedFields.data;
 
-    await db.appointment.create({
+    const newAppointment = await db.appointment.create({
       data: {
         title: `Appointment with ${patient?.user.name}`,
         description: `Appointment with ${patient?.user.name} on ${format(
@@ -514,7 +514,11 @@ export async function bookAppointment(
     );
 
     if (healthcareProviderUser?.receiveEmailNotifications) {
-      await sendNewAppointmentEmail(healthcareProviderUser, patient);
+      await sendNewAppointmentEmail(
+        healthcareProviderUser,
+        patient,
+        newAppointment,
+      );
     }
 
     return { success: "Appointment booked successfully." };
@@ -544,7 +548,7 @@ export async function BookAppointmentWithSpecialist(
 
     const { date, time, additionalImages } = validatedFields.data;
 
-    await db.appointment.create({
+    const newAppointment = await db.appointment.create({
       data: {
         title: `Appointment with ${patient?.user.name}`,
         description: `Appointment with ${patient?.user.name} on ${format(
@@ -588,7 +592,11 @@ export async function BookAppointmentWithSpecialist(
     );
 
     if (healthcareProviderUser?.receiveEmailNotifications) {
-      await sendNewAppointmentEmail(healthcareProviderUser, patient);
+      await sendNewAppointmentEmail(
+        healthcareProviderUser,
+        patient,
+        newAppointment,
+      );
     }
 
     return { success: "Appointment booked successfully." };

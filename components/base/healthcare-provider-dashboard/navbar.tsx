@@ -36,7 +36,7 @@ export async function Navbar({ className }: NavbarProps) {
       <div className="flex items-center space-x-4">
         <NotificationsFeed
           notifications={notifications || []}
-          healthcareProviderId={healthcareProvider?.id}
+          healthcareProvider={healthcareProvider}
         />
       </div>
     </header>

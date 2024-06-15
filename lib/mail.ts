@@ -5,7 +5,7 @@ import {
   getPatientByUserId,
   getUserByHealthcareProviderId,
 } from "@/actions/auth";
-import { User } from "@prisma/client";
+import { Appointment, User } from "@prisma/client";
 import { render } from "@react-email/components";
 import * as handlebars from "handlebars";
 import nodemailer from "nodemailer";
@@ -176,6 +176,7 @@ export async function sendTeamInvitationEmail(
 export async function sendNewAppointmentEmail(
   user: User,
   patient: Awaited<ReturnType<typeof getPatientByUserId>>,
+  appointment: Appointment,
 ) {
   const { SMTP_PASSWORD, SMTP_EMAIL } = process.env;
 
@@ -187,7 +188,9 @@ export async function sendNewAppointmentEmail(
     },
   });
 
-  const template = render(NewAppointmentTemplate({ user, patient }));
+  const template = render(
+    NewAppointmentTemplate({ user, patient, appointment }),
+  );
 
   await transporter.sendMail({
     from: SMTP_EMAIL,

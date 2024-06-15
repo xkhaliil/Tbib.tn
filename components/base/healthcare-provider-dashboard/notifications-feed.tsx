@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { getHealthcareProviderByUserId } from "@/actions/auth";
 import { acceptHealthcareCenterInvitation } from "@/actions/healthcare-provider";
 import {
   archiveNotification,
@@ -37,12 +38,12 @@ import { Separator } from "@/components/ui/separator";
 
 interface NotificationsFeedProps {
   notifications: Notification[];
-  healthcareProviderId: string | undefined;
+  healthcareProvider: Awaited<ReturnType<typeof getHealthcareProviderByUserId>>;
 }
 
 export function NotificationsFeed({
   notifications: intitialNotifications,
-  healthcareProviderId,
+  healthcareProvider,
 }: NotificationsFeedProps) {
   const [isPending, startTransition] = React.useTransition();
   const [notifications, setNotifications] = React.useState<Notification[]>(
@@ -50,7 +51,7 @@ export function NotificationsFeed({
   );
 
   React.useEffect(() => {
-    pusherClient.subscribe(`notifications-${healthcareProviderId}`);
+    pusherClient.subscribe(`notifications-${healthcareProvider?.id}`);
     console.log("Subscribed to notifications channel");
 
     const notificationHandler = (notification: Notification) => {
@@ -66,9 +67,9 @@ export function NotificationsFeed({
 
     return () => {
       pusherClient.unbind("notifications:new");
-      pusherClient.unsubscribe(`notifications-${healthcareProviderId}`);
+      pusherClient.unsubscribe(`notifications-${healthcareProvider?.id}`);
     };
-  }, [healthcareProviderId]);
+  }, [healthcareProvider]);
 
   const newNotifications = notifications.filter((n) => !n.read);
 
@@ -101,20 +102,29 @@ export function NotificationsFeed({
   };
 
   const handleAcceptHealthcareCenterInvitation = async (
-    healthcareProviderId: string | undefined,
+    healthcareProvider: Awaited<
+      ReturnType<typeof getHealthcareProviderByUserId>
+    >,
     notification: Notification,
   ) => {
     startTransition(() => {
-      acceptHealthcareCenterInvitation(healthcareProviderId, notification).then(
-        () => {
-          toast.success("Invitation accepted successfully");
-          setNotifications((currentNotifications) =>
-            currentNotifications.map((n) =>
-              n.id === notification.id ? { ...notification, read: true } : n,
-            ),
-          );
-        },
-      );
+      acceptHealthcareCenterInvitation(
+        healthcareProvider?.id,
+        notification,
+      ).then(() => {
+        toast.success("Invitation accepted successfully");
+        setNotifications((currentNotifications) =>
+          currentNotifications.map((n) =>
+            n.id === notification.id
+              ? {
+                  ...n,
+                  healthCareCenterId:
+                    healthcareProvider?.healthCareCenterId || "",
+                }
+              : n,
+          ),
+        );
+      });
     });
   };
 
@@ -235,11 +245,15 @@ export function NotificationsFeed({
                       size="icon"
                       onClick={() =>
                         handleAcceptHealthcareCenterInvitation(
-                          healthcareProviderId,
+                          healthcareProvider,
                           notification,
                         )
                       }
                       disabled={isPending}
+                      className={cn(
+                        "hidden",
+                        healthcareProvider?.healthCareCenterId,
+                      )}
                     >
                       <CheckIcon className="h-4 w-4" />
                     </Button>
@@ -254,8 +268,11 @@ export function NotificationsFeed({
           )}
 
           {readNotifications.map((notification, index) => (
-            <div className="border-b p-4" key={index}>
-              <div className="flex items-center justify-between">
+            <div key={index}>
+              <div className="flex h-8 items-center justify-center border-b bg-muted/40 text-center uppercase">
+                <h1 className="text-xs font-medium">Read</h1>
+              </div>
+              <div className="flex items-center justify-between p-4">
                 <div className="flex gap-3">
                   <div
                     className={cn(
@@ -313,25 +330,31 @@ export function NotificationsFeed({
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleArchiveNotification(notification.id)}
-                    disabled={isPending}
-                  >
-                    <ArchiveIcon className="h-4 w-4" />
-                  </Button>
+                  {!notification.archived && (
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => handleArchiveNotification(notification.id)}
+                      disabled={isPending}
+                    >
+                      <ArchiveIcon className="h-4 w-4" />
+                    </Button>
+                  )}
                   {notification.healthCareCenterId && (
                     <Button
                       variant="green"
                       size="icon"
                       onClick={() =>
                         handleAcceptHealthcareCenterInvitation(
-                          healthcareProviderId,
+                          healthcareProvider,
                           notification,
                         )
                       }
                       disabled={isPending}
+                      className={cn(
+                        "hidden",
+                        healthcareProvider?.healthCareCenterId,
+                      )}
                     >
                       <CheckIcon className="h-4 w-4" />
                     </Button>
@@ -342,8 +365,11 @@ export function NotificationsFeed({
           ))}
 
           {archivedNotifications.map((notification, index) => (
-            <div className="border-b p-4" key={index}>
-              <div className="flex items-center justify-between">
+            <div className="border-t" key={index}>
+              <div className="flex h-8 items-center justify-center border-b bg-muted/40 text-center uppercase">
+                <h1 className="text-xs font-medium">Archived</h1>
+              </div>
+              <div className="flex items-center justify-between p-4">
                 <div className="flex gap-3">
                   <div
                     className={cn(
@@ -381,9 +407,12 @@ export function NotificationsFeed({
                     )}
                   </div>
                   <div className="flex flex-col">
-                    <p className="text-sm font-medium text-foreground">
-                      {notification.title}
-                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-medium text-foreground">
+                        {notification.title}
+                      </p>
+                      <ArchiveIcon className="h-4 w-4 text-muted-foreground" />
+                    </div>
                     <span className="text-xs text-muted-foreground">
                       {formatDistance(new Date(notification.date), new Date())}{" "}
                       ago
@@ -401,7 +430,7 @@ export function NotificationsFeed({
           ))}
         </ScrollArea>
 
-        <div className="flex justify-center py-2.5">
+        <div className="flex justify-center border-t py-2.5">
           <Button variant="link" size="sm" className="p-0">
             View all
           </Button>
