@@ -124,7 +124,7 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         <div className="relative w-full">
           <input
             type="text"
-            placeholder="Speaciality, doctor, or center"
+            placeholder="Speaciality or center"
             className="h-full w-full border-r bg-transparent placeholder-muted-foreground outline-none"
             value={specialitySearchInput}
             onChange={handleSpecialityChange}
