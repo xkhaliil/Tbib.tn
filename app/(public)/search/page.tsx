@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getCurrentSession } from "@/actions/auth";
 import {
+  getHealthCareCentersByParams,
   getHealthcareProvidersByParams,
   SearchPageParams,
 } from "@/actions/search";
@@ -28,7 +29,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const currentUser = await getCurrentSession();
   const healthcareProviders =
     await getHealthcareProvidersByParams(searchParams);
-
+  const healthcareCenters = await getHealthCareCentersByParams(searchParams);
+  console.log(healthcareCenters);
   return (
     <>
       <SearchResultsNavbar currentUser={currentUser} />
