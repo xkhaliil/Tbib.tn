@@ -1,7 +1,12 @@
 import React from "react";
 
+import type { Metadata } from "next";
+
 import { VerifyEmailForm } from "@/components/forms/verify-email-form";
-import { Logo } from "@/components/marketing/logo";
+
+export const metadata: Metadata = {
+  title: "Verify Email",
+};
 
 export default function Verify() {
   return (

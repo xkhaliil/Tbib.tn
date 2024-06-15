@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getLatestPatients } from "@/actions/patient";
 
@@ -5,6 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { SignUpForm } from "@/components/forms/sign-up-form";
 import { Logo } from "@/components/marketing/logo";
+
+export const metadata: Metadata = {
+  title: "Sign Up",
+};
 
 export default async function SignUp() {
   const latestPatients = await getLatestPatients();

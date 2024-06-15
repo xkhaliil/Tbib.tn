@@ -1,5 +1,6 @@
 import React from "react";
 
+import type { Metadata } from "next";
 import {
   getHealthCareProviderById,
   getHealthCareProviderTimeSlots,
@@ -14,6 +15,16 @@ interface BookAppointmentPageProps {
   params: {
     id: string;
     date: string;
+  };
+}
+
+export async function generateMetadata({
+  params: { id, date },
+}: BookAppointmentPageProps): Promise<Metadata> {
+  const healthcareProvider = await getHealthCareProviderById(id);
+  const day = getDay(new Date(date));
+  return {
+    title: `Book an appointment with ${healthcareProvider?.user.name} on ${day}`,
   };
 }
 

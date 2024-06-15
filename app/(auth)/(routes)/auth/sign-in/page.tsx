@@ -1,8 +1,13 @@
 import React from "react";
 
+import type { Metadata } from "next";
 import Image from "next/image";
 
 import { SignInForm } from "@/components/forms/sign-in-form";
+
+export const metadata: Metadata = {
+  title: "Sign In",
+};
 
 export default function SignIn() {
   return (

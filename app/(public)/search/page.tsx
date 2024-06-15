@@ -1,5 +1,6 @@
 import React from "react";
 
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getCurrentSession } from "@/actions/auth";
 import {
@@ -18,6 +19,10 @@ import { SearchResultsNavbar } from "@/components/search-results-navbar";
 interface SearchPageProps {
   searchParams: SearchPageParams;
 }
+
+export const metadata: Metadata = {
+  title: "Search Results",
+};
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const currentUser = await getCurrentSession();
