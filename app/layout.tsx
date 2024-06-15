@@ -23,6 +23,14 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  openGraph: {
+    images: [
+      {
+        url: "https://oladoc.vercel.app/images/opengraph-image.png",
+        alt: "Oladoc: Find the Best Doctors Near You",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
