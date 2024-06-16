@@ -15,6 +15,7 @@ const lexend = Lexend({ subsets: ["latin"], variable: "--font-heading" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://oladoc.vercel.app/"),
   title: {
     default: "Oladoc: Find the Best Doctors Near You",
     template: "%s | Oladoc",

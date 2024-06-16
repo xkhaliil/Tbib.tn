@@ -37,7 +37,7 @@ export function PricingAndRefundsCard({
         <div className="grid gap-2">
           <CardTitle>Pricing & Refunds</CardTitle>
           <CardDescription>
-            Here are the pricing and refund policies of the healthcare provider.
+            Here are the pricing and refund policies.
           </CardDescription>
         </div>
       </CardHeader>

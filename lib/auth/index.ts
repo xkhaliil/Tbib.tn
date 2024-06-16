@@ -84,6 +84,7 @@ export const {
           token.receiveEmailNotifications as boolean;
         session.user.receiveSmsNotifications =
           token.receiveSmsNotifications as boolean;
+        session.user.emailVerified = token.emailVerified as Date;
       }
 
       return session;
@@ -126,6 +127,7 @@ export const {
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       token.receiveEmailNotifications = existingUser.receiveEmailNotifications;
       token.receiveSmsNotifications = existingUser.receiveSmsNotifications;
+      token.emailVerified = existingUser.emailVerified;
 
       if (trigger === "update") {
         return { ...token, ...session.user };

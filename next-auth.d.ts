@@ -8,6 +8,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   city: string;
   state: string;
   postalCode: string;
+  emailVerified: Date;
   bio: string;
   role: Role;
   isTwoFactorEnabled: boolean;

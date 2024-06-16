@@ -32,6 +32,8 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 
+import { VerifiedAccountBadge } from "./healthcare-provider/verified-account-badge";
+
 interface HealthcareProviderCardProps {
   healthcareProvider: HealthCareProvider & {
     user: User;
@@ -134,7 +136,7 @@ export function HealthcareProviderCard({
     <div className="grid grid-cols-1 rounded-lg border bg-white p-6 shadow-sm sm:grid-cols-2">
       <div className="flex flex-col border-r pr-6">
         <div className="flex items-center gap-6">
-          <div className="h-24 w-24 flex-shrink-0 rounded-lg bg-gray-200">
+          <div className="relative h-24 w-24 flex-shrink-0 rounded-lg bg-gray-200">
             <Image
               src={healthcareProvider.user.image || "/placeholder.svg"}
               alt={healthcareProvider.user.name}
@@ -143,6 +145,9 @@ export function HealthcareProviderCard({
               width={500}
               height={500}
             />
+            {!!healthcareProvider?.user.emailVerified && (
+              <VerifiedAccountBadge className="-bottom-2 -end-2" />
+            )}
           </div>
           <div className="flex flex-col space-y-1.5">
             <h2 className="text-lg font-semibold">
@@ -179,9 +184,11 @@ export function HealthcareProviderCard({
           </p>
 
           <h3 className="text-sm font-semibold">Expertises and acts</h3>
-          <p className="text-sm text-muted-foreground">
-            {healthcareProvider.services.join(", ") || "N/A"}
-          </p>
+          <ul className="list-inside list-disc text-sm text-muted-foreground">
+            {healthcareProvider.services.map((service) => (
+              <li key={service}>{service}</li>
+            ))}
+          </ul>
 
           <h3 className="text-sm font-semibold">Insurance</h3>
           <p className="text-sm text-muted-foreground">
@@ -189,7 +196,7 @@ export function HealthcareProviderCard({
           </p>
         </div>
 
-        <div className="mt-auto flex flex-col space-y-2.5">
+        <div className="mt-auto flex flex-col space-y-2.5 pt-4">
           <Button size="lg" variant="outline" asChild>
             <Link href={`/hp/profile/${healthcareProvider.id}`}>
               View Profile

@@ -223,7 +223,7 @@ export function ProfileForm() {
                     </AvatarFallback>
                   </Avatar>
 
-                  {user?.accountVerified && <VerifiedAccountBadge />}
+                  {!!user?.emailVerified && <VerifiedAccountBadge />}
                 </div>
                 <div className="flex flex-col space-y-0.5">
                   <h3 className="text-base font-semibold">
