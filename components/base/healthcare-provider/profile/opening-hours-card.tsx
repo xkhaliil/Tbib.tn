@@ -6,7 +6,7 @@ import {
   OpeningHours,
   User,
 } from "@prisma/client";
-import { format } from "date-fns";
+import { addHours, format } from "date-fns";
 
 import {
   Card,
@@ -52,8 +52,18 @@ export function OpeningHoursCard({
                   {getDayByIndex(openingHour.dayOfWeek)} :
                 </p>
                 <span className="ms-1">
-                  {format(openingHour.startTime, "HH:mm")} -{" "}
-                  {format(openingHour.endTime, "HH:mm")}
+                  {process.env.NODE_ENV === "production" && (
+                    <span>
+                      {format(addHours(openingHour.startTime, 1), "HH:mm")} -{" "}
+                      {format(addHours(openingHour.endTime, 1), "HH:mm")}
+                    </span>
+                  )}
+                  {process.env.NODE_ENV === "development" && (
+                    <span>
+                      {format(openingHour.startTime, "HH:mm")} -{" "}
+                      {format(openingHour.endTime, "HH:mm")}
+                    </span>
+                  )}
                 </span>
               </li>
             ))}
