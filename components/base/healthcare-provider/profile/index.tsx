@@ -39,7 +39,7 @@ export async function Profile({ healthcareProvider }: ProfileProps) {
             />
             <div className="flex flex-col">
               <h1 className="text-2xl font-semibold tracking-tight">
-                {healthcareProvider?.user.name}
+                Dr. {healthcareProvider?.user.name}
               </h1>
               <p className="text-base">{healthcareProvider?.speciality}</p>
               <p className="mt-1 text-sm">{healthcareProvider?.user.email}</p>
