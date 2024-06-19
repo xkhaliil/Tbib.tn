@@ -250,10 +250,6 @@ export function NotificationsFeed({
                         )
                       }
                       disabled={isPending}
-                      className={cn(
-                        "hidden",
-                        healthcareProvider?.healthCareCenterId,
-                      )}
                     >
                       <CheckIcon className="h-4 w-4" />
                     </Button>

@@ -69,7 +69,9 @@ export function OpeningHoursCard({ healthcareCenter }: OpeningHoursCardProps) {
         <div className="text-xs text-muted-foreground">
           Last updated on{" "}
           {format(
-            new Date(healthcareCenter?.openingHours[0].createdAt || new Date()),
+            new Date(
+              healthcareCenter?.openingHours[0]?.createdAt || new Date(),
+            ),
             "MMMM dd, yyyy",
           )}
         </div>

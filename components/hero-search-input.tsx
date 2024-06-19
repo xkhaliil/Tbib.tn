@@ -94,7 +94,7 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         };
       }
 
-      if (specialitySearchInput === "" || locationSearchInput !== "") {
+      if (specialitySearchInput === "" || locationSearchInput === "") {
         updatedQuery = {
           ...query,
           speciality: "General Practitioner",
@@ -124,7 +124,7 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         <div className="relative w-full">
           <input
             type="text"
-            placeholder="Speaciality or center"
+            placeholder="Speciality or center"
             className="h-full w-full border-r bg-transparent placeholder-muted-foreground outline-none"
             value={specialitySearchInput}
             onChange={handleSpecialityChange}
@@ -140,11 +140,11 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
                   <p className="px-4 py-3 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     {specialty.category}
                   </p>
-                  <div className="flex flex-col space-y-2 px-4 pb-4">
+                  <div className="flex flex-col px-2.5">
                     {specialty.specialties.map((s) => (
                       <button
                         key={s}
-                        className="flex items-start justify-start text-sm font-normal text-muted-foreground"
+                        className="flex items-start justify-start rounded-lg p-3 text-sm font-normal text-muted-foreground hover:bg-muted"
                         onMouseDown={(e) => {
                           e.preventDefault();
                           onSpecialityChange(s);
@@ -171,11 +171,11 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
             onBlur={() => setLocationInputFocused(false)}
           />
           {locationSearchInput.trim() && locationInputFocused && (
-            <div className="absolute z-30 max-h-[20rem] w-full overflow-y-auto rounded-b-lg border bg-white shadow-lg">
+            <div className="absolute z-30 max-h-[20rem] w-full overflow-y-auto rounded-b-lg border bg-white p-2.5 shadow-lg">
               {statesList.map((state) => (
                 <button
                   key={state}
-                  className="flex items-start justify-start px-4 py-2.5 text-sm font-normal text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="flex w-full items-start justify-start rounded-lg p-3 text-sm font-normal text-muted-foreground hover:bg-muted"
                   onMouseDown={(e) => {
                     e.preventDefault();
                     onLocationChange(state);

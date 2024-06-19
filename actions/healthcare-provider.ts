@@ -289,6 +289,7 @@ export async function getHealthCareProviderById(id: string) {
       openingHours: true,
       absences: true,
       appointments: true,
+      reviews: true,
     },
   });
 
