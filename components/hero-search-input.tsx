@@ -11,9 +11,9 @@ import { Button } from "@/components/ui/button";
 
 interface HeroSearchInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  onSearch: (speciality: string, location: string) => void;
-  onSpecialityChange: (speciality: string) => void;
-  onLocationChange: (location: string) => void;
+  onSearch?: (speciality: string, location: string) => void;
+  onSpecialityChange?: (speciality: string) => void;
+  onLocationChange?: (location: string) => void;
 }
 
 export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
@@ -124,7 +124,7 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
         <div className="relative w-full">
           <input
             type="text"
-            placeholder="Speciality or center"
+            placeholder="Speciality"
             className="h-full w-full border-r bg-transparent placeholder-muted-foreground outline-none"
             value={specialitySearchInput}
             onChange={handleSpecialityChange}
@@ -147,7 +147,7 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
                         className="flex items-start justify-start rounded-lg p-3 text-sm font-normal text-muted-foreground hover:bg-muted"
                         onMouseDown={(e) => {
                           e.preventDefault();
-                          onSpecialityChange(s);
+                          onSpecialityChange!(s);
                           setSpecialitySearchInput(s);
                         }}
                       >
@@ -178,7 +178,7 @@ export default forwardRef<HTMLInputElement, HeroSearchInputProps>(
                   className="flex w-full items-start justify-start rounded-lg p-3 text-sm font-normal text-muted-foreground hover:bg-muted"
                   onMouseDown={(e) => {
                     e.preventDefault();
-                    onLocationChange(state);
+                    onLocationChange!(state);
                     setLocationSearchInput(state);
                   }}
                 >

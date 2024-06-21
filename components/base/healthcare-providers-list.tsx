@@ -3,7 +3,6 @@
 import React from "react";
 
 import Image from "next/image";
-import Link from "next/link";
 import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import {
   ColumnDef,
@@ -12,7 +11,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+
+import { HealthcareProviderCardForHealthcareCenter } from "./healthcare-provider-card-for-healthcare-center";
 
 type HealthCareProvider = Awaited<ReturnType<typeof getHealthCareProviderById>>;
 
@@ -43,41 +50,44 @@ export function HealthcareProvidersList<TData, TValue>({
   return (
     <div>
       {table.getRowModel().rows.map((row) => (
-        <div
-          key={row.id}
-          className="mb-2.5 flex items-center gap-2 rounded-xl border p-4"
-        >
-          <div className="flex w-full items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Image
-                src={row.original?.user.image || "/placeholder.svg"}
-                alt={row.original?.user.name || "User"}
-                className="h-8 w-8 rounded-full object-cover"
-                width={500}
-                height={500}
+        <Accordion type="single" collapsible key={row.id}>
+          <AccordionItem value={row.id}>
+            <AccordionTrigger className="mb-2.5 flex items-center gap-2 rounded-xl border p-4">
+              <div className="flex w-full items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={row.original?.user.image || "/placeholder.svg"}
+                    alt={row.original?.user.name || "User"}
+                    className="h-8 w-8 rounded-full object-cover"
+                    width={500}
+                    height={500}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    {row.original?.user.name}
+                  </p>
+
+                  <span className="text-xs text-muted-foreground">/</span>
+
+                  <p className="text-sm text-muted-foreground">
+                    {row.original?.speciality}
+                  </p>
+
+                  <span className="text-xs text-muted-foreground">/</span>
+
+                  <p className="text-sm text-muted-foreground">
+                    {row.original?.officeState}
+                  </p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="mb-2">
+              <HealthcareProviderCardForHealthcareCenter
+                //@ts-ignore
+                healthcareProvider={row.original}
               />
-              <p className="text-sm text-muted-foreground">
-                {row.original?.user.name}
-              </p>
-
-              <span className="text-xs text-muted-foreground">/</span>
-
-              <p className="text-sm text-muted-foreground">
-                {row.original?.speciality}
-              </p>
-
-              <span className="text-xs text-muted-foreground">/</span>
-
-              <p className="text-sm text-muted-foreground">
-                {row.original?.officeState}
-              </p>
-            </div>
-
-            <Button variant="blue" size="sm" asChild>
-              <Link href={`/hp/profile/${row.original?.id}`}>View Profile</Link>
-            </Button>
-          </div>
-        </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       ))}
 
       <div className="mt-4 flex items-center justify-end space-x-2">

@@ -22,7 +22,6 @@ import { TwoFactorAuthTemplate } from "@/components/templates/two-factor-auth-te
 import { VerifyEmailTemplate } from "@/components/templates/verify-email-template";
 
 import { customTemplate } from "./template/custom";
-import { rejectHealthcareProviderTemplate } from "./template/reject";
 
 export async function sendVerificationEmail(user: User, token: string) {
   const { SMTP_PASSWORD, SMTP_EMAIL } = process.env;

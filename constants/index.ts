@@ -188,6 +188,8 @@ export const languages: ILanguage[] = [
   { value: "Arabic", label: "Arabic" },
   { value: "English", label: "English" },
   { value: "French", label: "French" },
+  { value: "Italian", label: "Italian" },
+  { value: "Spanish", label: "Spanish" },
 ];
 
 export const paymentMethods = [

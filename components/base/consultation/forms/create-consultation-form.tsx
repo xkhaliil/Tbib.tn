@@ -5,6 +5,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { saveConsultation } from "@/actions/consultation";
 import { getPatientRecord } from "@/actions/patient";
+import { getPrescriptionById } from "@/actions/prescription";
 import {
   CreateConsultationSchema,
   CreateConsultationSchemaType,
@@ -17,12 +18,15 @@ import {
   BoneIcon,
   FileBadgeIcon,
   MicroscopeIcon,
+  PrinterIcon,
   TabletsIcon,
 } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaBandage } from "react-icons/fa6";
 import { toast } from "sonner";
 
+import { generatePrescriptionInPdf } from "@/lib/pdf";
+import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -103,6 +107,24 @@ export function CreateConsultationForm({
         .catch((error) => {
           console.error(error);
         });
+    });
+  };
+
+  const handleGeneratePrescription = async () => {
+    const prescription = createConsultationForm.getValues(
+      "prescription",
+    ) as Awaited<ReturnType<typeof getPrescriptionById>>;
+    const patient = record?.patient;
+    const healthcareProvider = record?.healthCareProvider;
+
+    startTransition(() => {
+      generatePrescriptionInPdf(
+        prescription,
+        patient,
+        healthcareProvider,
+      ).catch((error) => {
+        console.error(error);
+      });
     });
   };
 
@@ -726,12 +748,24 @@ export function CreateConsultationForm({
         </CardContent>
       </Card>
       <Card>
-        <CardHeader>
-          <CardTitle>Treatment Plan</CardTitle>
-          <CardDescription>
-            Choose a suitable treatment plan for the patient.
-          </CardDescription>
-        </CardHeader>
+        <div className="flex items-center justify-between  p-6">
+          <div className="space-y-1.5">
+            <CardTitle>Treatment Plan</CardTitle>
+            <CardDescription>
+              Choose a suitable treatment plan for the patient.
+            </CardDescription>
+          </div>
+
+          <Button
+            variant="outline"
+            disabled={isPending}
+            onClick={handleGeneratePrescription}
+            size="sm"
+          >
+            <PrinterIcon className="h-4 w-4" />
+            <span className="ml-2">Print</span>
+          </Button>
+        </div>
 
         <Separator />
 

@@ -12,7 +12,7 @@ import {
   getUserByHealthcareProviderId,
 } from "../auth";
 
-export async function getHealthcareCenterById(id: string) {
+export async function getHealthcareCenterById(id: string | undefined) {
   try {
     const healthcareCenter = await db.healthCareCenter.findUnique({
       where: {
