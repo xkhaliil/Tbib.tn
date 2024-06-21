@@ -26,6 +26,7 @@ import {
   getPatientByUserId,
   getUserByHealthcareProviderId,
 } from "./auth";
+import { getHealthcareCenterById } from "./healthcare-center";
 
 export async function getAllPatients() {
   try {
@@ -76,9 +77,16 @@ export async function getPatientRecord(
         patient: {
           include: {
             user: true,
+            appointments: true,
+            prescriptions: true,
+            records: true,
           },
         },
-        healthCareProvider: true,
+        healthCareProvider: {
+          include: {
+            user: true,
+          },
+        },
         currentMedications: true,
       },
     });
@@ -439,6 +447,7 @@ export async function deleteDocument(id: string) {
 export async function bookAppointment(
   values: BookAppointmentSchemaType,
   healthCareProviderId: string | undefined,
+  healthCareCenterId: string | undefined,
 ) {
   try {
     const user = await getCurrentSession();
@@ -448,80 +457,161 @@ export async function bookAppointment(
     const healthcareProviderUser =
       await getUserByHealthcareProviderId(healthCareProviderId);
 
-    const validatedFields = BookAppointmentSchema.safeParse(values);
+    if (healthCareCenterId) {
+      const healthcareCenter =
+        await getHealthcareCenterById(healthCareCenterId);
 
-    if (!validatedFields.success) {
-      return { error: "Invalid fields!" };
-    }
+      const validatedFields = BookAppointmentSchema.safeParse(values);
 
-    const {
-      date,
-      time,
-      symptomsType,
-      symptoms,
-      symptomsDuration,
-      symptomsLength,
-      symptomsSeverity,
-      additionalImages,
-    } = validatedFields.data;
+      if (!validatedFields.success) {
+        return { error: "Invalid fields!" };
+      }
 
-    const newAppointment = await db.appointment.create({
-      data: {
-        title: `Appointment with ${patient?.user.name}`,
-        description: `Appointment with ${patient?.user.name} on ${format(
-          new Date(date),
-          "EEEE, MMMM d yyyy",
-        )} at ${format(new Date(time), "HH:mm")}`,
+      const {
         date,
-        startTime: new Date(time),
-        endTime: add(new Date(time), { minutes: 30 }),
+        time,
         symptomsType,
         symptoms,
         symptomsDuration,
         symptomsLength,
         symptomsSeverity,
         additionalImages,
-        patient: {
-          connect: {
-            id: patient?.id,
+      } = validatedFields.data;
+
+      const newAppointment = await db.appointment.create({
+        data: {
+          title: `Appointment with ${patient?.user.name}`,
+          description: `Appointment with ${patient?.user.name} on ${format(
+            new Date(date),
+            "EEEE, MMMM d yyyy",
+          )} at ${format(new Date(time), "HH:mm")}`,
+          date,
+          startTime: new Date(time),
+          endTime: add(new Date(time), { minutes: 30 }),
+          symptomsType,
+          symptoms,
+          symptomsDuration,
+          symptomsLength,
+          symptomsSeverity,
+          additionalImages,
+          isBookedFromHealthcareCenter: healthcareCenter?.user.name,
+          patient: {
+            connect: {
+              id: patient?.id,
+            },
+          },
+          healthCareProvider: {
+            connect: {
+              id: healthCareProviderId,
+            },
           },
         },
-        healthCareProvider: {
-          connect: {
-            id: healthCareProviderId,
-          },
+      });
+
+      const notification = await db.notification.create({
+        data: {
+          title: "New Appointment",
+          description: `You have a new appointment with ${patient?.user.name} on ${format(
+            new Date(date),
+            "EEEE, MMMM d yyyy",
+          )} at ${format(new Date(time), "HH:mm")}`,
+          type: NotificationType.NEW_APPOINTMENT,
+          date: new Date(),
+          userId: healthcareProviderUser?.id || "",
         },
-      },
-    });
+      });
 
-    const notification = await db.notification.create({
-      data: {
-        title: "New Appointment",
-        description: `You have a new appointment with ${patient?.user.name} on ${format(
-          new Date(date),
-          "EEEE, MMMM d yyyy",
-        )} at ${format(new Date(time), "HH:mm")}`,
-        type: NotificationType.NEW_APPOINTMENT,
-        date: new Date(),
-        userId: healthcareProviderUser?.id || "",
-      },
-    });
-
-    await pusherServer.trigger(
-      `notifications-${healthCareProviderId}`,
-      "notifications:new",
-      notification,
-    );
-
-    if (healthcareProviderUser?.receiveEmailNotifications) {
-      await sendNewAppointmentEmail(
-        healthcareProviderUser,
-        patient,
-        newAppointment,
+      await pusherServer.trigger(
+        `notifications-${healthCareProviderId}`,
+        "notifications:new",
+        notification,
       );
-    }
 
-    return { success: "Appointment booked successfully." };
+      if (healthcareProviderUser?.receiveEmailNotifications) {
+        await sendNewAppointmentEmail(
+          healthcareProviderUser,
+          patient,
+          newAppointment,
+        );
+      }
+
+      return { success: "Appointment booked successfully." };
+    } else {
+      const validatedFields = BookAppointmentSchema.safeParse(values);
+
+      if (!validatedFields.success) {
+        return { error: "Invalid fields!" };
+      }
+
+      const {
+        date,
+        time,
+        symptomsType,
+        symptoms,
+        symptomsDuration,
+        symptomsLength,
+        symptomsSeverity,
+        additionalImages,
+      } = validatedFields.data;
+
+      const newAppointment = await db.appointment.create({
+        data: {
+          title: `Appointment with ${patient?.user.name}`,
+          description: `Appointment with ${patient?.user.name} on ${format(
+            new Date(date),
+            "EEEE, MMMM d yyyy",
+          )} at ${format(new Date(time), "HH:mm")}`,
+          date,
+          startTime: new Date(time),
+          endTime: add(new Date(time), { minutes: 30 }),
+          symptomsType,
+          symptoms,
+          symptomsDuration,
+          symptomsLength,
+          symptomsSeverity,
+          additionalImages,
+          patient: {
+            connect: {
+              id: patient?.id,
+            },
+          },
+          healthCareProvider: {
+            connect: {
+              id: healthCareProviderId,
+            },
+          },
+        },
+      });
+
+      const notification = await db.notification.create({
+        data: {
+          title: "New Appointment",
+          description: `You have a new appointment with ${patient?.user.name} on ${format(
+            new Date(date),
+            "EEEE, MMMM d yyyy",
+          )} at ${format(new Date(time), "HH:mm")}`,
+          type: NotificationType.NEW_APPOINTMENT,
+          date: new Date(),
+          userId: healthcareProviderUser?.id || "",
+        },
+      });
+
+      await pusherServer.trigger(
+        `notifications-${healthCareProviderId}`,
+        "notifications:new",
+        notification,
+      );
+
+      if (healthcareProviderUser?.receiveEmailNotifications) {
+        await sendNewAppointmentEmail(
+          healthcareProviderUser,
+          patient,
+          newAppointment,
+        );
+      }
+
+      return { success: "Appointment booked successfully." };
+    }
   } catch (error) {
     console.error(error);
   }

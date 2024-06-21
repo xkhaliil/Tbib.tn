@@ -20,6 +20,10 @@ export const ourFileRouter = {
     image: { maxFileSize: "4MB", maxFileCount: 1 },
     "application/pdf": { maxFileSize: "4MB", maxFileCount: 1 },
   }).onUploadComplete(() => {}),
+  prescriptionAttachment: f({
+    image: { maxFileSize: "4MB", maxFileCount: 1 },
+    "application/pdf": { maxFileSize: "4MB", maxFileCount: 1 },
+  }).onUploadComplete(() => {}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

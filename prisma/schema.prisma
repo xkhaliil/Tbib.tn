@@ -270,7 +270,7 @@ model Appointment {
   symptomsLength   String?
   symptomsSeverity String?
   additionalImages String[]
-
+  isBookedFromHealthcareCenter String?
   consultation Consultation?
 
   patientId String  @db.ObjectId
@@ -278,6 +278,8 @@ model Appointment {
 
   healthCareProviderId String             @db.ObjectId
   healthCareProvider   HealthCareProvider @relation(fields: [healthCareProviderId], references: [id], onDelete: Cascade)
+  
+  
 }
 
 model Consultation {

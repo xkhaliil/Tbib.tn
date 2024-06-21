@@ -50,13 +50,21 @@ export function SearchClient({
     );
   } else if (activeTab === "healthcare-centers") {
     content = (
-      <div className="grid grid-cols-1 gap-6">
+      <div className="flex flex-col gap-6">
         {healthcareCenters.map((healthcareCenter) => (
           <HealthcareCenterCard
             key={healthcareCenter.id}
             healthcareCenter={healthcareCenter}
           />
         ))}
+
+        {healthcareCenters.length === 0 && (
+          <div className="flex h-60 items-center justify-center rounded-xl border bg-white">
+            <p className="text-center text-muted-foreground">
+              No healthcare centers found.
+            </p>
+          </div>
+        )}
       </div>
     );
   }

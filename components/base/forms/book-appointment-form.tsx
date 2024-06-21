@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import { bookAppointment } from "@/actions/patient";
 import { symptomsTypes, SymptomType } from "@/constants";
@@ -103,6 +103,7 @@ export function BookAppointmentForm({
   healthcareProvider,
   timeSlots,
 }: BookAppointmentFormProps) {
+  const searchParams = useSearchParams();
   const authenticatedUser = useCurrentUser();
   const signInDialog = useSignInDialog();
   const router = useRouter();
@@ -110,6 +111,10 @@ export function BookAppointmentForm({
   const [previousStep, setPreviousStep] = React.useState<number>(0);
   const [isPending, startTransition] = React.useTransition();
   const delta = currentStep - previousStep;
+
+  const healthcareCenterId = searchParams?.has("hc")
+    ? searchParams.get("hc")
+    : undefined;
 
   const bookAppointmentForm = useForm<BookAppointmentSchemaType>({
     resolver: zodResolver(BookAppointmentSchema),
@@ -126,7 +131,11 @@ export function BookAppointmentForm({
 
   const processForm = async (values: BookAppointmentSchemaType) => {
     startTransition(() => {
-      bookAppointment(values, healthcareProvider?.id)
+      bookAppointment(
+        values,
+        healthcareProvider?.id,
+        healthcareCenterId || undefined,
+      )
         .then((data) => {
           if (data?.error) {
             bookAppointmentForm.reset();

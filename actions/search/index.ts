@@ -7,11 +7,15 @@ import { db } from "@/lib/db";
 export interface SearchPageParams {
   speciality?: string;
   location?: string;
+  paymentsMethods?: string[];
+  insurances?: string[];
+  languages?: string[];
 }
 
 export async function getHealthcareProvidersByParams(params: SearchPageParams) {
   try {
-    const { speciality, location } = params;
+    const { speciality, location, paymentsMethods, insurances, languages } =
+      params;
 
     let query: any = {};
 
@@ -21,6 +25,26 @@ export async function getHealthcareProvidersByParams(params: SearchPageParams) {
 
     if (location) {
       query.officeState = location;
+    }
+
+    if (paymentsMethods) {
+      query.paymentMethods = {
+        hasSome: Array.isArray(paymentsMethods)
+          ? paymentsMethods
+          : [paymentsMethods],
+      };
+    }
+
+    if (insurances) {
+      query.insurances = {
+        hasSome: Array.isArray(insurances) ? insurances : [insurances],
+      };
+    }
+
+    if (languages) {
+      query.spokenLanguages = {
+        hasSome: Array.isArray(languages) ? languages : [languages],
+      };
     }
 
     const healthcareProviders = await db.healthCareProvider.findMany({

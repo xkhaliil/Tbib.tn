@@ -20,13 +20,37 @@ const nextConfig = {
     ],
   },
   transpilePackages: ["next-auth"],
-  webpack(config) {
+  webpack(config, { isServer, webpack }) {
     config.resolve.alias["handlebars"] = path.resolve(
       __dirname,
       "node_modules",
       "handlebars",
       "dist",
       "handlebars.js",
+    );
+    if (!isServer) {
+      config.resolve = {
+        ...config.resolve,
+        fallback: {
+          // fixes proxy-agent dependencies
+          net: false,
+          dns: false,
+          tls: false,
+          assert: false,
+          // fixes next-i18next dependencies
+          path: false,
+          fs: false,
+          // fixes mapbox dependencies
+          events: false,
+          // fixes sentry dependencies
+          process: false,
+        },
+      };
+    }
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(/node:/, (resource) => {
+        resource.request = resource.request.replace(/^node:/, "");
+      }),
     );
     return config;
   },

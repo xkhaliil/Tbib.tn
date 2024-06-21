@@ -22,10 +22,8 @@ interface HealthcareCenterCardProps {
 export function HealthcareCenterCard({
   healthcareCenter,
 }: HealthcareCenterCardProps) {
-  const router = useRouter();
-
   return (
-    <div className="grid grid-cols-1 rounded-lg border bg-white p-6 shadow-sm">
+    <div className="rounded-lg border bg-white p-6 shadow-sm">
       <div className="flex flex-col">
         <div className="flex items-center gap-6">
           <div className="relative h-24 w-24 flex-shrink-0 rounded-lg bg-gray-200">

@@ -2,14 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import { months } from "@/constants";
+import { PrescriptionTemplate } from "@/pdfs/prescription-template";
 import { ManageHealthcareProviderProfileSchemaType } from "@/schemas";
+import { compile } from "@fileforge/react-print";
 import { Notification } from "@prisma/client";
+import { render } from "@react-email/components";
 import bcrypt from "bcryptjs";
+import { UTApi } from "uploadthing/server";
 
 import { unstable_update } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-import { getCurrentSession } from "./auth";
+import { getCurrentSession, getHealthcareProviderById } from "./auth";
+import { getPatientById } from "./patient";
+import { getPrescriptionById } from "./prescription";
 
 export const settings = async (
   values: ManageHealthcareProviderProfileSchemaType,
