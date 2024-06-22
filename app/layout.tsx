@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Inter, Lexend } from "next/font/google";
 
 import "./globals.css";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 import { DialogProvider } from "@/providers/dialog-provider";
+import { StreamProvider } from "@/providers/stream-provider";
 import { SessionProvider } from "next-auth/react";
 
 import { cn } from "@/lib/utils";
@@ -51,7 +53,9 @@ export default function RootLayout({
         <Toaster />
         <DialogProvider />
         <ActiveStatus />
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <StreamProvider>{children}</StreamProvider>
+        </SessionProvider>
       </body>
     </html>
   );

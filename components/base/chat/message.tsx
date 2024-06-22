@@ -6,6 +6,7 @@ import { PdfIcon } from "@/icons/pdf-icon";
 import { Message as PrismaMessage, User } from "@prisma/client";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { VideoIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -35,14 +36,16 @@ export function Message({ message }: MessageProps) {
           </span>
         </div>
         <div className="leading-1.5 flex flex-col rounded-e-xl rounded-es-xl border-gray-200 bg-gray-100 p-4">
-          <p
-            className={cn(
-              "text-sm font-normal",
-              message.file && message.content ? "pb-2" : "pb-0",
-            )}
-          >
-            {message.content}
-          </p>
+          {!message.content?.startsWith("http") && (
+            <p
+              className={cn(
+                "text-sm font-normal",
+                message.file && message.content ? "pb-2" : "pb-0",
+              )}
+            >
+              {message.content}
+            </p>
+          )}
           {message.file && message.fileType === "application/pdf" && (
             <div className="flex items-center justify-between rounded-xl border bg-gray-50 p-2.5">
               <div className="me-2">
@@ -80,6 +83,29 @@ export function Message({ message }: MessageProps) {
                 />
               </div>
             ))}
+
+          {message.content?.startsWith("http") && (
+            <div className="flex flex-col">
+              <div className="flex items-center gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-600">
+                  <VideoIcon className="h-5 w-5 text-white" />
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-sm font-medium">
+                    Video Consultation
+                  </span>
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {format(new Date(message.createdAt), "EEEE, HH:mm")}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2.5">
+                <Button variant="green" size="sm" asChild>
+                  <Link href={message.content}>Join</Link>
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
