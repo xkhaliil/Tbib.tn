@@ -19,7 +19,10 @@ export async function Chat({ conversationId }: ChatProps) {
 
   return (
     <div className="col-start-2 col-end-4 flex h-screen w-full flex-col justify-between bg-muted/40 lg:col-start-3">
-      <ChatTopbar selectedUser={conversation?.patient.user as User} />
+      <ChatTopbar
+        selectedUser={conversation?.patient.user as User}
+        conversationId={conversationId}
+      />
       <ChatBody
         conversation={conversation}
         currentUser={currentUser}

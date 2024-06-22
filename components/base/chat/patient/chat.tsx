@@ -5,9 +5,9 @@ import { getConversationById } from "@/actions/conversation";
 import { User } from "@prisma/client";
 
 import { ChatBottomBar } from "@/components/base/chat/chat-bottom-bar";
-import { ChatTopbar } from "@/components/base/chat/chat-top-bar";
 
 import { ChatBody } from "../chat-body";
+import { ChatTopbar } from "./chat-top-bar";
 
 interface ChatProps {
   conversationId: string;
