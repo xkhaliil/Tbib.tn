@@ -9,8 +9,6 @@ import {
   SearchPageParams,
 } from "@/actions/search";
 
-
-
 import { Filters } from "@/components/base/results-page/filters";
 import { SearchClient } from "@/components/base/results-page/search-client";
 import { Container } from "@/components/container";
@@ -44,30 +42,29 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         />
       </div>
 
-      {healthcareProviders.length === 0 ||
-        (healthcareCenters.length === 0 && (
-          <Container className="mt-6 max-w-[1600px]">
-            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8">
-              <Image
-                src="empty-placeholder.svg"
-                alt="Empty placeholder"
-                width={130}
-                height={130}
-              />
+      {healthcareProviders.length === 0 && (
+        <Container className="mt-6 max-w-[1600px]">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8">
+            <Image
+              src="empty-placeholder.svg"
+              alt="Empty placeholder"
+              width={130}
+              height={130}
+            />
 
-              <div className="flex flex-col items-center space-y-1">
-                <h2 className="mt-4 text-base font-semibold text-blue-600">
-                  Looks like there are no healthcare providers matching your
-                  search criteria.
-                </h2>
+            <div className="flex flex-col items-center space-y-1">
+              <h2 className="mt-4 text-base font-semibold text-blue-600">
+                Looks like there are no healthcare providers matching your
+                search criteria.
+              </h2>
 
-                <p className="text-sm text-muted-foreground">
-                  Try changing your search criteria or location.
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Try changing your search criteria or location.
+              </p>
             </div>
-          </Container>
-        ))}
+          </div>
+        </Container>
+      )}
     </>
   );
 }
