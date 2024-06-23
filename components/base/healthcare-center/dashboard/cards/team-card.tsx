@@ -22,7 +22,7 @@ export function TeamCard() {
       </CardHeader>
       <CardFooter>
         <Button variant="blue" asChild>
-          <Link href="/hc/team">Manage Team</Link>
+          <Link href="/hc/dashboard/team">Manage Team</Link>
         </Button>
       </CardFooter>
     </Card>
