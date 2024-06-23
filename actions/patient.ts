@@ -11,7 +11,7 @@ import {
   UploadDocumentSchemaType,
 } from "@/schemas";
 import { AppointmentStatus, NotificationType } from "@prisma/client";
-import { add, format, startOfToday } from "date-fns";
+import { add, addHours, format, startOfToday } from "date-fns";
 
 import { db } from "@/lib/db";
 import {
@@ -797,13 +797,13 @@ export async function rescheduleAppointment(
         id,
       },
       data: {
-        date,
-        startTime: new Date(time),
-        endTime: add(new Date(time), { minutes: 30 }),
+        date: addHours(date, 1),
+        startTime: addHours(time, 1),
+        endTime: add(addHours(time, 1), { minutes: 30 }),
         description: `Appointment rescheduled on ${format(
           new Date(date),
           "EEEE, MMMM d yyyy",
-        )} at ${format(new Date(time), "HH:mm")}`,
+        )} at ${format(addHours(time, 1), "HH:mm")}`,
       },
     });
 

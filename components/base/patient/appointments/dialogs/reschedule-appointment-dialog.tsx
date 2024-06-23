@@ -233,9 +233,6 @@ export function RescheduleAppointmentDialog({
 
   const selectedTime = rescheduleAppointmentForm.watch("time");
 
-  console.log(selectedDay);
-  console.log(selectedTime);
-
   return (
     <Dialog>
       <DialogTrigger asChild>
