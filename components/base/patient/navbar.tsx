@@ -64,7 +64,6 @@ export function Navbar({ notifications, patientId }: NavbarProps) {
         </nav>
         <MobileMenu />
         <div className="flex flex-1 items-center justify-between gap-3 md:justify-end">
-          <SearchButton />
           <UserButton side="bottom" align="end" />
           <NotificationsFeed
             notifications={notifications}

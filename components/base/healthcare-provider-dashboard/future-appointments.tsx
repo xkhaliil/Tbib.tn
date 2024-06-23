@@ -49,7 +49,7 @@ export function FutureAppointments({ appointments }: FutureAppointmentsProps) {
                     {appointment.description}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {format(new Date(appointment.date), "do MMMM, yyyy")}
+                    {format(appointment.date, "do MMMM, yyyy")}
                   </p>
                   {appointment.isBookedFromHealthcareCenter && (
                     <p className="text-xs text-muted-foreground">
@@ -64,8 +64,8 @@ export function FutureAppointments({ appointments }: FutureAppointmentsProps) {
                 <div className="mt-2">
                   <div>
                     <p className="text-xs text-muted-foreground">
-                      {format(new Date(appointment.startTime), "p")} -&gt;{" "}
-                      {format(new Date(appointment.endTime), "p")}
+                      {format(appointment.startTime, "HH:mm")} -&gt;{" "}
+                      {format(appointment.endTime, "HH:mm")}
                     </p>
                   </div>
                 </div>
