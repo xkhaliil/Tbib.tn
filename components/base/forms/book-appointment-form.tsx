@@ -202,7 +202,7 @@ export function BookAppointmentForm({
           >
             <div className="flex flex-col space-y-1">
               <h3 className="text-sm font-semibold">Date And Time</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Select the date and time for your appointment.
               </p>
               <p className="text-sm text-muted-foreground">
@@ -664,21 +664,20 @@ export function BookAppointmentForm({
           <div className="flex items-center justify-end gap-x-2">
             <Button
               type="button"
+              onClick={previous}
+              disabled={currentStep === 0}
+              variant="outline"
+            >
+              Previous
+            </Button>
+            <Button
+              type="button"
               variant="blue"
               onClick={next}
               disabled={isPending}
             >
               {isPending ? <Spinner className="mr-2" /> : null}
               {currentStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-
-            <Button
-              type="button"
-              onClick={previous}
-              disabled={currentStep === 0}
-              variant="outline"
-            >
-              Previous
             </Button>
           </div>
         )}

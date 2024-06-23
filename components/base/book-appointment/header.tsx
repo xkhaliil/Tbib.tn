@@ -43,7 +43,9 @@ export function BookAppointmentHeader({
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/">Healthcare Provider</Link>
+                <Link href={`/hp/profile/${healthcareProvider?.id}`}>
+                  Dr. {healthcareProvider?.user.name}
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
@@ -56,7 +58,7 @@ export function BookAppointmentHeader({
         </Breadcrumb>
 
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold text-primary">
+          <h1 className="text-3xl font-bold text-blue-600">
             Book an appointment
           </h1>
           <p className="text-base text-muted-foreground">
