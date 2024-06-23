@@ -424,12 +424,6 @@ function AppointmentButton({ appointment }: AppointmentButtonProps) {
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col gap-1 pt-1 text-xs">
-            <Button variant="blue" size="sm">
-              View Details
-            </Button>
-          </div>
         </div>
       </PopoverContent>
     </Popover>
