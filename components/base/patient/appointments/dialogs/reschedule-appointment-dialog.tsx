@@ -32,6 +32,7 @@ import {
   parse,
   startOfToday,
   startOfWeek,
+  subDays,
 } from "date-fns";
 import { useForm } from "react-hook-form";
 
@@ -210,7 +211,7 @@ export function RescheduleAppointmentDialog({
     }
   };
 
-  const selectedDay = rescheduleAppointmentForm.watch("date");
+  let selectedDay = rescheduleAppointmentForm.watch("date");
 
   const handleGetTimeSlots = async (date: Date): Promise<Date[]> => {
     setTimeSlots([]);
@@ -228,6 +229,9 @@ export function RescheduleAppointmentDialog({
   React.useEffect(() => {
     if (selectedDay) {
       handleGetTimeSlots(selectedDay);
+    }
+    if (process.env.NODE_ENV === "production") {
+      selectedDay = subDays(selectedDay, 1);
     }
   }, [selectedDay]);
 
