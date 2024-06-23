@@ -4,7 +4,7 @@ import { getAppointmentWithHPById } from "@/actions/appointment";
 import { getHealthCareProviderById } from "@/actions/healthcare-provider";
 import { AppointmentStatus } from "@prisma/client";
 import { ClockIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { addHours, format } from "date-fns";
 
 import { cn } from "@/lib/utils";
 
@@ -70,13 +70,25 @@ export async function UpcomingAppointmentCard({
         <div className="flex items-center gap-2 text-sm">
           <ClockIcon className="h-5 w-4 text-muted-foreground" />
           <div className="flex items-center gap-1 text-muted-foreground">
-            <p>
-              {format(new Date(appointment?.startTime || new Date()), "HH:mm")}{" "}
-              -{" "}
-            </p>
-            <p>
-              {format(new Date(appointment?.endTime || new Date()), "HH:mm")}
-            </p>
+            {process.env.NODE_ENV === "production" && (
+              <span>
+                {format(
+                  addHours(appointment?.startTime || new Date(), 1),
+                  "HH:mm",
+                )}{" "}
+                -{" "}
+                {format(
+                  addHours(appointment?.endTime || new Date(), 1),
+                  "HH:mm",
+                )}
+              </span>
+            )}
+            {process.env.NODE_ENV === "development" && (
+              <span>
+                {format(appointment?.startTime || new Date(), "HH:mm")} -{" "}
+                {format(appointment?.endTime || new Date(), "HH:mm")}
+              </span>
+            )}
           </div>
         </div>
       </div>

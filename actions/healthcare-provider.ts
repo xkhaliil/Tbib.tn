@@ -8,6 +8,7 @@ import { compile } from "@fileforge/react-print";
 import { Notification } from "@prisma/client";
 import { render } from "@react-email/components";
 import bcrypt from "bcryptjs";
+import { addHours } from "date-fns";
 import { UTApi } from "uploadthing/server";
 
 import { unstable_update } from "@/lib/auth";
@@ -332,6 +333,8 @@ export async function getHealthCareProviderUserAndOpeningHoursAndAbsencesById(
 export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
   const INTERVAL = 30;
 
+  const parsedDate = addHours(date, 1);
+
   const healthCareProvider = await db.healthCareProvider.findUnique({
     where: {
       id,
@@ -341,7 +344,7 @@ export async function getHealthCareProviderTimeSlots(id: string, date: Date) {
       appointments: {
         where: {
           date: {
-            equals: date,
+            equals: parsedDate,
           },
         },
       },
