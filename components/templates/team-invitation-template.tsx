@@ -27,6 +27,10 @@ export function TeamInvitationTemplate({
   healthcareCenter,
   healthcareProvider,
 }: TeamInvitationTemplateProps) {
+  const acceptInvitationLink =
+    process.env.NODE_ENV === "production"
+      ? `https://oladoc.online/hp/dashboard`
+      : `http://localhost:3000/hp/dashboard`;
   return (
     <Html>
       <Head />
@@ -50,7 +54,7 @@ export function TeamInvitationTemplate({
             <Section className="mb-5 text-center">
               <Button
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                href="http://localhost:3000/hp/dashboard"
+                href={acceptInvitationLink}
               >
                 Accept Invitation
               </Button>

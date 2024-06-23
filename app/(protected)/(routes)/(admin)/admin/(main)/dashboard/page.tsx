@@ -1,6 +1,10 @@
 import React from "react";
 
-import { getAllDoctors, getDoctorsCount } from "@/actions/doctors";
+import {
+  getAllDoctors,
+  getDoctorsCount,
+  getTop5RateScoreDoctor,
+} from "@/actions/doctors";
 import {
   getAllHealthcareCenters,
   getHealthcareCentersCount,
@@ -11,13 +15,19 @@ import { DoctorIcon } from "@/icons/doctor-icon";
 import { HealthcareCenterIcon } from "@/icons/healthcare-center-icon";
 import { MedicalMaskIcon } from "@/icons/medical-mask-icon";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { AdminNavbar } from "@/components/base/admin-dashboard/admin-navbar";
 import { AdminSidebar } from "@/components/base/admin-dashboard/admin-sidebar";
 import { AdminStatsCard } from "@/components/base/admin-dashboard/admin-stats-card";
 import { TotalUsersChart } from "@/components/base/admin-dashboard/charts/total-users-chart";
+import { Top5Doctors } from "@/components/base/admin-dashboard/general-stats/top-5-doctors";
 
 export default async function AdminDashboard() {
   const patientsCount = await getPatientsCount();
@@ -27,6 +37,7 @@ export default async function AdminDashboard() {
   const patients = await getAllPatients();
   const healthcareProviders = await getAllDoctors();
   const healthcareCenters = await getAllHealthcareCenters();
+  const top5Doctors = await getTop5RateScoreDoctor();
   return (
     <div className="grid h-screen md:grid-cols-[220px_1fr] md:grid-rows-[56px_1fr] lg:grid-cols-[280px_1fr]">
       <AdminNavbar />
@@ -64,7 +75,10 @@ export default async function AdminDashboard() {
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-5">
             <Card className="col-span-3">
               <CardHeader>
-                <CardTitle>Total users per month</CardTitle>
+                <CardTitle>Total Users per Month</CardTitle>
+                <CardDescription>
+                  The total number of users registered in the system per month.
+                </CardDescription>
               </CardHeader>
               <CardContent className="pl-2">
                 <TotalUsersChart users={totalUsersPerMonth} />
@@ -72,10 +86,14 @@ export default async function AdminDashboard() {
             </Card>
             <Card className="col-span-2">
               <CardHeader>
-                <CardTitle>General stats</CardTitle>
-                <Separator orientation="horizontal" className="w-44 " />
+                <CardTitle>Top Rated Doctors</CardTitle>
+                <CardDescription>
+                  The top 5 doctors with the highest rating score.
+                </CardDescription>
               </CardHeader>
-              <CardContent></CardContent>
+              <CardContent>
+                <Top5Doctors doctors={top5Doctors} />
+              </CardContent>
             </Card>
           </div>
         </main>

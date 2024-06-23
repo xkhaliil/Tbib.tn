@@ -3,62 +3,38 @@ import React from "react";
 import Image from "next/image";
 import { getTop5RateScoreDoctor } from "@/actions/doctors";
 
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Separator } from "@/components/ui/separator";
 
-type Top5DoctorsCarouselType = Awaited<
-  ReturnType<typeof getTop5RateScoreDoctor>
->;
-interface Top5DoctorsCarouselProps {
-  doctors: Top5DoctorsCarouselType;
+type Top5DoctorsType = Awaited<ReturnType<typeof getTop5RateScoreDoctor>>;
+interface Top5DoctorsProps {
+  doctors: Top5DoctorsType;
 }
-export function Top5DoctorsCarousel({
-  doctors = [],
-}: Top5DoctorsCarouselProps) {
+export function Top5Doctors({ doctors }: Top5DoctorsProps) {
   return (
-    <div>
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full max-w-sm"
-      >
-        <CarouselContent>
-          {doctors.map((doctor, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div>
-                <Card className="border-none shadow-none ">
-                  <CardContent className="flex aspect-square flex-col items-center justify-center">
-                    <img
-                      src={doctor.doctor.user.image || ""}
-                      alt={doctor.doctor.user.name}
-                      className="h-full w-full rounded-md object-cover  "
-                    />
-                    <h1 className="text-xs font-normal shadow-sm ">
-                      Dr. {doctor.doctor.user.name}
-                    </h1>
-                  </CardContent>
-                  <CardContent className="flex items-center justify-center">
-                    <div className="flex items-center justify-center">
-                      <p className="text-sm font-semibold text-blue-600 dark:text-white">
-                        Rank : {index + 1}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+    <div className="flex flex-col divide-y divide-border">
+      {doctors?.map((doctor) => (
+        <>
+          <div
+            key={doctor.doctor.id}
+            className="flex items-center justify-between py-4"
+          >
+            <Image
+              src={doctor.doctor.user.image || "/placeholder.svg"}
+              alt={doctor.doctor.user.name}
+              width={500}
+              height={500}
+              className="h-16 w-16 rounded-full object-cover"
+            />
+            <div className="flex flex-col text-right">
+              <h3 className="text-sm font-medium">{doctor.doctor.user.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {doctor.doctor.speciality}
+              </p>
+              <h1 className="text-sm text-yellow-500">{doctor.rating}</h1>
+            </div>
+          </div>
+        </>
+      ))}
     </div>
   );
 }

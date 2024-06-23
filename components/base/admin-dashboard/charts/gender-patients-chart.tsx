@@ -2,9 +2,9 @@
 
 import * as React from "react";
 
-import { getPatientsByGender } from "@/actions/patient";
+import { getPatientsByGenderPerMonth } from "@/actions/patient";
 
-type GenderChartType = Awaited<ReturnType<typeof getPatientsByGender>>;
+type GenderChartType = Awaited<ReturnType<typeof getPatientsByGenderPerMonth>>;
 interface GenderChartProps {
   patients: GenderChartType;
 }

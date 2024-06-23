@@ -1,3 +1,5 @@
+import React from "react";
+
 import { User } from "@prisma/client";
 import {
   Body,
@@ -22,6 +24,10 @@ export function VerifyEmailTemplate({
   user,
   verificationToken,
 }: VerifyEmailTemplateProps) {
+  const verificationLink =
+    process.env.NODE_ENV === "production"
+      ? `https://oladoc.online/auth/verify?token=${verificationToken}`
+      : `http://localhost:3000/auth/verify?token=${verificationToken}`;
   return (
     <Html>
       <Head />
@@ -44,7 +50,7 @@ export function VerifyEmailTemplate({
             <Section className="mb-5 text-center">
               <Button
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                href={`http://localhost:3000/auth/verify?token=${verificationToken}`}
+                href={verificationLink}
               >
                 Verify Email
               </Button>

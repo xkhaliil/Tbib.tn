@@ -198,7 +198,7 @@ export async function getPatientsByMonth() {
     "Dec",
   ];
 
-  const PatientsPerMonth = Array(12)
+  const patientsPerMonth = Array(12)
     .fill(0)
     .map((_, index) => ({
       month: monthNames[index],
@@ -208,7 +208,7 @@ export async function getPatientsByMonth() {
       }).length,
     }));
 
-  return PatientsPerMonth;
+  return patientsPerMonth;
 }
 
 export async function getRandomSixPatients() {
@@ -233,39 +233,58 @@ export async function getRandomSixPatients() {
     })),
   };
 }
-export async function getPatientsByGender() {
-  var male: number = 0;
-  var female: number = 0;
+
+export async function getPatientsByGenderPerMonth(
+  healthcareProviderId: string | undefined,
+) {
   const patients = await db.patient.findMany({
-    include: {
+    select: {
       user: true,
+    },
+    where: {
+      appointments: {
+        some: {
+          healthCareProviderId: healthcareProviderId,
+        },
+      },
     },
   });
 
-  patients.map((patient) => {
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const patientsPerMonth = Array(12)
+    .fill(0)
+    .map((_, index) => ({
+      month: monthNames[index],
+      totalMale: 0,
+      totalFemale: 0,
+    }));
+
+  patients.forEach((patient) => {
+    const date = new Date(patient.user.createdAt);
+    const monthIndex = date.getMonth();
+
     if (patient.user.gender === "MALE") {
-      male++;
+      patientsPerMonth[monthIndex].totalMale += 1;
     } else {
-      female++;
+      patientsPerMonth[monthIndex].totalFemale += 1;
     }
   });
-  const PatientsByGender = [
-    {
-      data: [
-        {
-          id: 0,
-          value: male,
-          label: "Male",
-        },
-        {
-          id: 1,
-          value: female,
-          label: "Female",
-        },
-      ],
-    },
-  ];
-  return PatientsByGender;
+
+  return patientsPerMonth;
 }
 
 export async function getPatientPastAppointments(id: string | undefined) {
@@ -1075,4 +1094,88 @@ export async function getPatientConsultationsWithHealthcareProvider(
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function totalPatientsWeeklyWithIncrease() {
+  const totalPatientsInThisWeek = await db.patient.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      },
+    },
+  });
+
+  const totalPatientsInLastWeek = await db.patient.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 14)),
+          lt: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalPatientsInThisWeek,
+    increase: totalPatientsInThisWeek - totalPatientsInLastWeek,
+  };
+}
+
+export async function totalPatientsMonthlyWithIncrease() {
+  const totalPatientsInThisMonth = await db.patient.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+        },
+      },
+    },
+  });
+
+  const totalPatientsInLastMonth = await db.patient.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setMonth(new Date().getMonth() - 2)),
+          lt: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalPatientsInThisMonth,
+    increase: totalPatientsInThisMonth - totalPatientsInLastMonth,
+  };
+}
+
+export async function totalPatientsYearlyWithIncrease() {
+  const totalPatientsInThisYear = await db.patient.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      },
+    },
+  });
+
+  const totalPatientsInLastYear = await db.patient.count({
+    where: {
+      user: {
+        createdAt: {
+          gte: new Date(new Date().setFullYear(new Date().getFullYear() - 2)),
+          lt: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      },
+    },
+  });
+
+  return {
+    total: totalPatientsInThisYear,
+    increase: totalPatientsInThisYear - totalPatientsInLastYear,
+  };
 }

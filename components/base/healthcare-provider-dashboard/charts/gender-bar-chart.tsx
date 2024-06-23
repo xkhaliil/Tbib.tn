@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { getPatientsByGenderPerMonth } from "@/actions/patient";
 import {
   Bar,
   BarChart,
@@ -12,74 +13,18 @@ import {
   YAxis,
 } from "recharts";
 
-const genderDataPerMonth = [
-  {
-    month: "Jan",
-    maleValue: 6,
-    femaleValue: 9,
-  },
-  {
-    month: "Feb",
-    maleValue: 16,
-    femaleValue: 5,
-  },
-  {
-    month: "Mar",
-    maleValue: 6,
-    femaleValue: 6,
-  },
-  {
-    month: "Apr",
-    maleValue: 17,
-    femaleValue: 3,
-  },
-  {
-    month: "May",
-    maleValue: 4,
-    femaleValue: 8,
-  },
-  {
-    month: "Jun",
-    maleValue: 5,
-    femaleValue: 6,
-  },
-  {
-    month: "Jul",
-    maleValue: 6,
-    femaleValue: 9,
-  },
-  {
-    month: "Aug",
-    maleValue: 16,
-    femaleValue: 5,
-  },
-  {
-    month: "Sep",
-    maleValue: 6,
-    femaleValue: 6,
-  },
-  {
-    month: "Oct",
-    maleValue: 17,
-    femaleValue: 3,
-  },
-  {
-    month: "Nov",
-    maleValue: 4,
-    femaleValue: 8,
-  },
-  {
-    month: "Dec",
-    maleValue: 5,
-    femaleValue: 6,
-  },
-];
+type GenderChartType = Awaited<ReturnType<typeof getPatientsByGenderPerMonth>>;
 
-export function GenderBarChart() {
+interface GenderChartProps {
+  patients: GenderChartType;
+}
+
+export function GenderBarChart({ patients }: GenderChartProps) {
+  console.log(patients);
   return (
     <ResponsiveContainer width="100%" height={170}>
       <BarChart
-        data={genderDataPerMonth}
+        data={patients}
         margin={{
           top: 10,
         }}
@@ -126,9 +71,9 @@ export function GenderBarChart() {
           axisLine={false}
           width={25}
         />
-        <Bar dataKey="maleValue" fill="#2952ff" stackId="a" />
+        <Bar dataKey="totalMale" fill="#2952ff" stackId="a" />
         <Bar
-          dataKey="femaleValue"
+          dataKey="totalFemale"
           radius={[5, 5, 0, 0]}
           fill="#93e7fe"
           stackId="a"

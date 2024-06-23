@@ -21,6 +21,10 @@ export function ResetPasswordTemplate({
   user,
   verificationToken,
 }: ResetPasswordTemplateProps) {
+  const resetPasswordLink =
+    process.env.NODE_ENV === "production"
+      ? `https://oladoc.online/auth/reset-password?token=${verificationToken}`
+      : `http://localhost:3000/auth/reset-password?token=${verificationToken}`;
   return (
     <Html>
       <Head />
@@ -40,10 +44,7 @@ export function ResetPasswordTemplate({
               marginBottom: "30px",
             }}
           >
-            <Button
-              style={button}
-              href={`http://localhost:3000/auth/reset-password?token=${verificationToken}`}
-            >
+            <Button style={button} href={resetPasswordLink}>
               Reset Password
             </Button>
           </Section>

@@ -8,6 +8,7 @@ import {
   getHealthcareProviderByUserId,
 } from "@/actions/auth";
 import {
+  getPatientsByGenderPerMonth,
   getPatientsWithAtLeastOneAppointment,
   getTotalAdultPatients,
   getTotalChildPatients,
@@ -39,6 +40,9 @@ export default async function DashboardPage() {
   );
   const appointments = await getAllAppointments(healthcareProvider?.id);
   const pastAppointments = await getPastAppointments(healthcareProvider?.id);
+  const patientsByGenderPerMonth = await getPatientsByGenderPerMonth(
+    healthcareProvider?.id,
+  );
 
   const todayAppointments = await getAllTodayAppointments(
     healthcareProvider?.id,
@@ -125,7 +129,7 @@ export default async function DashboardPage() {
                     </span>
                   </div>
                 </div>
-                <GenderBarChart />
+                <GenderBarChart patients={patientsByGenderPerMonth} />
               </div>
 
               <div className="rounded-xl border bg-white p-6 lg:col-span-3">

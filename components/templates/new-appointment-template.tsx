@@ -1,6 +1,5 @@
 import React from "react";
 
-import { getAppointmentById } from "@/actions/appointment";
 import { getPatientByUserId } from "@/actions/auth";
 import { Appointment, User } from "@prisma/client";
 import {

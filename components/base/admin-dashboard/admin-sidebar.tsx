@@ -5,11 +5,10 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HomeIcon } from "@radix-ui/react-icons";
-import { Bell, SettingsIcon, UsersIcon } from "lucide-react";
+import { SettingsIcon, UsersIcon } from "lucide-react";
 import { BsHospital } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 
-import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/marketing/logo";
 
 import { AdminSidebarButton } from "./admin-sidebar-button";
@@ -22,12 +21,8 @@ export function AdminSidebar() {
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <Logo className="h-6 w-6" />
-            <span>Oladoc</span>
+            <span className="text-blue-600">Oladoc</span>
           </Link>
-          <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Toggle notifications</span>
-          </Button>
         </div>
         <div className="flex-1">
           <nav className="grid items-start gap-y-1 px-2 py-2 text-sm font-medium lg:px-4">
